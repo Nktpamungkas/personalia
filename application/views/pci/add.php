@@ -134,19 +134,19 @@
                                     document.getElementById('sisa_cuti').innerHTML  = "Sisa cuti karyawan sebanyak <b>" + data[0].sisa_cuti + " Hari.</b> Periode pengambilan cuti yaitu bulan <b>" +da_awal+'-'+mo_awal+'-'+ye_awal+ "</b> s/d bulan <b>" +da_akhir+'-'+mo_akhir+'-'+ye_akhir+".</b> Diluar periode bulan yang sudah ditentukan, maka cuti tidak berlaku (ganti keterangan menjadi izin)."
                                    
                                     var _lama_izin      = document.getElementById('lama_izin').value;
-                                    if (data[0].sisa_cuti <= 0) {
-                                    //    if (data[0].sisa_cuti <= 0) {
-                                    //         document.getElementById("Button").disabled = true;
-                                    //     }else{
-                                    //        document.getElementById("Button").disabled = false;
-                                        document.getElementById("Button").disabled = true;
-                                    }else{
-                                        document.getElementById("Button").disabled = false;
-                                    }
                                 }
                             } else {
                                 document.getElementById('sisa_cuti').innerHTML  = "SILAHKAN HUBUNGI WATI/INDAH UNTUK MELIHAT SISA CUTI.."
                             }
+                        }
+                        if (data[0].sisa_cuti <= 0) {
+                        //    if (data[0].sisa_cuti <= 0) {
+                        //         document.getElementById("Button").disabled = true;
+                        //     }else{
+                        //        document.getElementById("Button").disabled = false;
+                            document.getElementById("Button").disabled = true;
+                        }else{
+                            document.getElementById("Button").disabled = false;
                         }
                     }
                 } else {
