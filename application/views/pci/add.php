@@ -90,6 +90,7 @@
                             $('#tgl_mulai').attr('readonly', true);
                             $('#tgl_selesai').attr('readonly', true);
                         }else {
+                            
                             if (data[0].sisa_cuti) {
                                 if (data[0].thn_generate ==yyyy) { // jika sudah digenerate, periode cuti ditahun berikutnya
                                     if(mo_akhir >= 2){
