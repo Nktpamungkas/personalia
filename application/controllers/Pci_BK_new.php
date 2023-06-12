@@ -180,7 +180,10 @@ class pci extends CI_Controller
         }
 
         public function add()
-        {
+        { if ($data['sisa_cuti'] <= 0 and $this->input->post('ket', true) == "A01" ) {
+             $this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert">Saldo Cuti tidak cukup</center>');
+                redirect('pci/add_Request');
+        }else{
             $data = array (
                 'kode_cuti'             => "FIC-".date('Ym'),
                 'nip'                   => $this->input->post('no_scan', true),
@@ -205,7 +208,7 @@ class pci extends CI_Controller
                 'tgl_diset_mengetehui'  => $this->input->post('tgl_diset_mengetehui', true)
             );
             $save = $this->db->insert('permohonan_izin_cuti', $data);
-
+        }
             if ($save) {
                 $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Success.</b></center>');
                 redirect('pci');
@@ -445,7 +448,9 @@ class pci extends CI_Controller
                                 YEAR(CURDATE()+interval '1'year) as thn_akhir,
                                 CONCAT(DATE_FORMAT( tgl_tetap, '%d %M'),' ', YEAR(CURDATE())
                                 ,' - ' ,DATE_FORMAT( ( tgl_tetap + INTERVAL '12' MONTH - INTERVAL '1' DAY), '%d %M' ),' ',
-                                YEAR(CURDATE()+interval '1'year)) as pgenerate
+                                YEAR(CURDATE()+interval '1'year)) as pgenerate,
+                                YEAR(CURDATE()-interval '1'year) as thn_awal_periode_gen,
+                                YEAR(CURDATE()) as thn_akhir_periode_gen
                             FROM
                                     tbl_makar 
                                 WHERE
@@ -466,13 +471,15 @@ class pci extends CI_Controller
                 
                 $data = array (
                     'no_scan'   => $value['no_scan'],
-                    'sisa_cuti' => $saldosisacuti
+                    'sisa_cuti' => $saldosisacuti,
+                    'sisa_cuti_th_sebelumnya' => $value['sisa_cuti']
                );
                 $this->db->where('no_scan', $value['no_scan']);
                 $this->db->update('tbl_makar', $data);
 
                 if($value['sisa_cuti']){
-                    $alasan = "Sisa cuti ".$value['sisa_cuti']." telah dibayarkan.";
+                    // $alasan = "Sisa cuti ".$value['sisa_cuti']." telah dibayarkan.";
+                    $alasan = "Sisa cuti ".$value['sisa_cuti']." telah dibayarkan (".$value['thn_awal_periode_gen']." - ".$value['thn_akhir_periode_gen']." ).";
                 } else {
                     $alasan = "Tidak ada sisa cuti yang dibayarkan. Sisa cuti habis.";
                 }
@@ -630,5 +637,94 @@ class pci extends CI_Controller
         endforeach;
         $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Berhasil memotong sisa cuti karyawan</b></center>');
         redirect('pci/generate_cuti');
+    }
+
+    public function annual_leave_personal2()
+    {
+        $al         = $this->input->post('annual_leave', true);
+        $no_scan    = $this->input->post('no_scan', true);
+        $history   = $this->input->post('history', true);
+
+        $this->db->where_in('no_scan', $no_scan);
+        $kartap = $this->db->get('tbl_makar')->result_array();
+
+        foreach ($kartap as $kt) :
+            $data_cuti = array(
+                'sisa_cuti'     => $kt['sisa_cuti'] - $al
+            );
+            $this->db->where('no_scan', $kt['no_scan']);
+            $this->db->update('tbl_makar', $data_cuti);
+            
+            if ($history) {
+                // input histori izin cuti dipotong tahunan berdasarkan departemen yang dipilih
+                $data = array (
+                    'kode_cuti'             => "HCT-".date('Ym'),
+                    'nip'                   => $kt['no_scan'],
+                    'dept'                  => $kt['dept'],
+                    'lama_izin'             => $al,
+                    'days_or_month'          => "Hari",
+                    'ket'                   => "Cuti",
+                    'alasan'                => $history
+                );
+                $this->db->insert('permohonan_izin_cuti', $data);
+            }else{
+                // input histori izin cuti dipotong tahunan berdasarkan departemen yang dipilih
+                $data = array (
+                    'kode_cuti'             => "HCT-".date('Ym'),
+                    'nip'                   => $kt['no_scan'],
+                    'dept'                  => $kt['dept'],
+                    'lama_izin'             => $al,
+                    'days_or_month'          => "Hari",
+                    'ket'                   => "Cuti",
+                    'alasan'                => "Potongan Cuti Karyawan ".date('Y')
+                );
+                $this->db->insert('permohonan_izin_cuti', $data);
+            }
+            
+            //-------------------------------------------------------------------------------
+        endforeach;
+        $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Berhasil memotong sisa cuti karyawan</b></center>');
+        redirect('pci/generate_cuti');
+    }
+
+    public function export_sisa_cuti_diuangkan()
+    {
+        $data['tgl_mulai']   = $this->input->post('start', true);
+        $data['tgl_selesai'] = $this->input->post('stop', true);
+        $this->load->view('pci/export_excel_baru', $data);    
+    }
+    public function export_histori_cuti()
+    {
+        $data['dpci'] = $this->db->query("SELECT
+                                            a.nip, a.dept, a.lama_izin, a.saldo_cuti,
+                                            DATE_FORMAT( a.tgl_mulai, '%d %M %Y' ) AS tgl_mulai,
+                                            DATE_FORMAT( a.tgl_selesai, '%d %M %Y' ) AS tgl_selesai,
+                                            b.nama, a.ket, a.alasan
+                                        FROM
+                                            permohonan_izin_cuti a
+                                            LEFT JOIN ( SELECT * FROM tbl_makar b ) b ON b.no_scan = a.nip
+                                        WHERE
+                                        a.ket = 'A01
+                                    '
+                                    and a.nip = '$no_scan'")->row();
+        $this->load->view('pci/export_excel_history_cuti', $data); 
+    }
+
+    public function print_history_cuti($no_scan)
+    {
+        $data['title'] = 'Time Attendance | Print History Cuti';
+        $data['dpci'] = $this->db->query("SELECT
+                                            a.nip, a.dept, a.lama_izin, a.saldo_cuti,
+                                            DATE_FORMAT( a.tgl_mulai, '%d %M %Y' ) AS tgl_mulai,
+                                            DATE_FORMAT( a.tgl_selesai, '%d %M %Y' ) AS tgl_selesai,
+                                            b.nama, a.ket, a.alasan
+                                        FROM
+                                            permohonan_izin_cuti a
+                                            LEFT JOIN ( SELECT * FROM tbl_makar b ) b ON b.no_scan = a.nip
+                                        WHERE
+                                        a.ket = 'A01
+                                    '
+                                    and a.nip = '$no_scan'")->row();
+        $this->load->view('pci/print_histori_cuti', $data);
     }
 }

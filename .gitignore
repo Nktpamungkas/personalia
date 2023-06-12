@@ -6,8 +6,6 @@ application/cache/*
 application/logs/*
 !application/logs/index.html
 
-bower_components/
-
 !application/*/.htaccess
 
 composer.lock
@@ -31,3 +29,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 /tests/results/
+
+bower_components
+jSignature-master.zip
+license.txt
