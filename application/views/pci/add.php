@@ -140,10 +140,7 @@
                             }
                         }
                         if (data[0].sisa_cuti <= 0) {
-                        //    if (data[0].sisa_cuti <= 0) {
-                        //         document.getElementById("Button").disabled = true;
-                        //     }else{
-                        //        document.getElementById("Button").disabled = false;
+                    
                             document.getElementById("Button").disabled = true;
                         }else{
                             document.getElementById("Button").disabled = false;
