@@ -631,4 +631,51 @@ class pci extends CI_Controller
         $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Berhasil memotong sisa cuti karyawan</b></center>');
         redirect('pci/generate_cuti');
     }
+        public function annual_leave_personal2()
+    {
+        $al         = $this->input->post('annual_leave2', true);
+        $no_scan    = $this->input->post('no_scan', true);
+        $history   = $this->input->post('history', true);
+
+        $this->db->where_in('no_scan', $no_scan);
+        $kartap = $this->db->get('tbl_makar')->result_array();
+
+        foreach ($kartap as $kt) :
+            $data_cuti = array(
+                'sisa_cuti'     => $kt['sisa_cuti'] - $al
+            );
+            $this->db->where('no_scan', $kt['no_scan']);
+            $this->db->update('tbl_makar', $data_cuti);
+            
+            if ($history) {
+                // input histori izin cuti dipotong tahunan berdasarkan departemen yang dipilih
+                $data = array (
+                    'kode_cuti'             => "HCT-".date('Ym'),
+                    'nip'                   => $kt['no_scan'],
+                    'dept'                  => $kt['dept'],
+                    'lama_izin'             => $al,
+                    'days_or_month'          => "Hari",
+                    'ket'                   => "Cuti",
+                    'alasan'                => $history
+                );
+                $this->db->insert('permohonan_izin_cuti', $data);
+            }else{
+                // input histori izin cuti dipotong tahunan berdasarkan departemen yang dipilih
+                $data = array (
+                    'kode_cuti'             => "HCT-".date('Ym'),
+                    'nip'                   => $kt['no_scan'],
+                    'dept'                  => $kt['dept'],
+                    'lama_izin'             => $al,
+                    'days_or_month'          => "Hari",
+                    'ket'                   => "Cuti",
+                    'alasan'                => "Potongan Cuti Karyawan ".date('Y')
+                );
+                $this->db->insert('permohonan_izin_cuti', $data);
+            }
+            
+            //-------------------------------------------------------------------------------
+        endforeach;
+        $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Pembayaran sisa cuti karyawan berhasil</b></center>');
+        redirect('pci/generate_cuti');
+    }
 }
