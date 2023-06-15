@@ -310,6 +310,7 @@ function searchsisacuti_disabled() {
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-sm-12">
+                                                    <option value="" disabled selected></option>
                                                         <select class="select2" style="width: 100%; border-style: none;" multiple="multiple" name="no_scan[]" required>
                                                             <?php 
                                                                 $dataDept = $this->db->query("SELECT * FROM tbl_makar WHERE status_karyawan='Tetap' order by nama ASC")->result_array();
