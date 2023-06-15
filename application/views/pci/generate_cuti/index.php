@@ -305,7 +305,7 @@ function searchsisacuti_disabled() {
                                         <div class="form">
                                             <div class="form-group">
                                                 <label>Jumlah potongan <b>Sisa Cuti Karyawan</b></label>
-                                                <input type="text" name="annual_leave" class="form-control input-sm" required>
+                                                <input type="text" name="annual_leave2" class="form-control input-sm" required>
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
