@@ -327,7 +327,7 @@ function searchsisacuti_disabled() {
                                             <hr>
                                             <div class="form-group">
                                                 <label><b>Keterangan Histori</b></label>
-                                                <textarea class="form-control input-sm" name="history"></textarea>
+                                                <textarea class="form-control input-sm" name="history2"></textarea>
                                             </div>
                                         </div>
                                     </div>

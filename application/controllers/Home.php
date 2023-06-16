@@ -101,7 +101,6 @@ class Home extends CI_Controller
                                         AND NOT status_karyawan ='Tetap'
                                         AND status_idcard ='Sudah'
                                         AND not status_seragam ='Sudah'
-                                        AND masa_kerja <12
                                         ORDER BY
                                         masa_kerja desc")->result_array();
                                         echo json_encode($data);
