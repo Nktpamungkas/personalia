@@ -52,7 +52,7 @@
                                         <?php
                                             $dept = $user['dept'];
                                             if ($dept == "HRD") {
-                                                $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE NOT status_aktif = 0 AND NOT status_karyawan = 'Resigned' ORDER BY nama")->result_array();
+                                                $queryShift = $this->db->query("SELECT * FROM tbl_makar  ORDER BY nama")->result_array();
                                             }else{
                                                 $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE NOT status_aktif = 0 AND NOT status_karyawan = 'Resigned' AND dept = '$dept' ORDER BY nama")->result_array();
                                             }
