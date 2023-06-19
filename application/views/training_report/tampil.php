@@ -36,7 +36,7 @@
                                     <select class="form-control input-sm select2" style="width: 600px" tabindex="2" data-placeholder="Pilih NIP Trainer..."  name="trainer" required>
                                         <option value="" disabled selected></option>
                                         <?php
-                                           $querytrainer = $this->db->query("SELECT * FROM tbl_makar WHERE NOT status_aktif = 0 AND NOT status_karyawan = 'Resigned' ORDER BY nama asc")->result_array();
+                                           $querytrainer = $this->db->query("SELECT * FROM tbl_makar ORDER BY nama asc")->result_array();
                                          ?> 
                                          <?php foreach ($querytrainer as $dt) : ?>
                                             <option value="<?= $dt['no_scan'] ?>" <?php if ($dt['no_scan'] == $training->nip_trainer) {
