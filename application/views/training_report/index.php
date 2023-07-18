@@ -3,7 +3,7 @@
         <h3><i class="fa fa-angle-right"></i> Training Record</h3>
         <div class="col-md-6">
             <p class="inline">
-                <a href="<?= base_url('training_report/addTraining'); ?>" class="btn btn-info btn-sm"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Add New Training</a>
+                <!-- <a href="<?= base_url('training_report/addTraining'); ?>" class="btn btn-info btn-sm"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Add New Training</a> -->
                 <a href="#" data-toggle="modal" data-target="#modalExport" class="btn btn-default btn-sm">Export to Excel</a>
                 <div class="modal fade" id="modalExport" tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
                     <form action="<?= base_url('Training_report/export_excel') ?>" method="POST">
@@ -125,7 +125,9 @@
                                                                                                 LEFT JOIN( SELECT b.no_scan, b.dept, b.nama, b.jabatan FROM tbl_makar b) b ON b.no_scan = a.no_scan
                                                                                             WHERE
                                                                                                 a.kode_training = '$kode' 
-                                                                                                AND a.tgl_training = '$tgltraining' ")->result_array();
+                                                                                                AND a.tgl_training = '$tgltraining' 
+                                                                                            order by 
+                                                                                                b.dept asc")->result_array();
                                                                 $noUrut = 1;
                                                             ?>
                                                              <?php foreach ($query as $dtt) : ?>
