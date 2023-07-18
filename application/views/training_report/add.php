@@ -79,7 +79,7 @@
                             <div class="form-group">
                                 <div class="col-lg-offset-2 col-lg-10">
                                     <button class="btn btn-theme" type="submit" name="submit">Save</button>
-                                    <a href="<?= base_url('training_report'); ?>" class="btn btn-theme04">Cancel</a>
+                                    <!-- <a href="<?= base_url('training_report'); ?>" class="btn btn-theme04">Cancel</a> -->
                                 </div>
                             </div>
                         </form>
