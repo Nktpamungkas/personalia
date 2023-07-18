@@ -295,15 +295,21 @@ if ($user['name']) : ?>
                                 <?php endif; ?>
 
                                 <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5) : ?>
+                                    <li <?php if ($title == "Add Training Record") {
+                                            echo 'class="active"';
+                                        } ?>><a href="<?= base_url('Training_report/addTraining'); ?>">3. Add Record Training</a></li>
+                                <?php endif; ?>
+
+                                <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5) : ?>
                                     <li <?php if ($title == "Training Record") {
                                             echo 'class="active"';
-                                        } ?>><a href="<?= base_url('Training_report'); ?>">3. Record Training</a></li>
+                                        } ?>><a href="<?= base_url('Training_report'); ?>">4. Record Training</a></li>
                                 <?php endif; ?>
 
                                 <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5) : ?>
                                     <li <?php if ($title == "Evaluasi Training") {
                                             echo 'class="active"';
-                                        } ?>><a href="#">4. Evaluasi Training</a></li>
+                                        } ?>><a href="#">5. Evaluasi Training</a></li>
                                 <?php endif; ?>
 
                                 <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6) : ?>
