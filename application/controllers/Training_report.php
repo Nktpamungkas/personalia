@@ -101,12 +101,14 @@ class Training_report extends CI_Controller
                     'keterangan'    => gethostbyaddr($ipaddress)
                 );
                 $this->db->insert('log_new_training', $log);
+                $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"><b>Employee training has been created.</b></center>');
+                redirect($this->agent->referrer());
 
-                $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Employee training has been created.</b></center>');
-                redirect('training_report');
-            } else {
-                $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Employee training has been created.</b></center>');
-                redirect('training_report');
+            //     $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Employee training has been created.</b></center>');
+            //     redirect('training_report');
+            // } else {
+            //     $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Employee training has been created.</b></center>');
+            //     redirect('training_report');
             }
         }
     // END ADD NEW TRAINING
