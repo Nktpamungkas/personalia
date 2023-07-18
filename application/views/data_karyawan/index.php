@@ -25,6 +25,7 @@
                                 <th><center>Bagian</center></th>
                                 <th><center>Jabatan</center></th>
                                 <th><center>Tanggal Masuk</center></th>
+                                <th><center>Tanggal Tetap</center></th>
                                 <th><center>Status Karyawan</center></th>
                             </tr>
                         </thead>
@@ -155,6 +156,7 @@
                                                     '<td>'+data[i].bagian+'</td>'+
                                                     '<td>'+data[i].jabatan+'</td>'+
                                                     '<td><center>'+data[i].tgl_masuk+'</center></td>'+
+                                                    '<td><center>'+data[i].tgl_tetap+'</center></td>'+
                                                     '<td>'+data[i].status_karyawan+'</td>'+
                                                 '</tr>';
                                         }

@@ -35,6 +35,10 @@ class Data_Karyawan extends CI_Controller
                                         jabatan,
                                         bagian,
                                         DATE_FORMAT(tgl_masuk, '%d-%m-%Y') AS tgl_masuk,
+                                        case 
+                                            when status_karyawan = 'Tetap' then  DATE_FORMAT(tgl_tetap, '%d-%m-%Y')
+                                            else '-'
+                                        end AS tgl_tetap,
                                         status_karyawan 
                                     FROM tbl_makar
                                       WHERE NOT status_karyawan = 'Resigned' 
