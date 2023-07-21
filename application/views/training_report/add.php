@@ -2,7 +2,7 @@
     function tambahNama() {
         var idf = document.getElementById("idf").value;
         var stre;
-        stre = "<div class='col-lg-2' class='form-group'><p id='srow" + idf + "'><select class='form-control input-sm select2' name='no_scan[]' required><option value='' disabled selected></option><?php $queryShift = $this->db->query('SELECT * FROM tbl_makar ORDER BY nama')->result_array(); ?> <?php foreach ($queryShift as $dk) : ?> <option value='<?= $dk['no_scan'] ?>' <?php if ($dk['no_scan'] == set_value('no_scan')) { echo 'SELECTED';} ?>><?= $dk['no_scan'].' - '.$dk['nama'].' ('.$dk['dept'].')'; ?></option><?php endforeach; ?></select><a href='#' style=\"color:#3399FD;\" onclick='hapusElemen(\"#srow" + idf + "\"); return false;'>Hapus</a></p></div>";
+        stre = "<div class='col-lg-5' class='form-group'><p id='srow" + idf + "'><select class='form-control input-sm select2' name='no_scan[]' required><option value='' disabled selected></option><?php $queryShift = $this->db->query("SELECT * FROM tbl_makar where status_karyawan not in('Perubahan_status','Resigned')ORDER BY nama")->result_array(); ?> <?php foreach ($queryShift as $dk) : ?> <option value='<?= $dk['no_scan'] ?>' <?php if ($dk['no_scan'] == set_value('no_scan')) { echo 'SELECTED';} ?>><?= $dk['no_scan'].' - '.$dk['nama'].' ('.$dk['dept'].')'; ?></option><?php endforeach; ?></select><a href='#' style=\"color:#3399FD;\" onclick='hapusElemen(\"#srow" + idf + "\"); return false;'>Hapus</a></p></div>";
         $("#divSite").append(stre);
         idf = (idf - 1) + 2;
         document.getElementById("idf").value = idf;
