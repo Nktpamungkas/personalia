@@ -29,7 +29,23 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 /tests/results/
-
+system
+select2
+user_guide
+assets
 bower_components
+chosen
+css
+dates
+excel
+formulir pelatih
+gambar
+img
+jSignature
+lib
+panduan
+ramadhan
 jSignature-master.zip
-license.txt
+license.Txt
+
+
