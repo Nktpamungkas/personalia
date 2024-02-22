@@ -24,13 +24,12 @@
                                         b.jabatan,
                                         a.kode_training,
                                         c.nama_training,
-                                        a.tgl_training,
-                                        d.nama as nama_trainer
+                                        a.tgl_training
                                     FROM
                                         tbl_training a
                                         JOIN ( SELECT * FROM tbl_makar b ) b ON b.no_scan = a.no_scan
                                         JOIN ( SELECT * FROM training c ) c ON c.id = a.kode_training
-                                        JOIN ( SELECT * FROM tbl_makar d ) d ON d.no_scan = a.trainer
+                                        -- JOIN ( SELECT * FROM tbl_makar d ) d ON d.no_scan = a.trainer
                                         WHERE a.tgl_training BETWEEN '$tgl_mulai' AND '$tgl_selesai'
                                         order by a.kode_training asc, a.no_scan ASC, b.nama asc, b.dept asc, a.tgl_training asc")->result_array();
     ?>
@@ -42,7 +41,7 @@
         <td><?= $dd['jabatan']; ?></td>
         <td>TRN<?php echo sprintf("%04d", $dd['kode_training']); ?></td>
         <td><?= $dd['nama_training']; ?></td>
-        <td><?= $dd['nama_trainer']; ?></td>
+        <td></td>
         <td><?= $dd['tgl_training']; ?></td>
     </tr>
     <?php endforeach; ?>

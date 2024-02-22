@@ -175,6 +175,17 @@
             ]
         });
     });
+    $(document).ready(function() {
+        var oTable = $('#table-index-transition').dataTable({
+            "aoColumnDefs": [{
+                "bSortable": true,
+                "aTargets": [0]
+            }],
+            "aaSorting": [
+                [4, 'desc']
+            ]
+        });
+    });
 
     $(document).ready(function() {
         var oTable = $('#table-indexAll-pkl-ver').dataTable({
@@ -226,6 +237,27 @@
 
     $(document).ready(function() {
         var oTable = $('#PKWT').dataTable({
+            "aoColumnDefs": [{
+                "bSortable": true,
+                "aTargets": [0]
+            }],
+            "aaSorting": [
+                [4, 'asc']
+            ]
+        });
+    });
+
+    $(document).ready(function() {
+        var oTable = $('#PKWT2').dataTable({
+            "aoColumnDefs": [{
+                "bSortable": true,
+                "aTargets": [0]
+            }]
+        });
+    });
+
+    $(document).ready(function() {
+        var oTable = $('#PKWT3').dataTable({
             "aoColumnDefs": [{
                 "bSortable": true,
                 "aTargets": [0]

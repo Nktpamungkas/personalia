@@ -8,7 +8,7 @@
             <div class="col-lg-12">
                 <div class="form-panel">
                     <div class="form">
-                        <form class="cmxform form-horizontal style-form" action="<?= base_url('pkl/edit/') . $user['name']; ?>" method="post">
+                        <form class="cmxform form-horizontal style-form" action="<?= base_url('pkl2/edit/') . $user['name']; ?>" method="post">
                             <div class="form-group ">
                                 <label class="control-label col-lg-2">Kode Lembur</label>
                                 <div class="col-lg-10">
@@ -27,6 +27,22 @@
                                             <option value="<?= $ds['desc'] ?>" <?php if ($ds['desc'] == $dpkl->shift) {
                                                 echo "SELECTED";
                                             } ?>><?= $ds['desc'] ?></option>
+                                        <?php endforeach ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label class="control-label col-lg-2">Tipe Lembur</label>
+                                <div class="col-lg-10">
+                                    <select class="form-control input-sm select2" name="status_tipe_lembur" required>
+                                        <option value="" disabled selected>Pilih Jenis Lembur</option>
+                                        <?php
+                                            $queryShift = $this->db->query('SELECT * FROM jenis_lembur')->result_array();
+                                        ?>
+                                            <?php foreach ($queryShift as $ds) : ?>
+                                            <option value="<?= $ds['desc'] ?>" <?php if ($ds['desc'] == $dpkl->status_tipe_lembur) {
+                                                echo "SELECTED";
+                                            } ?>><?= $ds['ket'] ?></option>
                                         <?php endforeach ?>
                                     </select>
                                 </div>

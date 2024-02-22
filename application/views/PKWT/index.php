@@ -14,16 +14,44 @@ function functionGaji() {
         document.getElementById('upah').value = " "
     }
 }
+
+     // Mendapatkan elemen input
+     var inputTanggalMasuk = document.getElementById('kontrak_awal');
+    var inputJumlahBulan = document.getElementById('input_jumlah_bulan');
+    var inputTanggalEvaluasi = document.getElementById('kontrak_akhir');
+
+    // Menonaktifkan input tanggal masuk
+    inputTanggalMasuk.disabled = true;
+
+    // Menambahkan event listener pada input jumlah bulan
+    inputJumlahBulan.addEventListener('input', function() {
+        // Aktifkan tanggal masuk setelah jumlah bulan diisi
+        inputTanggalMasuk.disabled = false;
+
+        // Ambil nilai dari input tanggal masuk
+        var tglMasuk = new Date(inputTanggalMasuk.value);
+
+        // Ambil nilai dari input jumlah bulan
+        var jumlahBulan = parseInt(inputJumlahBulan.value, 10);
+
+        // Tambahkan jumlah bulan ke tanggal masuk
+        tglMasuk.setMonth(tglMasuk.getMonth() + jumlahBulan);
+
+        // Format tanggal untuk input tanggal evaluasi
+        var tglEvaluasi = tglMasuk.toISOString().split('T')[0];
+
+        // Set nilai pada input tanggal evaluasi
+        inputTanggalEvaluasi.value = tglEvaluasi;
+    });
 </script>
 <section id="main-content">
     <section class="wrapper">
-        <div class="row">
+        <div class="row mt">
             <div class="col-lg-12 main-chart">
                 <div class="border-head">
                     <h3>HUMAN RESOURCES INFORMATION SYSTEM</h3>
                 </div>
                 <div class="row mb">
-                    <div class="col-md-6 mb">
                         <p>
                             <center><h4><b>DATA HABIS KONTRAK</b></h4></center>
                             <?php if ($user['dept'] == "HRD" || $user['dept'] == "DIT") : ?>
@@ -90,7 +118,7 @@ function functionGaji() {
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-lg-4">Tgl kontrak awal</label>
+                                                        <label for="kontrak_awal" class="control-label col-lg-4">Tgl kontrak awal</label>
                                                         <div class="col-lg-4">
                                                             <input class="form-control input-sm" value="<?= set_value('kontrak_awal'); ?>" id="kontrak_awal" name="kontrak_awal" type="date">
                                                             <label class="control-label">*Tanggal masuk karyawan</label>
@@ -98,8 +126,10 @@ function functionGaji() {
                                                     </div>
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-lg-4">Durasi</label>
-                                                        <div class="col-lg-8">
-                                                            <input class="form-control input-sm" id="durasi" name="durasi" type="text">/Bulan <br><i style="font-size: 10px">(To change, please press "Tab")</i>
+                                                        <!-- <label for="input_jumlah_bulan">Tambahkan Jumlah Bulan:</label> -->
+                                                          <div class="col-lg-8">
+                                                            <!-- <input class="form-control input-sm" id="durasi" name="durasi" type="text">/Bulan <br><i style="font-size: 10px">(To change, please press "Tab")</i> -->
+                                                            <input type="number" id="input_jumlah_bulan" name="durasi" placeholder="Jumlah Bulan" value="" min="1" required>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
@@ -109,7 +139,7 @@ function functionGaji() {
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-lg-4">Keterangan Libur</label>
+                                                        <label class="control-label col-lg-4">Keterangan</label>
                                                         <div class="col-lg-8">
                                                             <input class="form-control input-sm" name="libur" type="text" placeholder="Kosongkan jika tidak ada libur">
                                                             <label style="font-size: 10px;">(Contoh: 01 Maret 2020 - 02 Maret 2020)</label>
@@ -129,7 +159,7 @@ function functionGaji() {
                             </div>
                         </p>
                         <p>
-                            <label><b>*Note: Menampilkan data habis kontrak pertanggal saat ini sampai dengan 1 bulan kedepan.</b></label>
+                            <label><b>*Note: Menampilkan data habis kontrak pertanggal saat ini sampai dengan 6 bulan kedepan.</b></label>
                         </p>
                         <div class="content-panel">
                             <table style="width:100%" cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="PKWT">
@@ -148,42 +178,60 @@ function functionGaji() {
                                     $dpt = $user['dept'];
                                     // $tglInterval = '2020-01-01';
                                     if ($dpt == "HRD") {
-                                        $data = $this->db->query("SELECT b.id,
-                                                                        b.no_scan,
-                                                                        a.nama,
-                                                                        a.dept,
-                                                                        DATE_FORMAT( b.kontrak_akhir, '%d %b %Y' ) AS kontrak_akhir,
-                                                                        b.keterangan 
-                                                                    FROM
-                                                                        tbl_makar a
-                                                                        INNER JOIN ( SELECT * FROM tbl_kontrak b) b ON b.no_scan = a.no_scan 
-                                                                    WHERE
-                                                                        b.kontrak_akhir BETWEEN DATE_ADD( now( ), INTERVAL -3 MONTH )  
-                                                                        AND DATE_ADD( now( ), INTERVAL 1 MONTH ) 
-                                                                        -- AND b.`status` = ' ' 
-                                                                        AND NOT a.status_karyawan = 'Resigned'
-                                                                        AND NOT a.status_karyawan = 'perubahan_status'
-                                                                    ORDER BY
-                                                                        b.kontrak_akhir")->result_array();
+                                        $data = $this->db->query("SELECT id,
+                                                                        no_scan,
+                                                                        nama,
+                                                                        dept,
+                                                                        DATE_FORMAT( kontrak_akhir, '%d %b %Y' ) AS kontrak_akhir,
+                                                                        keterangan 
+                                                                    FROM (
+                                                                        SELECT
+                                                                            a.id,
+                                                                            a.no_scan,
+                                                                            a.nama,
+                                                                            a.dept,
+                                                                            b.kontrak_akhir,
+                                                                            b.keterangan,
+                                                                            ROW_NUMBER() OVER (PARTITION BY a.no_scan ORDER BY b.kontrak_akhir DESC) AS row_num
+                                                                        FROM
+                                                                            tbl_makar a
+                                                                            INNER JOIN tbl_kontrak b ON b.no_scan = a.no_scan
+                                                                        WHERE
+                                                                            b.kontrak_akhir BETWEEN DATE_ADD(NOW(), INTERVAL -1 MONTH)
+                                                                            AND DATE_ADD(NOW(), INTERVAL 12 MONTH)
+                                                                            and NOT a.status_karyawan = 'Resigned'
+                                                                            AND NOT a.status_karyawan = 'perubahan_status'
+                                                                    ) AS ranked
+                                                                    WHERE row_num = 1
+                                                                    ORDER BY kontrak_akhir DESC ")->result_array();
                                     } else {
-                                        $data = $this->db->query("SELECT b.id, 
-                                                                        b.no_scan,
-                                                                        a.nama,
-                                                                        a.dept,
-                                                                        DATE_FORMAT(b.kontrak_akhir, '%d %b %Y') as kontrak_akhir,
-                                                                        b.keterangan 
-                                                                    FROM
-                                                                        tbl_makar a
-                                                                        INNER JOIN ( SELECT * FROM tbl_kontrak b) b ON b.no_scan = a.no_scan 
-                                                                    WHERE
-                                                                        b.kontrak_akhir BETWEEN DATE_ADD( now( ), INTERVAL -3 MONTH )  
-                                                                        AND DATE_ADD( now( ), INTERVAL 1 MONTH )
-                                                                        -- AND b.`status` = ' '
-                                                                        AND a.dept = '$dpt'
-                                                                        AND NOT a.status_karyawan = 'Resigned'
-                                                                        AND NOT a.status_karyawan = 'perubahan_status'
-                                                                    ORDER BY
-                                                                        b.kontrak_akhir")->result_array();
+                                        $data = $this->db->query(" SELECT id,
+                                                                        no_scan,
+                                                                        nama,
+                                                                        dept,
+                                                                        DATE_FORMAT( kontrak_akhir, '%d %b %Y' ) AS kontrak_akhir,
+                                                                        keterangan 
+                                                                    FROM (
+                                                                        SELECT
+                                                                            a.id,
+                                                                            a.no_scan,
+                                                                            a.nama,
+                                                                            a.dept,
+                                                                            b.kontrak_akhir,
+                                                                            b.keterangan,
+                                                                            ROW_NUMBER() OVER (PARTITION BY a.no_scan ORDER BY b.kontrak_akhir DESC) AS row_num
+                                                                        FROM
+                                                                            tbl_makar a
+                                                                            INNER JOIN tbl_kontrak b ON b.no_scan = a.no_scan
+                                                                        WHERE
+                                                                            b.kontrak_akhir BETWEEN DATE_ADD(NOW(), INTERVAL -1 MONTH)
+                                                                            AND DATE_ADD(NOW(), INTERVAL 12 MONTH)
+                                                                            and NOT a.status_karyawan = 'Resigned'
+                                                                            AND NOT a.status_karyawan = 'perubahan_status'
+                                                                    ) AS ranked
+                                                                    WHERE row_num = 1
+                                                                    and dept = '$dpt'
+                                                                    ORDER BY kontrak_akhir DESC")->result_array();
                                     }
                                 ?>
                                 <?php foreach($data AS $result) : ?>
@@ -231,7 +279,7 @@ function functionGaji() {
                             </table>
                         </div>
                     </div>
-                    <div class="col-md-6 mb">
+                </div>
                         <p>
                             <center><h4><b>KARYAWAN YANG DIPERPANJANG</b></h4></center>
                             <a href="#" data-toggle="modal" data-target="#modalPrint" class="btn btn-theme04 btn-xs">Buat Internal Memo</a>
@@ -588,6 +636,5 @@ function functionGaji() {
                         </div>
                     </div>
                 </div>
-            </div>
-    </section>
+         </section>
 </section>

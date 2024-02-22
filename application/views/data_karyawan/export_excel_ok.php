@@ -16,6 +16,8 @@
             <th>Alamat KTP</th>
             <th>Alamat Domisili</th>
             <th>Alamat NPWP</th>
+            <th>RT</th>                    
+            <th>RW</th> 
             <th>Kecamatan Domisili</th>
             <th>Kabupaten Domisili</th>
             <th>Agama</th>
@@ -53,11 +55,17 @@
     </thead>
     <tbody>
         <?php
-            $data = $this->db->query("SELECT * FROM tbl_makar")->result_array();
+            $data = $this->db->query("SELECT 
+                                            CASE
+                                                WHEN LEFT(no_ktp, 1) = '''' THEN SUBSTRING(no_ktp, 2,100)
+                                                ELSE no_ktp
+                                            END AS no_ktp_kutip,
+                                            tbl_makar.* FROM tbl_makar
+                                            order by CAST(no_scan AS INTEGER) asc")->result_array();
         ?>
         <?php foreach ($data as $dd) : ?>
         <tr>
-            <td class='str'><?= $dd['no_ktp']; ?></td>
+            <td class='str'><?= $dd['no_ktp_kutip']; ?></td>
             <td><?= $dd['no_scan']; ?></td>
             <td class='str'><?= $dd['npwp']; ?></td>
             <td><?= $dd['nama']; ?></td>
@@ -76,6 +84,8 @@
             <td><?= $dd['alamat_ktp']; ?></td>
             <td><?= $dd['alamat_domisili']; ?></td>
             <td><?= $dd['alamat_npwp']; ?></td>
+            <td><?= $dd['RT']; ?></td>
+            <td><?= $dd['RW']; ?></td>
             <td><?= $dd['kecamatan_domisili']; ?></td>
             <td><?= $dd['kabupaten_domisili']; ?></td>
             <td><?= $dd['agama']; ?></td>

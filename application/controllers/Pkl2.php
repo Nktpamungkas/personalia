@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class pkl extends CI_Controller
+class pkl2 extends CI_Controller
 {
 
     public function __construct()
@@ -14,9 +14,9 @@ class pkl extends CI_Controller
     {
         $data['user'] = $this->db->get_where('user', array('name' =>
         $this->session->userdata('name')))->row_array(); 
-        $data['title'] = 'Time Attendance | Lembur';
+        $data['title'] = 'Time Attendance | Lembur Test';
         $this->load->view('template/header', $data);
-        $this->load->view('pkl/index');
+        $this->load->view('pkl2/index2');
         $this->load->view('template/footer');
     }
 
@@ -25,9 +25,9 @@ class pkl extends CI_Controller
         $data['user'] = $this->db->get_where('user', array('name' =>
         $this->session->userdata('name')))->row_array();
 
-        $data['title'] = 'Time Attendance | Lembur';
+        $data['title'] = 'Time Attendance | Lembur Test';
         $this->load->view('template/header', $data);
-        $this->load->view('pkl/index_all');
+        $this->load->view('pkl2/index_all2');
         $this->load->view('template/footer');
     }
 
@@ -35,12 +35,12 @@ class pkl extends CI_Controller
     {
         $data['user'] = $this->db->get_where('user', array('name' =>
         $this->session->userdata('name')))->row_array(); 
-        $data['title'] = 'Time Attendance | Lembur';
+        $data['title'] = 'Time Attendance | Lembur Test';
 
         $bulan['Belum_ver'] = 'Verifikasi';
 
         $this->load->view('template/header', $data);
-        $this->load->view('pkl/index_all_verifikasi', $bulan);
+        $this->load->view('pkl2/index_all_verifikasi', $bulan);
         $this->load->view('template/footer');
     }
 
@@ -74,7 +74,7 @@ class pkl extends CI_Controller
                                     GROUP BY
                                         a.kode_lembur 
                                     ORDER BY
-                                        b.tanggal_permohonan DESC")->result_array();
+                                        b.tanggal_permohonan asc")->result_array();
         echo json_encode($data);
     }
     
@@ -94,7 +94,7 @@ class pkl extends CI_Controller
                                         b.`status` 
                                     FROM
                                         permohonan_kerja_lembur a
-                                        LEFT JOIN ( SELECT b.id_pkl, b.`status` FROM daftar_lembur b ) b ON b.id_pkl = a.id
+                                        LEFT JOIN ( SELECT b.id_pkl, b.`status`, b.tanggal_permohonan FROM daftar_lembur b ) b ON b.id_pkl = a.id
                                     WHERE
                                         b.`status` IN ( 'Verifikasi' )
                                         AND  b.tanggal_permohonan BETWEEN DATE_ADD( now( ), INTERVAL -2 MONTH ) AND DATE_ADD( now( ), INTERVAL 5 MONTH )
@@ -147,7 +147,7 @@ class pkl extends CI_Controller
     {
         $data['tgl_mulai']   = $this->input->post('start', true);
         $data['tgl_selesai'] = $this->input->post('stop', true);
-        $this->load->view('pkl/exportToExcel', $data);
+        $this->load->view('pkl2/exportToExcel2', $data);
     }
 
     // START NEW REQUEST FOR OVERTIME WORK                             
@@ -155,9 +155,9 @@ class pkl extends CI_Controller
         {
             $data['user'] = $this->db->get_where('user', array('name' =>
             $this->session->userdata('name')))->row_array(); 
-            $data['title'] = 'Time Attendance | Lembur';
+            $data['title'] = 'Time Attendance | Lembur Test';
             $this->load->view('template/header', $data);
-            $this->load->view('pkl/add');
+            $this->load->view('pkl2/add2');
             $this->load->view('template/footer');
         }
 
@@ -171,6 +171,7 @@ class pkl extends CI_Controller
                 array_push($value, array(
                     'kode_lembur'               => "FL-".date('Ym')."-".sprintf('%07s', $id_terakhir->last_id),
                     'dept'                      =>  $this->input->post('dept', true),
+                    'status_tipe_lembur'        =>  $this->input->post('status_tipe_lembur', true),
                     'no_scan'                   =>  $key,
                     // 'tujuan_lembur'             =>  $this->input->post('tujuan_lembur', true),
                     // 'target_lembur'             =>  $this->input->post('target_lembur', true),
@@ -193,7 +194,7 @@ class pkl extends CI_Controller
             $this->db->trans_complete();
 
             $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert" style="font-size: 14px"><b>Your Request for Overtime Work has been created.</b></center>');
-            redirect('pkl');
+            redirect('pkl2');
         }
 
         public function tambah($kodelembur)
@@ -205,12 +206,12 @@ class pkl extends CI_Controller
 
             if ($cari_data_tambah->count) {                 // Jika Data lembur sudah dibuat
                 $this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert"  style="font-size: 14px"><b>Maaf, tidak bisa mengubah data.</b></center>');
-                redirect('pkl');
+                redirect('pkl2');
             } else {                                        // Jika Data lembur belum dibuat
-                $data['title'] = 'Time Attendance | Edit Lembur';
+                $data['title'] = 'Time Attendance | Edit Lembur Test';
                 $data['dpkl'] = $this->db->query("SELECT * FROM permohonan_kerja_lembur WHERE kode_lembur = '$kodelembur'")->row();
                 $this->load->view('template/header', $data);
-                $this->load->view('pkl/tambah', $data);
+                $this->load->view('pkl2/tambah2', $data);
                 $this->load->view('template/footer');
             }
         }
@@ -226,6 +227,7 @@ class pkl extends CI_Controller
                         'kode_lembur'               =>  $this->input->post('kode_lembur', true),
                         'dept'                      =>  $this->input->post('dept', true),
                         'shift'                     =>  $this->input->post('shift', true),
+                        'status_tipe_lembur'        =>  $this->input->post('status_tipe_lembur', true),
                         'no_scan'                   =>  $key
                     ));
                 }
@@ -233,14 +235,14 @@ class pkl extends CI_Controller
 
                 if ($execute_insert) {
                     $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert" style="font-size: 14px"><b>Your Request for Overtime Work has been updated.</b></center>');
-                    redirect('pkl');
+                    redirect('pkl2');
                 } else {
                     $this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert" style="font-size: 14px"><b>Your Request for Overtime Work NOT ADDED.</b></center>');
-                    redirect('pkl');
+                    redirect('pkl2');
                 }
             } else {
                 $this->session->set_flashdata('message', '<center class="alert alert-info" role="alert" style="font-size: 14px"><b>Your Request for overtime Work is empty.</b></center>');
-                redirect('pkl');
+                redirect('pkl2');
             }
         }
 
@@ -257,7 +259,7 @@ class pkl extends CI_Controller
                 $data['title'] = 'Time Attendance | Edit Lembur';
                 $data['dpkl'] = $this->db->query("SELECT * FROM permohonan_kerja_lembur WHERE kode_lembur = '$kodelembur'")->row();
                 $this->load->view('template/header', $data);
-                $this->load->view('pkl/edit', $data);
+                $this->load->view('pkl2/edit2', $data);
                 $this->load->view('template/footer');
             }
         }
@@ -273,6 +275,7 @@ class pkl extends CI_Controller
                     'id'                        =>  $key,
                     'dept'                      =>  $this->input->post('dept', true),
                     'shift'                     =>  $this->input->post('shift', true),
+                    'status_tipe_lembur'        =>  $this->input->post('status_tipe_lembur', true),
                     'no_scan'                   =>  $data_name[$index],
                     // 'tujuan_lembur'             =>  $this->input->post('tujuan_lembur', true),
                     // 'target_lembur'             =>  $this->input->post('target_lembur', true),
@@ -295,10 +298,10 @@ class pkl extends CI_Controller
             
             if ($execute_insert) {
                 $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert" style="font-size: 14px"><b>Your request for overtime work has been updated.</b></center>');
-                redirect('pkl');
+                redirect('pkl2');
             } else {
                 $this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert" style="font-size: 14px"><b>Your request for overtime work <i>not updated</i>.</b></center>');
-                redirect('pkl');
+                redirect('pkl2');
             }
         }
 
@@ -308,7 +311,7 @@ class pkl extends CI_Controller
             $this->session->userdata('name')))->row_array(); 
 
             $data['pkl'] = $this->db->query("SELECT * FROM permohonan_kerja_lembur WHERE kode_lembur = '$kodelembur'")->row();
-            $this->load->view('pkl/print_permohonan', $data);
+            $this->load->view('pkl2/print_permohonan2', $data);
             
         }
     // END NEW REQUEST FOR OVERTIME WORK
@@ -325,16 +328,32 @@ class pkl extends CI_Controller
                 $data['dl'] = $this->db->query("SELECT * FROM daftar_lembur WHERE kode_lembur = '$kodelembur' ")->row();
                 $data['title'] = 'Time Attendance | Edit Lembur';
                 $this->load->view('template/header', $data);
-                $this->load->view('pkl/edit_ol', $data);
+                $this->load->view('pkl2/edit_ol3', $data);
                 $this->load->view('template/footer');
             } else { // Jika data tidak ada. NEW Surat perintah lembur
                 $data['dl'] = $this->db->query("SELECT * FROM permohonan_kerja_lembur WHERE kode_lembur = '$kodelembur' ")->row();
                 $data['title'] = 'Time Attendance | Lembur';
                 $this->load->view('template/header', $data);
-                $this->load->view('pkl/add_ol', $data);
+                $this->load->view('pkl2/add_ol3', $data);
                 $this->load->view('template/footer');
             }
         }
+         // START OVERTIME LIST
+         public function add_overtime_list2($kodelembur)
+         {
+             $data['user'] = $this->db->get_where('user', array('name' =>
+             $this->session->userdata('name')))->row_array();
+ 
+             $cari_data =  $this->db->query("SELECT COUNT(*) AS count FROM daftar_lembur WHERE kode_lembur = '$kodelembur' ")->row();
+ 
+             if ($cari_data->count) { // Jika data ada. EDIT Surat perintah lembur ATAU UNTUK VERIFIKASI
+                 $data['dl'] = $this->db->query("SELECT * FROM daftar_lembur WHERE kode_lembur = '$kodelembur' ")->row();
+                 $data['title'] = 'Time Attendance | Edit Lembur Test';
+                 $this->load->view('template/header', $data);
+                 $this->load->view('pkl2/edit_ol2', $data);
+                 $this->load->view('template/footer');
+             } 
+         }
 
         public function add_ol($username)
         {
@@ -347,6 +366,7 @@ class pkl extends CI_Controller
             $istirahat              = $this->input->post('istirahat', true);                // Array
             $total_jam_lembur       = $this->input->post('total_jam_lembur', true);         // Array
             $keterangan             = $this->input->post('keterangan', true);               // Array
+            $status_tipe_lembur     = $this->input->post('status_tipe_lembur', true);               // Array
             $value                  = array();
             $index                  = 0;                                                    // Set Index Awal 0
             foreach ($nama as $key) {                                                       // Buat Perulangan berdasarkan nama sampai akhir
@@ -370,7 +390,8 @@ class pkl extends CI_Controller
                     'disetujui_oleh_nama'       => $this->input->post('disetujui_oleh_nama', true),
                     'disetujui_oleh_jabatan'    => $this->input->post('disetujui_oleh_jabatan', true),
                     'tanggal_ttd'               => $this->input->post('tanggal_ttd', true),
-                    'tanggal_permohonan'        => $this->input->post('tanggal', true)
+                    'tanggal_permohonan'        => $this->input->post('tanggal', true),
+                    'status_tipe_lembur'        => $status_tipe_lembur
                 ));
                 $index++;
             }
@@ -389,7 +410,7 @@ class pkl extends CI_Controller
                 $this->db->update_batch('permohonan_kerja_lembur', $_value, 'id');
 
                 $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"  style="font-size: 14px"><b>Your Overtime List has been created.</b></center>');
-                redirect('pkl');
+                redirect('pkl2');
         }
 
         public function edit_ol($dept) 
@@ -405,6 +426,7 @@ class pkl extends CI_Controller
                 $waktu_lembur_stop      = $this->input->post('wl_2', true);                     // Array
                 $istirahat              = $this->input->post('istirahat', true);                // Array
                 $total_jam_lembur       = $this->input->post('total_jam_lembur', true);         // Array
+                $status_tipe_lembur     = $this->input->post('status_tipe_lembur', true);
                 $keterangan             = $this->input->post('keterangan', true);               // Array
                 $value                  = array();
                 $index                  = 0;                                                    // Set Index Awal 0
@@ -429,6 +451,7 @@ class pkl extends CI_Controller
                         'disetujui_oleh_nama'       => $this->input->post('disetujui_oleh_nama', true),
                         'disetujui_oleh_jabatan'    => $this->input->post('disetujui_oleh_jabatan', true),
                         'tanggal_ttd'               => $this->input->post('tanggal_ttd', true),
+                        'status_tipe_lembur'        => $status_tipe_lembur,
                         'status'                    => 'Verifikasi'
                     ));
                     $index++;
@@ -449,7 +472,7 @@ class pkl extends CI_Controller
                 $this->db->update_batch('permohonan_kerja_lembur', $_value, 'id');
     
                 $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert" style="font-size: 14px"><b>Your Overtime list has been verified.</b></center>');
-                redirect('pkl/index_all');
+                redirect('pkl2/index_all2');
             // JIKA DATANYA TIDAK TERCEKLIS ATAU TERVERIFIKASI
             } else {
                 $id                     = $this->input->post('id', true);                       // Array
@@ -502,7 +525,7 @@ class pkl extends CI_Controller
                 $this->db->update_batch('permohonan_kerja_lembur', $_value, 'id');
     
                 $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert" style="font-size: 14px"><b>Your Overtime list has been updated.</b></center>');
-                redirect('pkl');
+                redirect('pkl2');
             }
         }
 
@@ -556,7 +579,7 @@ class pkl extends CI_Controller
                     $update_printed = $this->db->query("UPDATE permohonan_kerja_lembur SET `status` = 'Printed' WHERE id = '$value[id_pkl]' "); 
                 }
                 
-                $this->load->view('pkl/print_daftar_lembur', $data);
+                $this->load->view('pkl2/print_daftar_lembur2', $data);
             } else {
                 $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"  style="font-size: 14px"><b>Tidak bisa `Print Surat Perintah Lembur`, data masih kosong! Silahkan `Buat Surat Perintah Lembur`.</b></center>');
                 redirect($this->agent->referrer());

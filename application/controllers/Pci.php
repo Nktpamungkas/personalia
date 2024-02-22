@@ -32,6 +32,16 @@ class pci extends CI_Controller
         $this->load->view('pci/indexAll', $bulan);
         $this->load->view('template/footer');
     }
+    public function index2()
+    {
+        $data['user'] = $this->db->get_where('user', array('name' =>
+        $this->session->userdata('name')))->row_array(); 
+        $data['title'] = 'Time Attendance | Izin Cuti';
+
+        $this->load->view('template/header', $data);
+        $this->load->view('pci\index2.php');
+        $this->load->view('template/footer');
+    }
 
     public function show_verifikasi()
     {
@@ -73,6 +83,14 @@ class pci extends CI_Controller
         $data['tgl_selesai'] = $this->input->post('stop', true);
         $this->load->view('pci/exportToExcel', $data);
     }
+
+    public function export_sisa_cuti_diuangkan()
+    {   
+        $data['tgl_mulai']   = $this->input->post('start', true);
+        $data['tgl_selesai'] = $this->input->post('stop', true);
+        $this->load->view('pci/export_cuti', $data);        
+    }
+
 
     public function export_excel_cuti($tgl1  = "", $tgl2  = "", $noscan = "", $dept  = "")
     {   
@@ -635,6 +653,7 @@ class pci extends CI_Controller
     {
         $al2 = $this->input->post('annual_leave2', true);
         $history2   = $this->input->post('history2', true);
+        $hutang_cuti = $this->input->post('hutang_cuti', true);
         $no_scan    = $this->input->post('no_scan', true);
         
         $this->db->where_in('no_scan', $no_scan);        
@@ -648,7 +667,7 @@ class pci extends CI_Controller
 
         $data = array (
         'no_scan'   => $value['no_scan'],
-        'sisa_cuti' => $saldosisacuti
+        'sisa_cuti' => $hutang_cuti
         );
         $this->db->where('no_scan', $value['no_scan']);
         $this->db->update('tbl_makar', $data);
@@ -658,7 +677,7 @@ class pci extends CI_Controller
         'kode_cuti'             => "GEN-".date('Ym'), //HISTORI IMPORT CUTI
         'nip'                   => $value['no_scan'], 
         'dept'                  => $value['dept'],
-        'saldo_cuti'            => $saldosisacuti,
+        'saldo_cuti'            => $al2,
         'days_or_month'         => "Hari",
         'ket'                   => "th.".date('Y'),
         'alasan'                => $history2

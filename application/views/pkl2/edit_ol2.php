@@ -1,13 +1,13 @@
 <script src="<?= base_url(); ?>lib/jquery/jquery.min.js"></script>
 <section id="main-content">
     <section class="wrapper">
-    <h4><i class="fa fa-angle-right"></i><a href="<?= base_url('pkl'); ?>"> Time Attendance </a><i class="fa fa-angle-right"></i> <a href="#"> Form Lembur </a><i class="fa fa-angle-right"></i> Form Daftar Lembur Terverivikasi</h4>
+    <h4><i class="fa fa-angle-right"></i><a href="<?= base_url('pkl2'); ?>"> Time Attendance </a><i class="fa fa-angle-right"></i> <a href="#"> Form Lembur </a><i class="fa fa-angle-right"></i> Form Daftar Lembur Terverivikasi</h4>
         <!-- FORM VALIDATION -->
         <div class="row mt">
             <div class="col-lg-12">
                 <div class="form-panel">
                     <div class="form">
-                        <form class="cmxform form-horizontal style-form" action="<?= base_url('pkl/edit_ol/') . $user['dept']; ?>" method="post">
+                        <form class="cmxform form-horizontal style-form" action="<?= base_url('pkl2/edit_ol2/') . $user['dept']; ?>" method="post">
                             <div class="form-group">
                                 <label class="control-label col-lg-2">KODE LEMBUR</label>
                                 <div class="col-lg-4">
@@ -36,24 +36,8 @@
                                 <label class="control-label col-lg-2"><b>*Tanggal</b></label>
                                 <div class="col-lg-4">
                                     <input class="form-control input-sm" value="<?= $dl->tanggal; ?>" name="tanggal" type="date" readonly>
-                                </div>   
-                                <label class="control-label col-lg-2"><b>*Jenis lembur</b></label>
-                                <div class="col-lg-4">
-                                    <label class=class="control-label col-lg-2" value="<?php $status_lembur =  $dl->status_tipe_lembur; if( $status_lembur == "Awal" ){echo "Lembur Awal";} elseif ($status_lembur == "Akhir") {echo "Lembur Akhir";} elseif ($status_lembur == "") {echo "Lembur Biasa/Hari Libur";}?>" >
-                                </div>                              
+                                </div>
                             </div>
-                            <div class="form-group has-warning">
-                            <label class="control-label col-lg-2"><b>Status Verifikasi</b></label>
-                                <div class="col-lg-4">
-                                <?php if ($user['special_user'] == 1 ) : ?>
-                                    <?php if ($dl->status == "Printed") : ?>
-                                            <input type="checkbox" name="verifikasi"><b>VERIFIKASI SEKARANG</b>
-                                    <?php else : ?>
-                                            <b><i>TERVERIFIKASI</i></b>
-                                     <?php endif; ?>
-                            <?php endif; ?>
-                                </div>                           
-                         </div>
                             <?= $this->session->flashdata('message'); ?>
                             <div class="adv-table" align="center">
                                 <table class="display table table-bordered">
@@ -73,7 +57,7 @@
                                             <th colspan="2">*Waktu Lembur</th>
                                             <th>*Total Jam Lembur</th>
                                             <th>Tujuan lembur</th>
-                                            <th>Tipe lembur</th>
+                                            <th>Status Lembur</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -123,14 +107,10 @@
                                             <input class="form-control input-sm purpose" name="keterangan[]" value="<?= $dp['keterangan']; ?>" type="text" placeholder="..." readonly>
                                         </td>
                                         <td>
-                                        <!-- <div class="col-sm 3">
-                                            <select class="form-control input-l select2" width = "80%" name="status_tipe_lembur[]" disabled>
-                                                <option value="Awal" <?php if($dp['status_tipe_lembur'] == "Awal"){ echo "SELECTED"; } ?>>Lembur Awal</option>
-                                                <option value="Akhir" <?php if($dp['status_tipe_lembur'] == "Akhir"){ echo "SELECTED"; } ?>>Lembur Akhir</option>
-                                                <option value="" <?php if($dp['status_tipe_lembur'] == ""){ echo "SELECTED"; } ?>>Lembur Biasa / Hari Libur</option> if(isset($_POST['submit'])){ echo $_POST['demand']; }elseif(isset($_GET['demand'])){ echo $_GET['demand']; } ?>
-                                            </select> 
-                                            </div> -->
-                                            <input class="form-control input-sm purpose" name="status_tipe_lembur[]" value="<?php if($dp['status_tipe_lembur'] == ""){ echo "Lembur Biasa / Hari Libur"; }elseif($dp['status_tipe_lembur'] == "Awal"){ echo "Lembur Awal"; } elseif($dp['status_tipe_lembur'] == "Akhir"){ echo "Lembur Akhir"; } ?>" type="text" placeholder="..." readonly>
+                                            <div class="col-sm 6">
+                                                <input class="form-control input-sm" value="<?= $dp['status_tipe_lembur']; ?>" name="status_tipe_lembur" type="hidden" readonly>
+                                                <input class="form-control input-sm"  value="<?php $status_lembur =  $dp['status_tipe_lembur']; if( $status_lembur == "Awal" ){echo "Lembur Awal";} elseif ($status_lembur == "Akhir") {echo "Lembur Akhir";}?>"  type="text" readonly>
+                                           </div>
                                         </td>
                                         <script type="text/javascript">
                                             $(document).ready(function(){
@@ -273,16 +253,28 @@
                                     
                                     </tfoot>
                                 </table>
-                            </div>  
-                             
+                            </div>
+                            <?php if ($user['special_user'] == 1 ) : ?>
+                                <hr>
                                 <div class="form-group">
                                     <div class="col-lg-offset-2 col-lg-6">
-                                 
+                                        <?php if ($dl->status == "Printed") : ?>
+                                            <input type="checkbox" name="verifikasi"><b>VERIFIKASI SEKARANG</b>
+                                        <?php else : ?>
+                                            <b><i>TERVERIFIKASI</i></b>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
+                                <hr>
+                            <?php endif; ?>
                             <div class="form-group">
                                 <div class="col-lg-offset-2 col-lg-10">
-                                        <a href="<?= base_url('pkl/index_all'); ?>" class="btn btn-theme04">Back</a>
+                                    <!-- <button class="btn btn-primary" type="submit" name="submit">Save</button>
+                                    <?php if($user['dept'] == "HRD") : ?>
+                                        <a href="<?= base_url('pkl2/index_all2'); ?>" class="btn btn-theme04">Cancel</a>
+                                    <?php else : ?>
+                                        <a href="<?= base_url('pkl2'); ?>" class="btn btn-theme04">Cancel</a>
+                                    <?php endif; ?> -->
                                 </div>
                             </div>
                         </form>

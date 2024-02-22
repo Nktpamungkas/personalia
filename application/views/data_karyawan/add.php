@@ -1,3 +1,4 @@
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script language="javascript">
     function tambahDataKeluarga() {
         var idf = document.getElementById("idf").value;
@@ -44,6 +45,45 @@
             $('#kontrak_akhir').attr('readonly', true);
         }
     }
+    $(document).ready(function () {
+        $("#jenis_kelamin").change(function () {
+            var selectedValueA = $(this).val();
+            var inputB = $("#jk");
+
+            if (selectedValueA === "Wanita") {
+                inputB.val("N");
+            } else {
+                // Sesuaikan dengan kebutuhan Anda, misalnya, kosongkan nilainya
+                inputB.val("L");
+            }
+
+        });
+    });
+
+// // Mendapatkan elemen input tanggal masuk dan elemen untuk hasil evaluasi
+// var inputTanggalMasuk = document.getElementById('tgl_masuk');
+//     var spanTanggalEvaluasi = document.getElementById('tgl_evaluasi');
+
+//     // Fungsi untuk menghitung dan menampilkan hasil evaluasi
+//     function hitungTanggalEvaluasi() {
+//         // Mendapatkan nilai tanggal masuk
+//         var tanggalMasuk = new Date(inputTanggalMasuk.value);
+
+//         // Menambahkan interval 90 hari
+//         tanggalMasuk.setDate(tanggalMasuk.getDate() + 90);
+
+//         // Format tanggal ke dalam format yang diinginkan (YYYY-MM-DD)
+//         var tanggalBerbedaEvaluasi = tanggalMasuk.toISOString().split('T')[0];
+
+//         // Menetapkan nilai tanggal yang berbeda sebagai teks pada elemen span
+//         spanTanggalEvaluasi.textContent = tanggalBerbedaEvaluasi;
+//     }
+
+//     // Memanggil fungsi hitungTanggalEvaluasi saat halaman dimuat
+//     document.addEventListener('DOMContentLoaded', hitungTanggalEvaluasi);
+
+//     // Memanggil fungsi hitungTanggalEvaluasi saat nilai input tanggal masuk berubah
+//     inputTanggalMasuk.addEventListener('input', hitungTanggalEvaluasi);
 </script>
 <style type="text/css">
     .form-style-4{
@@ -237,7 +277,7 @@
                                         <th>
                                             <label>
                                                 <span>Jenis Kelamin <span style="color: red">(*)</span></span><br>
-                                                <select class="select2" data-placeholder="Pilih Jenis Kelamin" name="jenis_kelamin" required>
+                                                <select class="select2" data-placeholder="Pilih Jenis Kelamin" name="jenis_kelamin" id="jenis_kelamin"required>
                                                     <option value="" disabled selected>---------------------------------------------------</option>
                                                     <?php $queryJenisKelamin = $this->db->get('jenis_kelamin')->result_array(); ?>
                                                     <?php foreach ($queryJenisKelamin as $djk) : ?>
@@ -245,7 +285,10 @@
                                                     <?php if ($djk['id'] == set_value('jenis_kelamin')) { echo "SELECTED"; } ?>
                                                     ><?= $djk['jenis_kelamin'] ?></option>
                                                     <?php endforeach; ?>
+                                                    <!-- <option value="Laki">Laki - Laki</option>
+                                                    <option value="Wanita">Perempuan</option> -->
                                                 </select>
+                                                <input  id="jk" name="jk" type ="Hidden">
                                             </label>
                                         </th>
                                     </tr>
@@ -524,9 +567,10 @@
                                 <th>
                                     <label>
                                         <span>Tgl Masuk Karyawan (bulan/tgl/tahun) <span style="color: red">(*)</span></span><br>
-                                        <input type="date" value="<?= set_value('tgl_masuk'); ?>" name="tgl_masuk" placeholder="Tanggal Masuk Karyawan" required>
+                                        <!-- <input type="date" value="<?= set_value('tgl_masuk'); ?>" name="tgl_masuk" placeholder="Tanggal Masuk Karyawan" required> -->
+                                        <input type="date" id="tgl_masuk" name="tgl_masuk" placeholder="Tanggal Masuk Karyawan" value="<?= set_value('tgl_masuk'); ?>" required>
                                     </label>
-                                </th>
+                                 </th>
                             </tr>
                             <tr>
                                 <th>
@@ -552,13 +596,41 @@
                                 <th>
                                     <label>
                                         <span>Atasan 1 </span><br>
-                                        <input value="<?= set_value('atasan1'); ?>" name="atasan1" type="text" placeholder="Atasan 1">
+                                        <!-- <input value="<?= set_value('atasan1'); ?>" name="atasan1" type="text" placeholder="Atasan 1"> -->
+                                        <!-- <input type="hidden" name="dept" value="<?= $user['dept']; ?>"> -->
+                                    <select class="select2" data-placeholder="Atasan 1" name="atasan1" id="atasan1" required>
+                                        <option value="" disabled selected></option>
+                                        <?php
+                                            // $dept = $user['dept'];
+                                            // $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE dept = '$dept' AND NOT status_aktif = 0 AND NOT status_karyawan = 'Resigned' AND NOT status_karyawan = 'perubahan_status' ORDER BY nama")->result_array();
+                                            $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE status_aktif = 1 AND NOT status_karyawan = 'perubahan_status' and GOLONGAN not in ('OPERATOR', 'STAFF' , 'DRIVER','SECURITY','ADMIN','Specialist') ORDER BY nama")->result_array();
+                                        ?>
+                                        <?php foreach ($queryShift as $dk) : ?>
+                                            <option value="<?= $dk['nama'] ?>" <?php if ($dk['nama'] == set_value('nama')) {
+                                                echo "SELECTED";
+                                            } ?>><?= $dk['nama'].' - '.$dk['dept'].' '.$dk['jabatan']; ?></option>
+                                        <?php endforeach ?>
+                                    </select><br>
                                     </label>
                                 </th>
                                 <th>
-                                    <label>
+                                <label>
                                         <span>Atasan 2 </span><br>
-                                        <input value="<?= set_value('atasan2'); ?>" name="atasan2" type="text" placeholder="Atasan 2">
+                                        <!-- <input value="<?= set_value('atasan1'); ?>" name="atasan1" type="text" placeholder="Atasan 1"> -->
+                                        <!-- <input type="hidden" name="dept" value="<?= $user['dept']; ?>"> -->
+                                    <select class="select2" data-placeholder="Atasan 2" name="atasan2" id="atasan2" required>
+                                        <option value="" disabled selected></option>
+                                        <?php
+                                            // $dept = $user['dept'];
+                                            // $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE dept = '$dept' AND NOT status_aktif = 0 AND NOT status_karyawan = 'Resigned' AND NOT status_karyawan = 'perubahan_status' ORDER BY nama")->result_array();
+                                            $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE status_aktif = 1 AND NOT status_karyawan = 'perubahan_status' and GOLONGAN not in ('OPERATOR', 'STAFF' , 'DRIVER','SECURITY','ADMIN','Specialist') ORDER BY nama")->result_array();
+                                        ?>
+                                        <?php foreach ($queryShift as $dk) : ?>
+                                            <option value="<?= $dk['nama'] ?>" <?php if ($dk['nama'] == set_value('nama')) {
+                                                echo "SELECTED";
+                                            } ?>><?= $dk['nama'].' - '.$dk['dept'].' '.$dk['jabatan']; ?></option>
+                                        <?php endforeach ?>
+                                    </select><br>
                                     </label>
                                 </th>
                                 <th>
@@ -599,18 +671,25 @@
                                         <input name="alamat_npwp" type="text" value="<?= set_value('alamat_npwp'); ?>" placeholder="Alamat NPWP">
                                     </label>
                                </th>
-                               <th colspan="2">
-                                    <label>
+                               <th colspan = 1>
+                                   <label>
                                         <span>Kode Jabatan</span>
-                                        <select class="select2" data-placeholder="Kode Jabatan" name="kode_jabatan">
-                                        <?php $queryAdditional = $this->db->get('additional_info')->result_array(); ?>
+                                        <select class="select2" data-placeholder="Kode Jabatan" name="kode_jabatan" width = "80%">
+                                            <?php $queryAdditional = $this->db->get('additional_info')->result_array(); ?>
                                             <option value="" disabled selected>---------------------------------------------------</option>
                                             <?php foreach ($queryAdditional as $da) : ?>
-                                                <option value="<?= $da['kode']; ?>"><?= $da['kode'] .' - '. $da['jabatan']; ?></option>
+                                                <option value="<?= $da['kode']; ?>" <?php if ($da['kode'] == set_value('kode')) { echo "SELECTED"; } ?>><?= $da['kode'] . ' - ' . $da['jabatan']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </label>
                                </th>
+                               <th>
+                                    <label>
+                                        <span>Tgl Evaluasi Karyawan Baru </span><br>
+                                        <input type="date" id="tgl_evaluasi" name="tgl_evaluasi" placeholder="Tanggal Evaluasi Karyawan" readonly>
+                                    </label>
+                                    <span id="tgl_evaluasi"></span>
+                                </th>
                             </tr>
                             <tr>
                                 <th><br><br>
@@ -627,3 +706,18 @@
         </div>
     </section>
 </section>
+<script>
+    document.getElementById('tgl_masuk').addEventListener('change', function() {
+        // Ambil nilai dari input tanggal masuk
+        var tglMasuk = new Date(this.value);
+
+        // Tambahkan 90 hari
+        tglMasuk.setDate(tglMasuk.getDate() + 90);
+
+        // Format tanggal untuk input tanggal evaluasi
+        var tglEvaluasi = tglMasuk.toISOString().split('T')[0];
+
+        // Set nilai pada input tanggal evaluasi
+        document.getElementById('tgl_evaluasi').value = tglEvaluasi;
+    });
+</script>

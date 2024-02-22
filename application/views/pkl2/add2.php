@@ -1,7 +1,7 @@
 <script language="javascript">
     function tambahNama() {
         var idf  = document.getElementById("idf").value;
-        var stre = "<div class='col-lg-2' class='form-group'><p id='srow" + idf + "'><select class='form-control input-sm select2' tabindex='2' name='no_scan[]' required><option value='' disabled selected></option><?php  $dept = $user['dept']; $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE dept = '$dept' AND NOT status_karyawan = 'perubahan_status' AND NOT status_karyawan = 'Resigned' ORDER BY nama ASC")->result_array(); ?> <?php foreach ($queryShift as $dk) : ?> <option value='<?= $dk['no_scan'] ?>' <?php if ($dk['no_scan'] == set_value('no_scan')) { echo 'SELECTED';} ?>><?= $dk['no_scan'].' - '.$dk['nama']; ?></option><?php endforeach ?></select><a href='#' style=\"color:#3399FD;\" onclick='hapusElemen(\"#srow" + idf + "\"); return false;'>Hapus</a></p></div>";
+        var stre = "<div class='col-lg-2' class='form-group'><p id='srow" + idf + "'><select class='form-control input-sm select2' tabindex='2' name='no_scan[]' required><option value='' disabled selected></option><?php  $dept = $user['dept']; $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE dept = '$dept' AND NOT status_karyawan = 'perubahan_status' AND NOT status_aktif = 0 ORDER BY nama ASC")->result_array(); ?> <?php foreach ($queryShift as $dk) : ?> <option value='<?= $dk['no_scan'] ?>' <?php if ($dk['no_scan'] == set_value('no_scan')) { echo 'SELECTED';} ?>><?= $dk['no_scan'].' - '.$dk['nama']; ?></option><?php endforeach ?></select><a href='#' style=\"color:#3399FD;\" onclick='hapusElemen(\"#srow" + idf + "\"); return false;'>Hapus</a></p></div>";
         $("#divSite").append(stre);
         idf = (idf - 1) + 2;
         
@@ -16,14 +16,14 @@
 </script>
 <section id="main-content">
     <section class="wrapper">
-    <h4><i class="fa fa-angle-right"></i><a href="<?= base_url('pkl'); ?>"> Time Attendance </a><i class="fa fa-angle-right"></i> <a href="<?= base_url('pkl'); ?>"> Form Lembur</a><i class="fa fa-angle-right"></i> Add Form Lembur</h4>
+    <h4><i class="fa fa-angle-right"></i><a href="<?= base_url('pkl2'); ?>"> Time Attendance </a><i class="fa fa-angle-right"></i> <a href="<?= base_url('pkl2'); ?>"> Form Lembur</a><i class="fa fa-angle-right"></i> Add Form Lembur</h4>
         <!-- FORM VALIDATION -->
         <div class="row mt">
             <div class="col-lg-12">
                 <?= $this->session->flashdata('message'); ?>
                 <div class="form-panel">
                     <div class="form">
-                        <form class="cmxform form-horizontal style-form" action="<?= base_url('pkl/add/') . $user['name']; ?>" method="post">
+                        <form class="cmxform form-horizontal style-form" action="<?= base_url('Pkl2/add/') . $user['name']; ?>" method="post">
                             <div class="form-group ">
                                 <label class="control-label col-lg-2">Kode Cuti</label>
                                 <div class="col-lg-10">
@@ -44,6 +44,23 @@
                                             } ?>><?= $ds['ket'] ?></option>
                                         <?php endforeach ?>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label class="control-label col-lg-2">Tipe Lembur</label>
+                                <div class="col-lg-10">
+                                    <select class="form-control input-sm select2" name="status_tipe_lembur" required>
+                                            <option value="" disabled selected>Pilih Jenis Lembur</option>
+                                            <?php
+                                                $queryShift = $this->db->query("SELECT * FROM jenis_lembur")->result_array();
+                                            ?>
+                                            <?php foreach ($queryShift as $ds) : ?>
+                                                <option value="<?= $ds['desc'] ?>" <?php if ($ds['desc'] == set_value('ket')) {
+                                                    echo "SELECTED";
+                                                } ?>><?= $ds['ket'] ?></option>
+                                            <?php endforeach ?>
+                                        </select> 
+                                    <label class="control-label col-lg-12" style="color: #26b72b;"><b><i>Note: 1. Lembur Awal untuk lembur sebelum jam kerja normal.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. lembur Akhir untuk lembur setelah jam kerja normal.</i></b></label>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -123,7 +140,7 @@
                             <div class="form-group">
                                 <div class="col-lg-offset-2 col-lg-10">
                                     <button class="btn btn-primary" type="submit" name="submit">Save</button>
-                                    <a href="<?= base_url('pkl'); ?>" class="btn btn-theme04">Cancel</a>
+                                    <a href="<?= base_url('pkl2'); ?>" class="btn btn-theme04">Cancel</a>
                                 </div>
                             </div>
                         </form>

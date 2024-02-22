@@ -1,7 +1,7 @@
 <script src="<?= base_url(); ?>lib/jquery/jquery.min.js"></script>
 <section id="main-content">
     <section class="wrapper">
-    <h4><i class="fa fa-angle-right"></i><a href="<?= base_url('pkl'); ?>"> Time Attendance </a><i class="fa fa-angle-right"></i> <a href="#"> Form Lembur </a><i class="fa fa-angle-right"></i> Form Daftar Lembur Terverivikasi</h4>
+    <h4><i class="fa fa-angle-right"></i><a href="<?= base_url('pkl'); ?>"> Time Attendance </a><i class="fa fa-angle-right"></i> <a href="<?= base_url('pkl'); ?>"> Form Lembur </a><i class="fa fa-angle-right"></i> Edit Form Daftar Lembur</h4>
         <!-- FORM VALIDATION -->
         <div class="row mt">
             <div class="col-lg-12">
@@ -35,38 +35,22 @@
                                 </div>
                                 <label class="control-label col-lg-2"><b>*Tanggal</b></label>
                                 <div class="col-lg-4">
-                                    <input class="form-control input-sm" value="<?= $dl->tanggal; ?>" name="tanggal" type="date" readonly>
-                                </div>   
-                                <label class="control-label col-lg-2"><b>*Jenis lembur</b></label>
-                                <div class="col-lg-4">
-                                    <label class=class="control-label col-lg-2" value="<?php $status_lembur =  $dl->status_tipe_lembur; if( $status_lembur == "Awal" ){echo "Lembur Awal";} elseif ($status_lembur == "Akhir") {echo "Lembur Akhir";} elseif ($status_lembur == "") {echo "Lembur Biasa/Hari Libur";}?>" >
-                                </div>                              
+                                    <input class="form-control input-sm" value="<?= $dl->tanggal; ?>" name="tanggal" type="date" required>
+                                </div>
                             </div>
-                            <div class="form-group has-warning">
-                            <label class="control-label col-lg-2"><b>Status Verifikasi</b></label>
-                                <div class="col-lg-4">
-                                <?php if ($user['special_user'] == 1 ) : ?>
-                                    <?php if ($dl->status == "Printed") : ?>
-                                            <input type="checkbox" name="verifikasi"><b>VERIFIKASI SEKARANG</b>
-                                    <?php else : ?>
-                                            <b><i>TERVERIFIKASI</i></b>
-                                     <?php endif; ?>
-                            <?php endif; ?>
-                                </div>                           
-                         </div>
                             <?= $this->session->flashdata('message'); ?>
                             <div class="adv-table" align="center">
                                 <table class="display table table-bordered">
                                     <thead>
                                         <tr>
-                                            <!-- <th></th> -->
+                                            <th></th>
                                             <th>No</th>
                                             <th>Nama</th>
                                             <th>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-5">
                                                     *No Absensi
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-7">
                                                     Istirahat
                                                 </div>
                                             </th>
@@ -74,6 +58,52 @@
                                             <th>*Total Jam Lembur</th>
                                             <th>Tujuan lembur</th>
                                             <th>Tipe lembur</th>
+                                        </tr>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>
+                                                <div class="col-sm-5">
+
+                                                </div>
+                                                <div class="col-sm-7">
+                                                    <div class="checkbox">
+                                                        <label title="Berdasarkan data 1">
+                                                            <input type="checkbox" id="check_as_one_rest" value=""><small><b>Same as 1<b></small>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="checkbox">
+                                                    <label title="Berdasarkan data 1">
+                                                        <input type="checkbox" id="check_as_one_start" value=""><small><b>Same as 1<b></small>
+                                                    </label>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="checkbox">
+                                                    <label title="Berdasarkan data 1">
+                                                        <input type="checkbox" id="check_as_one_end" value="" ><small><b>Same as 1<b></small>
+                                                    </label>
+                                                </div>
+                                            </th>
+                                            <th></th>
+                                            <th>
+                                                <div class="checkbox">
+                                                    <label title="Berdasarkan data 1">
+                                                        <input type="checkbox" id="check_as_one_purpose" value="" ><small><strong>Same as 1<strong></small>
+                                                    </label>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                 <div class="checkbox">
+                                                        <label title="Berdasarkan data 1">
+                                                            <input type="checkbox" class="check_as_one_tipeLembur" value=""><small><strong>Same as 1</strong></small>
+                                                        </label>
+                                                </div>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -83,27 +113,27 @@
                                             $no = 1;
                                         ?>
                                     <?php foreach ($query_pkl as $dp) : ?>
-                                        <!-- <td> -->
+                                        <td>
                                             <center>
-                                                <!-- <a href="<?= base_url(); ?>pkl/delete_overtime_list/<?= $dp['id_pkl']; ?>">
+                                                <a href="<?= base_url(); ?>pkl/delete_overtime_list/<?= $dp['id_pkl']; ?>">
                                                     <i class="fa fa-times" style="color: red;"></i>
-                                                </a> -->
+                                                </a>
                                             </center>
-                                        <!-- </td> -->
+                                        </td>
                                         <td>
                                             <center><b><?= $no++; ?></b></center>
                                         </td>
                                         <td>
                                             <input value="<?= $dp['id']; ?>" name="id[]" type="hidden">
                                             <input value="<?= $dp['id_pkl']; ?>" name="id_pkl[]" type="hidden">
-                                            <input class="form-control input-sm" value="<?= $dp['nama']; ?>" id="nama<?= $dp['no_absen']; ?>" name="nama[]" type="text" readonly>
+                                            <input class="form-control input-sm" value="<?= $dp['nama']; ?>" id="nama<?= $dp['no_absen']; ?>" name="nama[]" type="text" required>
                                         </td>
                                         <td>
                                             <div class="col-sm-6">
-                                                <input class="form-control input-sm" name="no_absen[]" value="<?= $dp['no_absen']; ?>" type="text" id="no_absen<?= $dp['no_absen']; ?>" <?php { echo "readonly"; } ?>>
+                                                <input class="form-control input-sm" name="no_absen[]" value="<?= $dp['no_absen']; ?>" type="text" id="no_absen<?= $dp['no_absen']; ?>" <?php if($user['special_user'] == 1){ echo "required"; } else { echo "readonly"; } ?>>
                                             </div>
                                             <div class="col-sm 6">
-                                                <select class="form-input input-sm rest" name="istirahat[]" id="istirahat<?= $dp['no_absen']; ?>" title="Total Istirahat" disabled>
+                                                <select class="form-input input-sm rest" name="istirahat[]" id="istirahat<?= $dp['no_absen']; ?>" title="Total Istirahat">
                                                     <option value="0" <?php if($dp['istirahat'] == "0"){ echo "SELECTED"; } ?>>Full</option>
                                                     <option value="1" <?php if($dp['istirahat'] == "1"){ echo "SELECTED"; } ?>>1 Jam</option>
                                                     <option value="0.5" <?php if($dp['istirahat'] == "0.5"){ echo "SELECTED"; } ?>>1/2 Jam</option>
@@ -111,26 +141,25 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input class="form-control input-sm start" name="wl_1[]" value="<?= $dp['waktu_lembur_start']; ?>" type="time" id="wl_1<?= $dp['no_absen']; ?>" readonly> 
+                                            <input class="form-control input-sm start" name="wl_1[]" value="<?= $dp['waktu_lembur_start']; ?>" type="time" id="wl_1<?= $dp['no_absen']; ?>" required> 
                                         </td>
                                         <td>
-                                            <input class="form-control input-sm end" name="wl_2[]" value="<?= $dp['waktu_lembur_stop']; ?>" type="time" id="wl_2<?= $dp['no_absen']; ?>" readonly>
+                                            <input class="form-control input-sm end" name="wl_2[]" value="<?= $dp['waktu_lembur_stop']; ?>" type="time" id="wl_2<?= $dp['no_absen']; ?>" required>
                                         </td>
                                         <td>
-                                            <input class="form-control input-sm sum" name="total_jam_lembur[]" value="<?= $dp['total_jam_lembur']; ?>" type="number" step="0.01" id="total_jam_lembur<?= $dp['no_absen']; ?>" readonly>
+                                            <input class="form-control input-sm sum" name="total_jam_lembur[]" value="<?= $dp['total_jam_lembur']; ?>" type="number" step="0.01" id="total_jam_lembur<?= $dp['no_absen']; ?>" required>
                                         </td>
                                         <td>
-                                            <input class="form-control input-sm purpose" name="keterangan[]" value="<?= $dp['keterangan']; ?>" type="text" placeholder="..." readonly>
+                                            <input class="form-control input-sm purpose" name="keterangan[]" value="<?= $dp['keterangan']; ?>" type="text" placeholder="...">
                                         </td>
                                         <td>
-                                        <!-- <div class="col-sm 3">
-                                            <select class="form-control input-l select2" width = "80%" name="status_tipe_lembur[]" disabled>
+                                            <div class="col-sm 6">
+                                            <select class="form-control input-sm rest"  name="status_tipe_lembur[]" ?>" required>
                                                 <option value="Awal" <?php if($dp['status_tipe_lembur'] == "Awal"){ echo "SELECTED"; } ?>>Lembur Awal</option>
                                                 <option value="Akhir" <?php if($dp['status_tipe_lembur'] == "Akhir"){ echo "SELECTED"; } ?>>Lembur Akhir</option>
-                                                <option value="" <?php if($dp['status_tipe_lembur'] == ""){ echo "SELECTED"; } ?>>Lembur Biasa / Hari Libur</option> if(isset($_POST['submit'])){ echo $_POST['demand']; }elseif(isset($_GET['demand'])){ echo $_GET['demand']; } ?>
+                                                <option value="" <?php if($dp['status_tipe_lembur'] == ""){ echo "SELECTED"; } ?>>Lembur Biasa / Hari Libur</option>
                                             </select> 
-                                            </div> -->
-                                            <input class="form-control input-sm purpose" name="status_tipe_lembur[]" value="<?php if($dp['status_tipe_lembur'] == ""){ echo "Lembur Biasa / Hari Libur"; }elseif($dp['status_tipe_lembur'] == "Awal"){ echo "Lembur Awal"; } elseif($dp['status_tipe_lembur'] == "Akhir"){ echo "Lembur Akhir"; } ?>" type="text" placeholder="..." readonly>
+                                            </div>
                                         </td>
                                         <script type="text/javascript">
                                             $(document).ready(function(){
@@ -254,35 +283,47 @@
                                     <tbody>
                                         <tr>
                                             <td>Nama</td>
-                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->dibuat_oleh_nama; ?>" name="dibuat_oleh_nama" type="text" readonly></td>
-                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->diperiksa_oleh_nama; ?>" name="diperiksa_oleh_nama" type="text" readonly></td>
-                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->disetujui_oleh_nama; ?>" name="disetujui_oleh_nama" type="text" readonly></td>
+                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->dibuat_oleh_nama; ?>" name="dibuat_oleh_nama" type="text" required></td>
+                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->diperiksa_oleh_nama; ?>" name="diperiksa_oleh_nama" type="text" required></td>
+                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->disetujui_oleh_nama; ?>" name="disetujui_oleh_nama" type="text" required></td>
                                         </tr>
                                         <tr>
                                             <td>Jabatan</td>
-                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->dibuat_oleh_jabatan; ?>" name="dibuat_oleh_jabatan" type="text" readonly></td>
-                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->diperiksa_oleh_jabatan; ?>" name="diperiksa_oleh_jabatan" type="text" readonly></td>
-                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->disetujui_oleh_jabatan; ?>" name="disetujui_oleh_jabatan" type="text" readonly></td>
+                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->dibuat_oleh_jabatan; ?>" name="dibuat_oleh_jabatan" type="text" required></td>
+                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->diperiksa_oleh_jabatan; ?>" name="diperiksa_oleh_jabatan" type="text" required></td>
+                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->disetujui_oleh_jabatan; ?>" name="disetujui_oleh_jabatan" type="text" required></td>
                                         </tr>
                                         <tr>
                                             <td>Tanggal</td>
-                                            <td colspan="3"><input class="form-control input-sm col-lg-2" name="tanggal_ttd" type="date" value="<?= $dl->tanggal_ttd; ?>" readonly></td>
+                                            <td colspan="3"><input class="form-control input-sm col-lg-2" name="tanggal_ttd" type="date" value="<?= $dl->tanggal_ttd; ?>" required></td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
                                     
                                     </tfoot>
                                 </table>
-                            </div>  
-                             
+                            </div>
+                            <?php if ($user['special_user'] == 1 ) : ?>
+                                <hr>
                                 <div class="form-group">
                                     <div class="col-lg-offset-2 col-lg-6">
-                                 
+                                        <?php if ($dl->status == "Printed") : ?>
+                                            <input type="checkbox" name="verifikasi"><b>VERIFIKASI SEKARANG</b>
+                                        <?php else : ?>
+                                            <b><i>TERVERIFIKASI</i></b>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
+                                <hr>
+                            <?php endif; ?>
                             <div class="form-group">
                                 <div class="col-lg-offset-2 col-lg-10">
-                                        <a href="<?= base_url('pkl/index_all'); ?>" class="btn btn-theme04">Back</a>
+                                    <button class="btn btn-primary" type="submit" name="submit">Save</button>
+                                    <?php if($user['dept'] == "HRD") : ?>
+                                        <a href="<?= base_url('pkl/index_all'); ?>" class="btn btn-theme04">Cancel</a>
+                                    <?php else : ?>
+                                        <a href="<?= base_url('pkl'); ?>" class="btn btn-theme04">Cancel</a>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </form>
@@ -393,5 +434,26 @@
             }
         });
 
+        $(".check_as_one_tipeLembur").click(function() {
+            var value_tipeLembur = $("table.display tbody tr:eq(0) td:eq(8) div:eq(0) select option:selected").val();
+
+            if ($(this).prop("checked")) {
+                $(".form-control.input-sm.tipeLembur").val(value_tipeLembur);
+                console.log(value_tipeLembur);
+            } else if ($("#check_as_one_tipeLembur").prop("checked") == false){
+                console.log("tipe Lembur not doing anything!");
+            }
+        });
+
+        $("table.display tbody tr:eq(0) td:eq(8) div:eq(0) select option:selected").change(function(){
+            var value_tipeLembur = $("table.display tbody tr:eq(0) td:eq(8) div:eq(0) select option:selected").val();
+            
+            if ($(".check_as_one_tipeLembur").prop("checked") == true) {
+                $(".form-control.input-sm.tipeLembur").val(value_tipeLembur);
+            } else if ($("#check_as_one_tipeLembur").prop("checked") == false){
+                console.log("tipe Lembur not doing anything!");
+            }
+        });
+        
     });
 </script>

@@ -8,7 +8,7 @@ class Data_Karyawan extends CI_Controller
     {
         parent::__construct();
         $this->load->library('form_validation');
-
+        $this->load->model('dual_db_model');
         
         // load base_url
         $this->load->helper('url');
@@ -33,13 +33,13 @@ class Data_Karyawan extends CI_Controller
                                         nama,
                                         dept,
                                         jabatan,
-                                        bagian,
+                                        upper(bagian) as bagian,
                                         DATE_FORMAT(tgl_masuk, '%d-%m-%Y') AS tgl_masuk,
                                         case 
                                             when status_karyawan = 'Tetap' then  DATE_FORMAT(tgl_tetap, '%d-%m-%Y')
                                             else '-'
                                         end AS tgl_tetap,
-                                        status_karyawan 
+                                        upper(status_karyawan) as  status_karyawan
                                     FROM tbl_makar
                                       WHERE NOT status_karyawan = 'Resigned' 
                                       AND NOT status_karyawan = 'perubahan_status'  
@@ -206,6 +206,7 @@ class Data_Karyawan extends CI_Controller
         $mail->addAddress('nilo.pamungkas@indotaichen.com');
         $mail->addAddress('bintoro.dy@indotaichen.com');
         $mail->addAddress('ryan.wong@indotaichen.com');
+        $mail->addAddress('yohanes.william@indotaichen.com');  
         $mail->addAddress('meyliana@indotaichen.com');
         $mail->addAddress('stefanus.pranjana@indotaichen.com');
         $mail->addAddress('Iso.hrd@indotaichen.com');
@@ -225,6 +226,7 @@ class Data_Karyawan extends CI_Controller
                                 Nama karyawan : $query->nama <br>
                                 Departemen : $query->dept <br>
                                 Tanggal Masuk : $query->tgl_masuk <br>
+                                Tanggal Terakhir Training : $query->tgl_evaluasi <br>
                                 Jabatan : $query->jabatan
                             </body>
                         </html>"; 
@@ -322,11 +324,30 @@ class Data_Karyawan extends CI_Controller
                     'kartu_keluarga'        => $this->input->post('kartu_keluarga', true),
                     'masa_berlaku_ktp'      => $this->input->post('masa_berlaku_ktp', true),
                     'tgl_seragam'           => $tgl_seragam,
-                    'status_seragam'        => $this->input->post('status_seragam', true)
+                    'status_seragam'        => $this->input->post('status_seragam', true),
+                    'status_idcard'         => $this->input->post('status_seragam', true),
+                    'tgl_evaluasi'          => $this->input->post('tgl_evaluasi', true)
                 );
                 $this->db->insert('tbl_makar', $data);
+                
+                $data2 = array(
+                    'nik'                   => '0000' . $this->input->post('no_scan', true),
+                    'nama'                  => $this->input->post('nama', true),
+                    'dept'                  => $this->input->post('dept', true),
+                    'idk'                   => $this->input->post('no_scan', true),
+                    'jk'                    => $this->input->post('jk', true),
+                    'email'                 => $this->input->post('email_pribadi', true),
+                    'tgl_masuk'             => $this->input->post('tgl_masuk', true),
+                    'sts'                   => substr($this->input->post('status_karyawan', true), 0, 1),
+                    'tgl_tetap'             => $this->input->post('tgl_tetap', true),
+                    'spsi'                  => '1',
+                    'bpjstk'                => '1',
+                    'bpjskes'               => '1',
+                    'jabatan'               => $this->input->post('jabatan', true),                   
+                    'aktif'                 => $this->input->post('status_aktif', true)
+                );            
+                $this->dual_db_model->save_data_to_both_databases($data2);
 
-                 
                 $id = $this->input->post('no_scan', true);
                 // var_dump($no_scan);
 
@@ -343,9 +364,34 @@ class Data_Karyawan extends CI_Controller
                 $this->tambah_data_keluarga();
                 $this->tambah_data_pengalaman_kerja();
 
+
                 // KIRIM EMAIL KARYAWAN BARU
                 $noscan = $this->input->post('no_scan', true);
-                $query = $this->db->query("SELECT * FROM tbl_makar WHERE no_scan = '$noscan'")->row();
+                $dept = $this->input->post('dept', true);
+                
+                // Ubah query SQL untuk menyertakan kolom dept_mail
+                $query = $this->db->query("SELECT 
+                                                makar.no_scan,
+                                                makar.nama,
+                                                makar.dept,
+                                                makar.jabatan,
+                                                makar.tgl_masuk,
+                                                makar.tgl_evaluasi,
+                                                dm.dept_email1 as dept_email1,
+                                                dm.dept_email2 as dept_email2,
+                                                dm.dept_email3 as dept_email3,
+                                                dm.dept_email4 as dept_email4,
+                                                dm.dept_email5 as dept_email5
+                                            FROM tbl_makar makar
+                                            LEFT JOIN dept_mail dm ON dm.code = makar.dept 
+                                            WHERE makar.no_scan = '$noscan'
+                ")->row();
+                
+                $dept_mail1 = $query->dept_email1;     
+                $dept_mail2 = $query->dept_email2; 
+                $dept_mail3 = $query->dept_email3; 
+                $dept_mail4 = $query->dept_email4; 
+                $dept_mail5 = $query->dept_email5;                   
 
                 $this->load->library('phpmailer_lib'); 
                 $mail = $this->phpmailer_lib->load();
@@ -360,18 +406,51 @@ class Data_Karyawan extends CI_Controller
 
                 $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
                 $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
-
-                // Menambahkan penerima
-                $mail->addAddress('nilo.pamungkas@indotaichen.com');
-                $mail->addAddress('bintoro.dy@indotaichen.com');
-                $mail->addAddress('ryan.wong@indotaichen.com');
-                $mail->addAddress('meyliana@indotaichen.com');
-                $mail->addAddress('stefanus.pranjana@indotaichen.com');
-                $mail->addAddress('Iso.hrd@indotaichen.com');
-                $mail->addAddress('Hrd@indotaichen.com');
-                $mail->addAddress('prs.absensi@indotaichen.com');
-                $mail->addAddress('prs01@indotaichen.com');
+                
+                if ($dept == 'MKT'){
+                    // Menambahkan penerima
+                    $mail->addAddress('irwan.mulyadi@indotaichen.com');
+                    $mail->addAddress('bunbun@indotaichen.com');
+                    $mail->addAddress('bambang@indotaichen.com');
+                    $mail->addAddress('frans@indotaichen.com');
+                    $mail->addAddress('suhemi@indotaichen.com');
+                    $mail->addAddress('nilo.pamungkas@indotaichen.com');
+                    $mail->addAddress('bintoro.dy@indotaichen.com');
+                    $mail->addAddress('ryan.wong@indotaichen.com');
+                    $mail->addAddress('yohanes.william@indotaichen.com');  
+                    $mail->addAddress('meyliana@indotaichen.com');
+                    $mail->addAddress('stefanus.pranjana@indotaichen.com');
+                    $mail->addAddress('Iso.hrd@indotaichen.com');
+                    $mail->addAddress('Hrd@indotaichen.com');
+                    $mail->addAddress('prs.absensi@indotaichen.com');
+                    $mail->addAddress('prs01@indotaichen.com');
+                    $mail->addAddress('asep.pauji@indotaichen.com');
+                    $mail->addAddress($dept_mail1);
+                    $mail->addAddress($dept_mail2);
+                    $mail->addAddress($dept_mail3);
+                    $mail->addAddress($dept_mail4);
+                    $mail->addAddress($dept_mail5);
+                }else{
+                    // Menambahkan penerima
+                    $mail->addAddress('nilo.pamungkas@indotaichen.com');
+                    $mail->addAddress('bintoro.dy@indotaichen.com');
+                    $mail->addAddress('ryan.wong@indotaichen.com');
+                    $mail->addAddress('yohanes.william@indotaichen.com');  
+                    $mail->addAddress('meyliana@indotaichen.com');
+                    $mail->addAddress('stefanus.pranjana@indotaichen.com');
+                    $mail->addAddress('Iso.hrd@indotaichen.com');
+                    $mail->addAddress('Hrd@indotaichen.com');
+                    $mail->addAddress('prs.absensi@indotaichen.com');
+                    $mail->addAddress('prs01@indotaichen.com');
+                    $mail->addAddress('asep.pauji@indotaichen.com');
+                    $mail->addAddress($dept_mail1);
+                    $mail->addAddress($dept_mail2);
+                    $mail->addAddress($dept_mail3);
+                    $mail->addAddress($dept_mail4);
+                    $mail->addAddress($dept_mail5);
+                }                
                 // $mail->addAddress('denie@indotaichen.com');
+
                 $mail->Subject = 'Informasi Karyawan baru'; 
                 // Mengatur format email ke HTML
                 $mail->isHTML(true);
@@ -379,12 +458,15 @@ class Data_Karyawan extends CI_Controller
                                     <head>
                                     </head>
                                     <body>
+                                     <br>
                                         Data karyawan baru, sebagai berikut : <br>
                                         Nomor Absen : $query->no_scan <br>
                                         Nama karyawan : $query->nama <br>
                                         Departemen : $query->dept <br>
-                                        Tanggal Masuk : $query->tgl_masuk <br>
+                                        Tanggal Masuk : $query->tgl_masuk <br>                                        
+                                        Tanggal Evaluasi: $query->tgl_evaluasi <br>
                                         Jabatan : $query->jabatan
+                                        <br>
                                     </body>
                                 </html>"; 
                 $mail->Body = $mailContent; 
@@ -411,7 +493,7 @@ class Data_Karyawan extends CI_Controller
         }
     // END ADD NEW EMPLOYEE
     
- // START EDIT NEW EMPLOYEE
+
         public function tampil($no_scan)
         {
             $data['user'] = $this->db->get_where('user', array('name' =>
@@ -426,8 +508,12 @@ class Data_Karyawan extends CI_Controller
             $this->load->view('template/footer');
         }
 
+
+     // START EDIT NEW EMPLOYEE
         public function edit($username)
-        {
+      
+        {   $no_scan = $this->input->post('no_scan', true);
+            $tgl_tetap = $this->input->post('tgl_tetap', true);
             $data = array(
                 'no_ktp'                => $this->input->post('no_ktp', true),
                 'nama'                  => $this->input->post('nama', true),
@@ -453,12 +539,21 @@ class Data_Karyawan extends CI_Controller
                 'no_hp'                 => $this->input->post('no_hp', true),
                 'pengalaman_kerja'      => $this->input->post('pengalaman_kerja', true),
                 'keterampilan_khusus'   => $this->input->post('keterampilan_khusus', true),
-                // 'tgl_seragam'           => $this->input->post('tgl_seragam', true),
-                'status_seragam'        => $this->input->post('status_seragam', true)
-                
+                'tgl_resign'            => $this->input->post('tgl_resign', true),
+                'status_seragam'        => $this->input->post('status_seragam', true),
+                'tgl_evaluasi'         => $this->input->post('tgl_evaluasi', true)
+                                
             );
             $this->db->where('no_scan', $this->input->post('no_scan', true));
             $this->db->update('tbl_makar', $data);
+
+            $data2 = array(
+                'tgl_tetap' => $tgl_tetap
+            );
+          
+            $this->dual_db_model->update_data_in_second_database('tblkrynhrd', 'idk', $no_scan, $data2);
+            // $this->dual_db_model->save_data_to_both_databases($data2);
+            // $this->dual_db_model->update_data_in_second_database('tblkrynhrd', 'nik', $this->input->post('no_scan', true), $data2);
 
             $this->tambah_data_keluarga();
             $this->tambah_data_pengalaman_kerja();
@@ -559,7 +654,8 @@ class Data_Karyawan extends CI_Controller
                         // 'tgl_seragam'           => $this->input->post('tgl_seragam', true),
                         'status_seragam'        => $this->input->post('status_seragam', true),
                         'ukuran_baju_polo'        => $this->input->post('ukuran_baju_polo', true),
-                        'ukuran_baju_shirt'        => $this->input->post('ukuran_baju_shirt', true)
+                        'ukuran_baju_shirt'        => $this->input->post('ukuran_baju_shirt', true),
+                        'tgl_evaluasi'         => $this->input->post('tgl_evaluasi', true)
                         
                     );
                     $this->db->insert('tbl_makar', $data);
@@ -614,9 +710,11 @@ class Data_Karyawan extends CI_Controller
                     'kartu_keluarga'        => $this->input->post('kartu_keluarga', true),
                     'masa_berlaku_ktp'      => $this->input->post('masa_berlaku_ktp', true),
                     // 'tgl_seragam'           => $this->input->post('tgl_seragam', true),
+                    'tgl_resign'            => $this->input->post('tgl_resign', true),
                     'status_seragam'        => $this->input->post('status_seragam', true),
                     'ukuran_baju_polo'        => $this->input->post('ukuran_baju_polo', true),
-                    'ukuran_baju_shirt'        => $this->input->post('ukuran_baju_shirt', true)
+                    'ukuran_baju_shirt'        => $this->input->post('ukuran_baju_shirt', true),
+                    'tgl_evaluasi'         => $this->input->post('tgl_evaluasi', true)
                     
                 );
                 $this->db->where('id', $id);
@@ -648,6 +746,7 @@ class Data_Karyawan extends CI_Controller
             $data = array(
                 // 'tgl_pengajuan_resign'        => $this->input->post('tgl_pengajuan_resign'),
                 'tgl_resign'                  => $this->input->post('tgl_resign'),
+                'keterangan_resign'          => $this->input->post('ket_resign'),
                 'status_karyawan'              => 'Resigned'
                 // 'status_aktif'      => 0
             );
@@ -672,6 +771,7 @@ class Data_Karyawan extends CI_Controller
             $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
 
             // Menambahkan penerima
+            $mail->addAddress('yohanes.william@indotaichen.com');  
             $mail->addAddress('nilo.pamungkas@indotaichen.com');
             $mail->addAddress('bintoro.dy@indotaichen.com');
             $mail->addAddress('ryan.wong@indotaichen.com');

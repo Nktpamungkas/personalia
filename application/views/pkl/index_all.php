@@ -5,7 +5,7 @@
             <p>
                 <form action="<?= base_url('pkl/show_verifikasi'); ?>" method="POST">
                     <a href="<?= base_url('pkl'); ?>" class="btn btn-warning"><i class=" fa fa-reply"></i>&nbsp;&nbsp;Back</a>
-                    <a href="#" data-toggle="modal" data-target="#modalExport" class="btn btn-info">Export to Excel</a>
+                    <a href="#" data-toggle="modal" data-target="#modalExport" class="btn btn-info">Export to Excel</a>     
                 </form>
                 <div class="modal fade" id="modalExport" tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
                     <form action="<?= base_url('pkl/export_excel') ?>" method="POST">
@@ -52,6 +52,7 @@
                     <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="mydata">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th width="150px">Kode Lembur</th>
                                 <th width="150px">Tanggal</th>
                                 <th width="150px">Department</th>
@@ -96,6 +97,16 @@
                                 for(i = 0; i < data.length; i++){
                                     html += 
                                     '<tr class="gradeX">'+
+                                         `<td>
+                                            <li class="dropdown" style="list-style-type:none;">
+                                            <a href="#" class="fa fa-align-justify" data-toggle="dropdown"></a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="<?= base_url(); ?>pkl/tambah_revisi/`+data[i].kode_lembur+`" style="font-size:13px;">Tambah Nama Karyawan Lembur(revisi)</a></li>
+                                                <li><a href="<?= base_url(); ?>pkl/add_overtime_list_revisi/`+data[i].kode_lembur+`" style="font-size:13px;"><b>Buat Surat Perintah Lembur(revisi)</b></a></li>
+                                            </ul> 
+                                            </li>                                       
+                                        </td>`+
+
                                         '<td style="font-size: 12px;"><a href="#" style="text-decoration: underline;">'+data[i].kode_lembur+'</a></td>'+
 
                                         `<td>`+data[i].tgl_format+`</td>`+

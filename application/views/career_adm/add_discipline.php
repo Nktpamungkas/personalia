@@ -39,13 +39,13 @@
                             <div class="form-group">
                                 <label class="control-label col-lg-2">Surat Peringatan ke-</label>
                                 <div class="col-lg-10">
-                                    <input type="text" class="form-control input-sm" name="sp">
+                                    <input type="text" class="form-control input-sm" name="sp" required>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-lg-2">Alasan</label>
                                 <div class="col-lg-10">
-                                    <textarea class="form-control" name="alasan"></textarea>
+                                    <textarea class="form-control" name="alasan" required></textarea>
                                 </div>
                             </div>
                             <div class="form-group">

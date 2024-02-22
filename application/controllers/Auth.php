@@ -12,8 +12,8 @@ class Auth extends CI_Controller
 
     public function index()
     {      
-        //upadate Status Resigned
-        $sql= "UPDATE tbl_makar set status_aktif = 0 WHERE tgl_resign between tgl_resign AND NOW() AND status_karyawan ='Resigned'"; 
+    //upadate Status Resigned
+        $sql= "UPDATE tbl_makar set status_aktif = 0 WHERE tgl_resign between tgl_resign AND NOW() AND status_karyawan = 'Resigned'"; 
         $this->db->query($sql);
 
       //Generate Cuti tahunan
@@ -30,9 +30,10 @@ class Auth extends CI_Controller
                         status_karyawan = 'Tetap' 
                         AND gaji IS NULL 
                         AND status_aktif = 1 
-                        AND DATE_FORMAT( tgl_tetap, '%d %M' ) = DATE_FORMAT(CURDATE(),'%d %M') 
-                        and not year(tgl_tetap) = year(CURDATE())
-                        and not tgl_generate_cuti = CURDATE()
+                        -- AND DATE_FORMAT( tgl_tetap, '%d %M' ) = DATE_FORMAT(CURDATE(),'%d %M') 
+                        -- and not year(tgl_tetap) = year(CURDATE())
+                        -- and not tgl_generate_cuti = CURDATE()
+                        and no_scan ='1129'
                     ORDER BY
                         ( tgl_tetap + INTERVAL '12' MONTH - INTERVAL '1' DAY ) DESC";           
         // $sheet_gen  = $this->db->query($sql_sheet." LIMIT 1 ")->row(); 
@@ -45,58 +46,87 @@ class Auth extends CI_Controller
             }
 
         $data = array (
-        'no_scan'   => $value['no_scan'],
-        'sisa_cuti' => $saldosisacuti,
-        'sisa_cuti_th_sebelumnya' => $value['sisa_cuti'],
-        'tgl_generate_cuti'=> DATE('Y-m-d')
+                'no_scan'   => $value['no_scan'],
+                'sisa_cuti' => $saldosisacuti,
+                'sisa_cuti_th_sebelumnya' => $value['sisa_cuti'],
+                'tgl_generate_cuti'=> DATE('Y-m-d')
         );
         $this->db->where('no_scan', $value['no_scan']);
         $this->db->update('tbl_makar', $data);
 
-            if($value['sisa_cuti']){
+        if($value['sisa_cuti']){
             $alasan = "Sisa cuti ".$value['sisa_cuti']." telah dibayarkan (Periode".$value['thn_awal_periode_gen']." - ".$value['thn_akhir_periode_gen']." ).";
-            } else {
+        } else {
             $alasan = "Tidak ada sisa cuti yang dibayarkan. Sisa cuti habis.";
-            }
+        }
 
         // input histori izin cuti 
         $data_histori = array (
-        'kode_cuti'             => "GEN-".date('Ym'), //HISTORI IMPORT CUTI
-        'nip'                   => $value['no_scan'], 
-        'dept'                  => $value['dept'],
-        'saldo_cuti'            => $saldosisacuti,
-        'days_or_month'         => "Hari",
-        'ket'                   => "th.".date('Y'),
-        'alasan'                => $alasan
+                        'kode_cuti'             => "GEN-".date('Ym'), //HISTORI IMPORT CUTI
+                        'nip'                   => $value['no_scan'], 
+                        'dept'                  => $value['dept'],
+                        'saldo_cuti'            => $saldosisacuti,
+                        'days_or_month'         => "Hari",
+                        'ket'                   => "th.".date('Y'),
+                        'alasan'                => $alasan
         );
         $this->db->insert('permohonan_izin_cuti', $data_histori);
 
         }
    
         //Update Data Career transition(Mitasi, Promosi, Demosi)
-        $sql_transition="SELECT 
+        $sql_transition = "SELECT 
                             no_scan,
+                            proses,
                             tgl_efektif,
                             dept_baru,
                             bagian_baru,
                             golongan_baru,
-                            jabatan_baru 
+                            jabatan_baru,
+                            kode_jabatan_baru,
+                            atasan1,
+                            atasan2
                         FROM 
                             career_transition
                         WHERE 
                             tgl_efektif = CURDATE() ";
-        $sheet_tran      = $this->db->query($sql_transition)->result_array(); 
-        foreach ($sheet_tran AS $value){
-            $data = array (
-                'no_scan'    => $value['no_scan'],
-                'dept'       => $value['dept_baru'],
-                'bagian'     => $value['bagian_baru'],
-                'golongan'   => $value['golongan_baru'],
-                'jabatan'    => $value['jabatan_baru']
+
+        $sheet_tran = $this->db->query($sql_transition)->result_array();
+
+        foreach ($sheet_tran as $value) {
+            if ($value['proses'] == 'mutasi'){
+
+                $data = array(
+                    'dept'         => $value['dept_baru'],
+                    'bagian'       => $value['bagian_baru'],
+                    );
+            // Tambahkan kondisi if untuk memeriksa apakah atasan1 dan atasan2 tidak null
+            } else if ($value['atasan1'] !== null && $value['atasan2'] !== null) {
+                //update jika atasan1 dan atasan2 tidak null
+                $data = array(
+                    'dept'         => $value['dept_baru'],
+                    'bagian'       => $value['bagian_baru'],
+                    'golongan'     => $value['golongan_baru'],
+                    'jabatan'      => $value['jabatan_baru'],
+                    'kode_jabatan' => $value['kode_jabatan_baru'],
+                    'atasan1'      => $value['atasan1'], 
+                    'atasan2'      => $value['atasan2'], 
                 );
-                $this->db->where('no_scan', $value['no_scan']);
-                $this->db->update('tbl_makar', $data);
+            } else {
+                //update jika atasan1 dan atasan2 null
+                $data = array(
+                    'dept'         => $value['dept_baru'],
+                    'bagian'       => $value['bagian_baru'],
+                    'golongan'     => $value['golongan_baru'],
+                    'jabatan'      => $value['jabatan_baru'],
+                    'kode_jabatan' => $value['kode_jabatan_baru'],
+                );
+            }
+
+            $this->db->where('no_scan', $value['no_scan']); 
+            $this->db->update('tbl_makar', $data);
         }
+
 
         //Update Masa Kerja Karyawan baru
         $masakerja = "UPDATE tbl_makar set masa_kerja = 6 where tgl_seragam between tgl_seragam  AND  now() and status_seragam ='BELUM' and status_idcard ='BELUM' AND NOT status_karyawan = 'Resigned' ";
@@ -104,7 +134,6 @@ class Auth extends CI_Controller
 
         $tglseragam = "UPDATE tbl_makar set tgl_seragam = (DATE_ADD(tgl_masuk, INTERVAL 6 month )) where status_seragam = 'BELUM' and status_idcard ='BELUM' AND NOT status_karyawan = 'Resigned'";
         $this->db->query($tglseragam);
-
   
         $this->form_validation->set_rules('name', 'Name', 'trim|required');
         $this->form_validation->set_rules('password', 'Password', 'trim|required');

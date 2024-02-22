@@ -15,7 +15,7 @@
                                 <h5><b>TOTAL KARYAWAN PRIA</b></h5>
                             </div>
                             <?php 
-                                $aktiveL = $this->db->query("SELECT Count(*) AS jml FROM tbl_makar WHERE status_aktif = '1' AND jenis_kelamin='Laki' AND NOT status_karyawan in ('perubahan_status','Resigned')")->row();
+                                $aktiveL = $this->db->query("SELECT Count(*) AS jml FROM tbl_makar WHERE status_aktif = '1' AND jenis_kelamin='Laki' AND NOT status_karyawan='perubahan_status'")->row();
                             ?>
                             <div class="row">
                                 <div class="col-sm-12 col-xs-12">
@@ -28,11 +28,11 @@
                         <div class="white-panel pn">
                             <div class="white-header">
                                 <?php 
-                                    $active = $this->db->query("SELECT Count(*) AS jml FROM tbl_makar WHERE status_aktif = '1'AND NOT status_karyawan in ('perubahan_status','Resigned')")->row();
+                                    $active = $this->db->query("SELECT Count(*) AS jml FROM tbl_makar WHERE status_aktif = '1'")->row();
                                 ?>
                                 <h5>TOTAL KARYAWAN TETAP & KONTRAK</h5>
+                                
                             </div>
-                           
                             <p><img src="<?= base_url('img/profile/') . $user['image']; ?>" class="img-circle" width="50"></p>
                             <p><b>PT. INDOTAICHEN TEXTILE INDUSTRI</b><br><?= $active->jml; ?></p>
                             
@@ -40,26 +40,16 @@
                                 <?php 
                                     $kontrak    = $this->db->query("SELECT Count(*) AS jml FROM tbl_makar WHERE status_karyawan LIKE '%Kontrak%' AND status_aktif = '1'")->row();
                                     $tetap      = $this->db->query("SELECT Count(*) AS jml FROM tbl_makar WHERE status_karyawan LIKE '%Tetap%' AND status_aktif = '1'")->row();
-                                    $pkwt    = $this->db->query("SELECT Count(*) AS jml FROM tbl_makar WHERE status_karyawan LIKE '%PKWT%'  AND status_aktif = '1'")->row();
-                                    $expat      = $this->db->query("SELECT Count(*) AS jml FROM tbl_makar WHERE status_karyawan LIKE '%expat%' AND status_aktif = '1'")->row();
                                 ?>
-                                <div class="col-md-3">
-                                    <p class="small mt">Expat</p>
-                                    <p><?= $expat->jml; ?></p>
+                                <div class="col-md-6">
+                                <p class="small mt">KARYAWAN TETAP</p>
+                                <p><?= $tetap->jml; ?></p>
                                 </div>
-                                <div class="col-md-3">
-                                     <p class="small mt">KARYAWAN TETAP</p>
-                                    <p><?= $tetap->jml; ?></p>
+                                <div class="col-md-6">
+                                <p class="small mt">KARYAWAN KONTRAK</p>
+                                <p><?= $kontrak->jml; ?></p>
                                 </div>
-                                <div class="col-md-3">
-                                    <p class="small mt">KARYAWAN KONTRAK</p>
-                                    <p><?= $kontrak->jml; ?></p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p class="small mt">PKWT-PD</p>
-                                    <p><?= $pkwt->jml; ?></p>
-                                </div>                                              
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-8 mb">

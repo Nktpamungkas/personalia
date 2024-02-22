@@ -306,6 +306,8 @@ function searchsisacuti_disabled() {
                                             <div class="form-group">
                                                 <label>Jumlah potongan <b>Sisa Cuti Karyawan</b></label>
                                                 <input type="text" name="annual_leave2" class="form-control input-sm" required>
+                                                <label><b>Hutang Cuti Karyawan</b> <font color='red'>*jika tidak ada hutang cuti isi dengan 0 </font ></label>
+                                                <input type="text" name="hutang_cuti" class="form-control input-sm" required>
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
@@ -379,14 +381,17 @@ function searchsisacuti_disabled() {
                         </div>
                     </label>
                 </div>
-            </div>
+               </div>
                 <?php endif ?>
+            </p>
+            <p>
+                <a href="<?= base_url('pci\index2'); ?>" data-toggle="modal" class="btn btn-info btn-sm" ><i class=" fa fa-download"></i>&nbsp;&nbsp;History cuti karyawan resigned</a>
             </p>
         </div>
         <div class="row mb col-sm-12">
             <?= $this->session->flashdata('message'); ?>
             <div class="content-panel">
-                <div class="adv-table">
+               <div class="adv-table">
                     <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="table-cuti">
                         <thead>
                             <tr>

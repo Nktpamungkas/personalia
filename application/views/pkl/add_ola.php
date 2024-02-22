@@ -16,11 +16,11 @@
                                     <input class="form-control input-sm" value="<?= $dl->kode_lembur; ?>" name="kode_lembur" type="text" readonly>
                                     <input value="<?= $dl->tanggal ?>" type="hidden">
                                 </div>
-                                <label class="control-label col-lg-2">Tanggal permohonan kerja lembur</label>
+                                <!-- <label class="control-label col-lg-2">Tanggal permohonan kerja lembur</label>
                                 <div class="col-lg-4">
                                     <input class="form-control input-sm" value="<?= date_format(date_create($dl->tanggal), 'd M Y'); ?>" type="text" readonly>
                                     <input value="<?= $dl->tanggal ?>" name="tanggal_permohonan" type="hidden">
-                                </div>
+                                </div> -->
                             </div>
                             <div class="form-group has-warning">
                                 <label class="control-label col-lg-2"><b>*Shift</b></label>
@@ -58,7 +58,8 @@
                                             </th>
                                             <th colspan="2"><center>*Waktu Lembur</center></th>
                                             <th>*Total Jam Lembur</th>
-                                            <th>Keterangan</th>
+                                            <th>Tujuan Lembur</th>
+                                            <th>Status Lembur</th>
                                         </tr>
                                         <tr>
                                             <th></th>
@@ -90,35 +91,26 @@
                                                     </label>
                                                 </div>
                                             </th>
+                                            <th></th>
                                             <th>
                                                 <div class="checkbox">
-                                                    <!-- <label title="Berdasarkan data 1">
-                                                        <input type="checkbox" id="check_as_one_sum" value="" ><small><strong>Result<strong></small>
-                                                    </label> -->
+                                                    <label title="Berdasarkan data 1">
+                                                        <input type="checkbox" id="check_as_one_purpose" value="" ><small><strong>Same as 1<strong></small>
+                                                    </label>
                                                 </div>
                                             </th>
-                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                            $query_pkl = $this->db->query("SELECT
-                                                a.id, a.no_scan, b.nama 
-                                            FROM
-                                                permohonan_kerja_lembur a
-                                                LEFT JOIN ( SELECT * FROM tbl_makar b ) b ON b.no_scan = a.no_scan 
-                                            WHERE
-                                                a.kode_lembur ='$dl->kode_lembur'")->result_array();
+                                    <?php
+                                            $query_pkl = $this->db->get_where('daftar_lembur', array('kode_lembur' => $dl->kode_lembur))->result_array();
+                                            // $query_pkl = $this->db->query("SELECT * FROM daftar_lembur WHERE kode_lembur = '$dl->kode_lembur' ORDER BY no_absen ASC")->result_array();
                                             $no = 1;
-                                            $t1 = 1;
-                                            $t2 = 1;
-                                            $t  = 1;
                                         ?>
-                                        <?php foreach ($query_pkl as $dp) : ?>
-                                        <tr>
+                                    <?php foreach ($query_pkl as $dp) : ?>
                                         <td>
                                             <center>
-                                                <a href="<?= base_url(); ?>pkl/delete_overtime_list/<?= $dp['id']; ?>" title="hapus dari daftar lembur dan permohonan lembur">
+                                                <a href="<?= base_url(); ?>pkl/delete_overtime_list/<?= $dp['id_pkl']; ?>">
                                                     <i class="fa fa-times" style="color: red;"></i>
                                                 </a>
                                             </center>
@@ -128,129 +120,144 @@
                                         </td>
                                         <td>
                                             <input value="<?= $dp['id']; ?>" name="id[]" type="hidden">
-                                            <input class="form-control input-sm" value="<?= $dp['nama']; ?>" name="nama[]" id="nama<?= $dp['no_scan']; ?>" title="nama karyawan lembur" type="text" required>
+                                            <input value="<?= $dp['id_pkl']; ?>" name="id_pkl[]" type="hidden">
+                                            <input class="form-control input-sm" value="<?= $dp['nama']; ?>" id="nama<?= $dp['no_absen']; ?>" name="nama[]" type="text" required>
                                         </td>
                                         <td>
                                             <div class="col-sm-6">
-                                                <input class="form-control input-sm " name="no_absen[]" type="text" value="<?= $dp['no_scan']; ?>" title="Nomor Absen Karayawan" id="no_scan<?= $dp['no_scan']; ?>" readonly>
+                                                <input class="form-control input-sm" name="no_absen[]" value="<?= $dp['no_absen']; ?>" type="text" id="no_absen<?= $dp['no_absen']; ?>" <?php if($user['special_user'] == 1){ echo "required"; } else { echo "readonly"; } ?>>
                                             </div>
                                             <div class="col-sm 6">
-                                                <select class="form-input input-sm rest" name="istirahat[]" id="istirahat<?= $dp['no_scan']; ?>" title="Total Istirahat">
-                                                    <option value="0">Full</option>
-                                                    <option value="1">1 Jam</option>
-                                                    <option value="0.5">1/2 Jam</option>
+                                                <select class="form-input input-sm rest" name="istirahat[]" id="istirahat<?= $dp['no_absen']; ?>" title="Total Istirahat">
+                                                    <option value="0" <?php if($dp['istirahat'] == "0"){ echo "SELECTED"; } ?>>Full</option>
+                                                    <option value="1" <?php if($dp['istirahat'] == "1"){ echo "SELECTED"; } ?>>1 Jam</option>
+                                                    <option value="0.5" <?php if($dp['istirahat'] == "0.5"){ echo "SELECTED"; } ?>>1/2 Jam</option>
                                                 </select>
                                             </div>
                                         </td>
                                         <td>
-                                            <input class="form-control input-sm start" name="wl_1[]" type="time" onLoad="wl_1<?= $dp['no_scan']; ?>" id="wl_1<?= $dp['no_scan']; ?>" placeholder="--.--" title="Waktu Mulai Lembur" required>
+                                            <input class="form-control input-sm start" name="wl_1[]" value="<?= $dp['waktu_lembur_start']; ?>" type="time" id="wl_1<?= $dp['no_absen']; ?>" required> 
                                         </td>
                                         <td>
-                                            <input class="form-control input-sm end" name="wl_2[]" type="time" onLoad="wl_2<?= $dp['no_scan']; ?>" id="wl_2<?= $dp['no_scan']; ?>" placeholder="--.--" title="Waktu Selesai Lembur" required>
+                                            <input class="form-control input-sm end" name="wl_2[]" value="<?= $dp['waktu_lembur_stop']; ?>" type="time" id="wl_2<?= $dp['no_absen']; ?>" required>
                                         </td>
                                         <td>
-                                            <input class="form-control input-sm sum" name="total_jam_lembur[]" type="number" step="0.01" id="total_jam_lembur<?= $dp['no_scan']; ?>" title="Total jam lembur" required>
+                                            <input class="form-control input-sm sum" name="total_jam_lembur[]" value="<?= $dp['total_jam_lembur']; ?>" type="number" step="0.01" id="total_jam_lembur<?= $dp['no_absen']; ?>" required>
                                         </td>
                                         <td>
-                                            <input class="form-control input-sm" name="keterangan[]" type="text" placeholder="..." title="Keterangan lain-lain">
+                                            <input class="form-control input-sm purpose" name="keterangan[]" value="<?= $dp['keterangan']; ?>" type="text" placeholder="...">
+                                        </td>
+                                        <td>
+                                        <div class="col-sm 6">
+                                            <input class="form-control input-sm" value="<?= $dp['status_tipe_lembur']; ?>" name="status_tipe_lembur" type="hidden" readonly>
+                                            <input class="form-control input-sm"  value="<?php $status_lembur =  $dp['status_tipe_lembur']; if( $status_lembur == "Awal" ){echo "Lembur Awal";} elseif ($status_lembur == "Akhir") {echo "Lembur Akhir";}?>"  type="text" readonly>
+                                           
+                                        </div>
                                         </td>
                                         <script type="text/javascript">
                                             $(document).ready(function(){
-                                                // START HITUNG WAKTU DAN MENGURANI OTOMATIS ISTIRAHAT
-                                                    $('#wl_1<?= $dp['no_scan']; ?>').change(function(){
-                                                        _wl_1 = document.getElementById('wl_1<?= $dp['no_scan']; ?>').value;
-                                                        _wl_2 = document.getElementById('wl_2<?= $dp['no_scan']; ?>').value;
-                                                        istirahat = document.getElementById('istirahat<?= $dp['no_scan']; ?>').value;
+                                                $('#wl_1<?= $dp['no_absen']; ?>').change(function(){
+                                                    _wl_1 = document.getElementById('wl_1<?= $dp['no_absen']; ?>').value;
+                                                    _wl_2 = document.getElementById('wl_2<?= $dp['no_absen']; ?>').value;
+                                                    istirahat = document.getElementById('istirahat<?= $dp['no_absen']; ?>').value;
 
-                                                        if ( _wl_2 < _wl_1) {
-                                                            hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0] + 24;
-                                                            minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
-                                                        } else {
-                                                            hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0];
-                                                            minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
-                                                        }
+                                                    if ( _wl_2 < _wl_1) {
+                                                        hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0] + 24;
+                                                        minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
+                                                    } else {
+                                                        hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0];
+                                                        minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
+                                                    }
 
-                                                        hasil = ((hours * 60) + minutes) / 60;
+                                                    hasil = ((hours * 60) + minutes) / 60;
+                                                    hasil_istirahat = hasil - istirahat;
 
-                                                        hasil_istirahat = hasil - istirahat;
+                                                    document.getElementById('total_jam_lembur<?= $dp['no_absen']; ?>').value = hasil_istirahat;
+                                                });
+                                                
+                                                $('#wl_2<?= $dp['no_absen']; ?>').change(function(){
+                                                    _wl_1 = document.getElementById('wl_1<?= $dp['no_absen']; ?>').value;
+                                                    _wl_2 = document.getElementById('wl_2<?= $dp['no_absen']; ?>').value;
+                                                    istirahat = document.getElementById('istirahat<?= $dp['no_absen']; ?>').value;
 
-                                                        document.getElementById('total_jam_lembur<?= $dp['no_scan']; ?>').value = hasil_istirahat;
-                                                    });
+                                                    if ( _wl_2 < _wl_1) {
+                                                        hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0] + 24;
+                                                        minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
+                                                    } else {
+                                                        hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0];
+                                                        minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
+                                                    }
+
+                                                    hasil = ((hours * 60) + minutes ) / 60;
+                                                    hasil_istirahat = hasil - istirahat;
                                                     
-                                                    $('#wl_2<?= $dp['no_scan']; ?>').change(function(){
-                                                        _wl_1 = document.getElementById('wl_1<?= $dp['no_scan']; ?>').value;
-                                                        _wl_2 = document.getElementById('wl_2<?= $dp['no_scan']; ?>').value;
-                                                        istirahat = document.getElementById('istirahat<?= $dp['no_scan']; ?>').value;
+                                                    document.getElementById('total_jam_lembur<?= $dp['no_absen']; ?>').value = hasil_istirahat;
+                                                });
 
-                                                        if ( _wl_2 < _wl_1) {
-                                                            hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0] + 24;
-                                                            minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
-                                                        } else {
-                                                            hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0];
-                                                            minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
+                                                $('#istirahat<?= $dp['no_absen']; ?>').change(function(){
+                                                    _wl_1 = document.getElementById('wl_1<?= $dp['no_absen']; ?>').value;
+                                                    _wl_2 = document.getElementById('wl_2<?= $dp['no_absen']; ?>').value;
+                                                    istirahat = document.getElementById('istirahat<?= $dp['no_absen']; ?>').value;
+
+                                                    if ( _wl_2 < _wl_1) {
+                                                        hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0] + 24;
+                                                        minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
+                                                    } else {
+                                                        hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0];
+                                                        minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
+                                                    }
+
+                                                    hasil = ((hours * 60) + minutes) / 60;
+                                                    hasil_istirahat = hasil - istirahat;
+
+                                                    document.getElementById('total_jam_lembur<?= $dp['no_absen']; ?>').value = hasil_istirahat;
+                                                });
+
+                                            // START SERACH NAMA
+                                                $('#no_absen<?= $dp['no_absen']; ?>').change(function(){
+                                                    var _nama    = document.getElementById('no_absen<?= $dp['no_absen']; ?>').value;
+                                                    var _none    = "Nama tidak ditemukan";
+
+                                                    $.ajax ({
+                                                        type: 'POST',
+                                                        url: '<?= base_url()."pkl/search_nama" ?>/' + _nama,
+                                                        dataType: 'json',
+                                                        success: function(dataSearch){
+                                                            document.getElementById('nama<?= $dp['no_absen']; ?>').value = dataSearch[0].nama;
                                                         }
-
-                                                        hasil = ((hours * 60) + minutes) / 60;
-                                                        
-                                                        hasil_istirahat = hasil - istirahat;
-
-                                                        document.getElementById('total_jam_lembur<?= $dp['no_scan']; ?>').value = hasil_istirahat;
                                                     });
+                                                });
+                                                
+                                                $('#wl_1<?= $dp['no_absen']; ?>').change(function(){
+                                                    var _nama    = document.getElementById('no_absen<?= $dp['no_absen']; ?>').value;
+                                                    var _none    = "Nama tidak ditemukan";
 
-                                                    $('#istirahat<?= $dp['no_scan']; ?>').change(function(){
-                                                        _wl_1 = document.getElementById('wl_1<?= $dp['no_scan']; ?>').value;
-                                                        _wl_2 = document.getElementById('wl_2<?= $dp['no_scan']; ?>').value;
-
-                                                        istirahat = document.getElementById('istirahat<?= $dp['no_scan']; ?>').value;
-
-                                                        if ( _wl_2 < _wl_1) {
-                                                            hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0] + 24;
-                                                            minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
-                                                        } else {
-                                                            hours       = _wl_2.split(':')[0] - _wl_1.split(':')[0];
-                                                            minutes     = _wl_2.split(':')[1] - _wl_1.split(':')[1];
+                                                    $.ajax ({
+                                                        type: 'POST',
+                                                        url: '<?= base_url()."pkl/search_nama" ?>/' + _nama,
+                                                        dataType: 'json',
+                                                        success: function(dataSearch){
+                                                            document.getElementById('nama<?= $dp['no_absen']; ?>').value = dataSearch[0].nama;
                                                         }
-
-                                                        hasil = ((hours * 60) + minutes) / 60;
-
-                                                        hasil_istirahat = hasil - istirahat;
-
-                                                        document.getElementById('total_jam_lembur<?= $dp['no_scan']; ?>').value = hasil_istirahat;
                                                     });
-                                                // END HITUNG WAKTU DAN MENGURANI OTOMATIS ISTIRAHAT
+                                                });
+                                                
+                                                $('#wl_2<?= $dp['no_absen']; ?>').change(function(){
+                                                    var _nama    = document.getElementById('no_absen<?= $dp['no_absen']; ?>').value;
+                                                    var _none    = "Nama tidak ditemukan";
 
-                                                // START SEARCH NAMA
-                                                    $('#wl_1<?= $dp['no_scan']; ?>').change(function(){
-                                                        var _nama    = document.getElementById('no_scan<?= $dp['no_scan']; ?>').value;
-                                                        var _none    = "Nama tidak ditemukan";
-
-                                                        $.ajax ({
-                                                            type: 'POST',
-                                                            url: '<?= base_url()."pkl/search_nama" ?>/' + <?= $dp['no_scan']; ?>,
-                                                            dataType: 'json',
-                                                            success: function(dataSearch){
-                                                                document.getElementById('nama<?= $dp['no_scan']; ?>').value = dataSearch[0].nama;
-                                                            }
-                                                        });
+                                                    $.ajax ({
+                                                        type: 'POST',
+                                                        url: '<?= base_url()."pkl/search_nama" ?>/' + _nama,
+                                                        dataType: 'json',
+                                                        success: function(dataSearch){
+                                                            document.getElementById('nama<?= $dp['no_absen']; ?>').value = dataSearch[0].nama;
+                                                        }
                                                     });
-                                                    
-                                                    $('#wl_2<?= $dp['no_scan']; ?>').change(function(){
-                                                        var _nama    = document.getElementById('no_scan<?= $dp['no_scan']; ?>').value;
-                                                        var _none    = "Nama tidak ditemukan";
-
-                                                        $.ajax ({
-                                                            type: 'POST',
-                                                            url: '<?= base_url()."pkl/search_nama" ?>/' + <?= $dp['no_scan']; ?>,
-                                                            dataType: 'json',
-                                                            success: function(dataSearch){
-                                                                document.getElementById('nama<?= $dp['no_scan']; ?>').value = dataSearch[0].nama;
-                                                            }
-                                                        });
-                                                    });
-                                                // END SERACH NAMA
+                                                });
+                                            // END SERACH NAMA
                                             });
                                         </script>
-                                        </tr>
                                     </tbody>
                                     <?php endforeach; ?>
                                 </table>
@@ -266,22 +273,22 @@
                                             <th><center>Disetujui Oleh : </center></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <<tbody>
                                         <tr>
                                             <td>Nama</td>
                                             <td><input class="form-control input-sm col-lg-2" value="<?= $dl->dibuat_oleh_nama; ?>" name="dibuat_oleh_nama" type="text" required></td>
                                             <td><input class="form-control input-sm col-lg-2" value="<?= $dl->diperiksa_oleh_nama; ?>" name="diperiksa_oleh_nama" type="text" required></td>
-                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->dt_disetujui_nama; ?>" name="disetujui_oleh_nama" type="text" required></td>
+                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->disetujui_oleh_nama; ?>" name="disetujui_oleh_nama" type="text" required></td>
                                         </tr>
                                         <tr>
                                             <td>Jabatan</td>
                                             <td><input class="form-control input-sm col-lg-2" value="<?= $dl->dibuat_oleh_jabatan; ?>" name="dibuat_oleh_jabatan" type="text" required></td>
                                             <td><input class="form-control input-sm col-lg-2" value="<?= $dl->diperiksa_oleh_jabatan; ?>" name="diperiksa_oleh_jabatan" type="text" required></td>
-                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->dt_disetujui_jabatan; ?>" name="disetujui_oleh_jabatan" type="text" required></td>
+                                            <td><input class="form-control input-sm col-lg-2" value="<?= $dl->disetujui_oleh_jabatan; ?>" name="disetujui_oleh_jabatan" type="text" required></td>
                                         </tr>
                                         <tr>
                                             <td>Tanggal</td>
-                                            <td colspan="3"><input class="form-control input-sm col-lg-2" name="tanggal_ttd" type="date" required></td>
+                                            <td colspan="3"><input class="form-control input-sm col-lg-2" name="tanggal_ttd" type="date" value="<?= $dl->tanggal_ttd; ?>" required></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -305,6 +312,7 @@
     $(document).ready(function() {
         ////REST SAME ALL AS NO.1
         $("table.display tbody tr:eq(0)").css("background-color", "#e7e8c3"); 
+
         $("#check_as_one_rest").click(function(){
             var value_rest = $("table.display tbody tr:eq(0) td:eq(3) div:eq(1) select option:selected").val();
             var value_sum = $("table.display tbody tr:eq(0) td:eq(6) input").val(); //sum
@@ -329,6 +337,29 @@
             }
         });
         
+        ////SAME ALL AS NO.1 PURPOSE
+        $("#check_as_one_purpose").click(function(){
+            var value_end_purpose = $("table.display tbody tr:eq(0) td:eq(7) input").val();
+            
+            if($("#check_as_one_purpose").prop("checked") == true){
+                $("input.form-control.input-sm.purpose").val(value_end_purpose); 
+                console.log(value_end_purpose)
+            } else if ($("#check_as_one_purpose").prop("checked") == false){
+                console.log("purpose not doing anything !");
+            }
+        });
+
+        $("table.display tbody tr:eq(0) td:eq(3) input.form-control.input-sm.purpose").change(function(){
+            var value_end_purpose = $("table.display tbody tr:eq(0) td:eq(7) input").val();
+            
+            if($("#check_as_one_purpose").prop("checked") == true){
+                $("input.form-control.input-sm.purpose").val(value_end_purpose); 
+                console.log(value_end_purpose)
+            } else if ($("#check_as_one_purpose").prop("checked") == false){
+                console.log("purpose not doing anything !");
+            }
+        });
+
         ////START SAME ALL AS NO.1
         $("#check_as_one_start").click(function(){ 
             var value_start = $("table.display tbody tr:eq(0) td:eq(4) input").val(); //start

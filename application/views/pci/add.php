@@ -90,7 +90,6 @@
                             $('#tgl_mulai').attr('readonly', true);
                             $('#tgl_selesai').attr('readonly', true);
                         }else {
-                            
                             if (data[0].sisa_cuti) {
                                 if (data[0].thn_generate ==yyyy) { // jika sudah digenerate, periode cuti ditahun berikutnya
                                     if(mo_akhir >= 2){
@@ -140,12 +139,51 @@
                                 document.getElementById('sisa_cuti').innerHTML  = "SILAHKAN HUBUNGI WATI/INDAH UNTUK MELIHAT SISA CUTI.."
                             }
                         }
-                        if (data[0].sisa_cuti <= 0) {
-                    
-                            document.getElementById("Button").disabled = true;
-                        }else{
-                            document.getElementById("Button").disabled = false;
-                        }
+                        // if (data[0].sisa_cuti <= 7) {
+                        //     document.getElementById("Button").disabled = true;
+                        // }else{
+                        //     document.getElementById("Button").disabled = false;
+                        // }
+
+                      // Ambil nilai sisa cuti dari data
+                    var sisaCuti = data[0].sisa_cuti;
+                    var noscan= document.getElementById('no_scan').value;  
+                    // Ambil nilai tanggal_tetap dari data (gantilah 'tanggal_tetap' dengan properti yang sesuai)
+                    var tgl_generate_cuti = new Date(data[0].tgl_generate_cuti);
+
+                    // Tanggal target (10 April 2024)
+                    var targetDate = new Date("2024-04-10");
+
+                    // Tambahkan 1 tahun ke tanggal_tetap
+                    var satuTahunKemudian = new Date(tgl_generate_cuti);
+                    satuTahunKemudian.setFullYear(satuTahunKemudian.getFullYear() + 1);
+
+                    // Periksa kondisi
+                    if (sisaCuti <= 0 || satuTahunKemudian <= targetDate) {
+                        document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
+                    } else if (sisaCuti <= 0 && satuTahunKemudian <= targetDate) {
+                        document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
+                    } else if (sisaCuti <= 0 && satuTahunKemudian >= targetDate) {
+                        document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
+                    }else if (sisaCuti <= 7 && satuTahunKemudian >= targetDate) {
+                        document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
+                    } else if (sisaCuti <= 7 && satuTahunKemudian <= targetDate) {
+                        document.getElementById("Button").disabled = false; // Tombol diaktifkan
+                   } else {
+                        document.getElementById("Button").disabled = false; // Tombol diaktifkan
+                    }
+           
+                // Periksa kondisi
+                    // if (sisaCuti <= 0 || satuTahunKemudian >= targetDate) {
+                    //     document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
+                    // } else if (sisaCuti > 7 || satuTahunKemudian >= targetDate) {
+                    //     document.getElementById("Button").disabled = false; // Tombol diaktifkan
+                    // } else {
+                    //     document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
+                    // }
+
+
+
                     }
                 } else {
                     document.getElementById("tgl_mulai").setAttribute("min", "");
@@ -154,6 +192,7 @@
                     document.getElementById("tgl_selesai").setAttribute("max", "");
                     
                     document.getElementById('sisa_cuti').innerHTML  = "Karyawan belum mandapatkan hak cuti."
+                    document.getElementById("Button").disabled = true;
                 }
             }
         });
@@ -210,6 +249,7 @@
                     $('#tgl_mulai').removeAttr("readonly");
                     $('#tgl_selesai').removeAttr("readonly");
                     document.getElementById('lama_izin').value = data[0].lama_cuti;
+                    document.getElementById("Button").disabled = false;
                     searchsisacuti_disabled();
                 } else if (_ket == "A06"){ //pernikahan anak karyawan
                     $('#lama_izin').attr('readonly', true);
@@ -217,6 +257,7 @@
                     $('#tgl_mulai').removeAttr("readonly");
                     $('#tgl_selesai').removeAttr("readonly");
                     document.getElementById('lama_izin').value = data[0].lama_cuti;
+                    document.getElementById("Button").disabled = false;
                     searchsisacuti_disabled();
                 } else if (_ket == "A07"){ //khitanan anak karyawan
                     $('#lama_izin').attr('readonly', true);
@@ -224,6 +265,7 @@
                     $('#tgl_mulai').removeAttr("readonly");
                     $('#tgl_selesai').removeAttr("readonly");
                     document.getElementById('lama_izin').value = data[0].lama_cuti;
+                    document.getElementById("Button").disabled = false;
                     searchsisacuti_disabled();
                 } else if (_ket == "A08"){ //istri melahirkan / keguguran
                     $('#lama_izin').attr('readonly', true);
@@ -231,6 +273,7 @@
                     $('#tgl_mulai').removeAttr("readonly");
                     $('#tgl_selesai').removeAttr("readonly");
                     document.getElementById('lama_izin').value = data[0].lama_cuti;
+                    document.getElementById("Button").disabled = false;
                     searchsisacuti_disabled();
                 } else if (_ket == "A09"){ //cuti baptis
                     $('#lama_izin').attr('readonly', true);
@@ -238,6 +281,7 @@
                     $('#tgl_mulai').removeAttr("readonly");
                     $('#tgl_selesai').removeAttr("readonly");
                     document.getElementById('lama_izin').value = data[0].lama_cuti;
+                    document.getElementById("Button").disabled = false;
                     searchsisacuti_disabled();
                 } else if (_ket == "A10"){ //keluarga inti meninggal
                     $('#lama_izin').attr('readonly', true);
@@ -245,6 +289,7 @@
                     $('#tgl_mulai').removeAttr("readonly");
                     $('#tgl_selesai').removeAttr("readonly");
                     document.getElementById('lama_izin').value = data[0].lama_cuti;
+                    document.getElementById("Button").disabled = false;
                     searchsisacuti_disabled();
                 } else if (_ket == "A11"){ //saudara meninggal
                     $('#lama_izin').attr('readonly', true);
@@ -252,6 +297,7 @@
                     $('#tgl_mulai').removeAttr("readonly");
                     $('#tgl_selesai').removeAttr("readonly");
                     document.getElementById('lama_izin').value = data[0].lama_cuti;
+                    document.getElementById("Button").disabled = false;
                     searchsisacuti_disabled();
                 } else if (_ket == "A12"){ //keluarga serumah meninggal
                     $('#lama_izin').attr('readonly', true);
@@ -259,6 +305,7 @@
                     $('#tgl_mulai').removeAttr("readonly");
                     $('#tgl_selesai').removeAttr("readonly");
                     document.getElementById('lama_izin').value = data[0].lama_cuti;
+                    document.getElementById("Button").disabled = false;
                     searchsisacuti_disabled();
                 } else if (_ket == "A02"){ //cuti melahurkan
                     $('#lama_izin').attr('readonly', true);
@@ -266,6 +313,7 @@
                     $('#tgl_mulai').removeAttr("readonly");
                     $('#tgl_selesai').removeAttr("readonly");
                     document.getElementById('lama_izin').value = data[0].lama_cuti;
+                    document.getElementById("Button").disabled = false;
                     searchsisacuti_disabled();
                 } else if (_ket == "A01"){ //cuti tahunan
                     $('#lama_izin').removeAttr("readonly");
@@ -280,6 +328,7 @@
                     $('#tgl_mulai').removeAttr("readonly");
                     $('#tgl_selesai').removeAttr("readonly");
                     document.getElementById('lama_izin').value = null;
+                    document.getElementById("Button").disabled = false;
                     searchsisacuti_disabled();
                 } else if (_ket == "A14"){ //sakit dengan surat dokter
                     $('#lama_izin').removeAttr("readonly");
@@ -287,6 +336,7 @@
                     $('#tgl_mulai').removeAttr("readonly");
                     $('#tgl_selesai').removeAttr("readonly");
                     document.getElementById('lama_izin').value = null;
+                    document.getElementById("Button").disabled = false;
                     searchsisacuti_disabled();
                 } else if (_ket == "B03"){ //mangkir
                     $('#lama_izin').removeAttr("readonly");
@@ -362,7 +412,7 @@
                 $('#tgl_selesai').removeAttr("readonly");
             }
             
-            if (document.getElementById('ket').value == "Cuti") {
+            if (document.getElementById('ket').value == "A01") {
                 $.ajax ({
                     type: 'POST',
                     url: '<?= base_url()."pci/search_noscan" ?>/' + _no_scan,   

@@ -105,7 +105,7 @@
                                                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                                                             <h4 class="modal-title"><i class="fa fa-sign-out"></i>Proses Resign</h4>
                                                                         </div>
-                                                                        <div class="modal-body">
+                                                                        <div class="modal-body" width = '480'>
                                                                             <div class="row">
                                                                                 <div class="col-lg-5">
                                                                                     <label class="control-label col-lg-12">No Scan </label>
@@ -137,6 +137,19 @@
                                                                                 <div class="col-lg-7">
                                                                                     <input value="`+data[i].no_scan+`" id="no_scan" name="no_scan" type="hidden" >
                                                                                     <input class="form-control input-sm" value="`+data[i].tgl_resign+`" name="tgl_resign" type="date" required>
+                                                                                </div>
+                                                                                <div class="col-lg-5">
+                                                                                    <label class="control-label col-lg-12">Keterangan Resign</label>
+                                                                                </div>
+                                                                                <div class="col-lg-7">
+                                                                                    <input value="`+data[i].no_scan+`" id="no_scan" name="no_scan" type="hidden" >
+                                                                                    <select class="select2" name="ket_resign" data-placeholder="Pilih Keterangan Resign" required>
+                                                                                    <option value="" disabled selected>---------------------------------------------------</option>
+                                                                                    <?php $queryketresign = $this->db->get('ket_resign')->result_array();?>
+                                                                                    <?php foreach ($queryketresign as $dp) : ?>
+                                                                                    <option value="<?= $dp['desc_resign'] ?>" <?php if ($dp['desc_resign'] == set_value('desc_resign')) { echo "SELECTED";} ?>><?= $dp['desc_resign'] ?></option>
+                                                                                    <?php endforeach; ?>
+                                                                                </select>
                                                                                 </div>
                                                                              </div>
                                                                         </div>

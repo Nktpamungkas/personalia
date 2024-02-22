@@ -13,7 +13,7 @@
             <?= $this->session->flashdata('message'); ?>
             <div class="content-panel">
                 <div class="adv-table">
-                    <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="table-index-discipline">
+                    <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="table-index-transition">
                         <thead>
                             <tr>
                                 <th><i class="fa fa-gear"></i></th>
@@ -35,8 +35,7 @@
                             <?php 
                                 $query = $this->db->query("SELECT a.id as idcareer,a.*,b.* FROM career_transition a
                                                             LEFT JOIN ( SELECT * FROM tbl_makar b) b ON b.no_scan = a.no_scan
-                                                            where not a.no_scan = '4780'")->result_array(); 
-                                
+                                                            where not a.no_scan = '4780' ")->result_array();                                 
                             ?>
                             <?php foreach($query AS $result) : ?>
                             <tr>

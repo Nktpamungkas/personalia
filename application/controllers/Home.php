@@ -47,8 +47,8 @@ class Home extends CI_Controller
                                         a.nama,
                                         a.dept,
                                         a.jabatan,
-                                        DATE_FORMAT(tgl_masuk, '%d-%m-%Y') AS tgl_masuk,
-                                        TIMESTAMPDIFF( MONTH , tgl_masuk, NOW() ) AS masa_kerja,
+                                        DATE_FORMAT(a.tgl_masuk, '%d-%m-%Y') AS tgl_masuk,
+                                        TIMESTAMPDIFF( MONTH , a.tgl_masuk, NOW() ) AS masa_kerja,
                                         a.status_seragam,
                                         a.status_idcard,
                                         DATE_FORMAT((DATE_ADD(tgl_masuk, INTERVAL 6 month )), '%d-%m-%Y') as tgl_seragam,
@@ -63,16 +63,17 @@ class Home extends CI_Controller
                                         c.dept_email5
                                 FROM
                                         tbl_makar a
-                                        INNER JOIN ( SELECT * FROM dept_mail ) c ON c.code = a.dept 
-                                        left JOIN ( SELECT * FROM status_email_idcard ) d ON d.no_scan = a.no_scan
+                                        left JOIN  dept_mail c ON c.code = a.dept 
+                                        left JOIN status_email_idcard d ON d.no_scan = a.no_scan
                                     WHERE
-                                        tgl_masuk BETWEEN tgl_masuk
+                                        a.tgl_masuk BETWEEN a.tgl_masuk
                                         AND  DATE_ADD( NOW(), INTERVAL '6' MONTH ) 
-                                        AND NOT status_karyawan ='Resigned'
-                                        AND NOT status_idcard ='Sudah'
-                                        AND NOT status_seragam ='Sudah'
+                                        and a.masa_kerja = 6
+                                        AND  a.status_karyawan IN ('Kontrak2','Kontrak1')
+                                        AND NOT a.status_idcard ='Sudah'
+                                        AND NOT a.status_seragam ='Sudah'
                                         ORDER BY
-                                        masa_kerja desc")->result_array();
+                                        masa_kerja desc,a.tgl_masuk asc ")->result_array();
                                         echo json_encode($data);
     }
     public function data_status_idcseragam_all_dept2()
@@ -166,6 +167,10 @@ class Home extends CI_Controller
                                         nama,
                                         dept,
                                         DATE_FORMAT( tgl_masuk, '%d %M %Y' ) AS ftgl_masuk,
+                                        case 
+                                            when tgl_evaluasi <>'' then  DATE_FORMAT( tgl_evaluasi, '%d %M %Y' ) 
+                                            else '-'
+                                        end AS ftgl_evaluasi,
                                         jabatan 
                                     FROM
                                         tbl_makar
@@ -264,6 +269,137 @@ class Home extends CI_Controller
         $this->load->view('template/footer');
     }
 
+    public function karyawanbaru2()
+    {
+        $data['user'] = $this->db->get_where('user', array('name' =>
+        $this->session->userdata('name')))->row_array(); //Select * from user where name = '$name'
+        // echo 'selemat datang ' . $data['user']['name'];
+        $data['title'] = 'Dashboard Karyawan Baru';
+        $this->load->view('template/header', $data);
+        $this->load->view('home/karyawanbaru2');
+        $this->load->view('template/footer');
+    }
+    public function Kirim_email_karyawanbaru()
+    {
+        $this->load->library('phpmailer_lib'); 
+        $mail = $this->phpmailer_lib->load();
+
+        if (isset($_POST['kirim_email'])) {
+            $no_scan = $_POST['no_scan'];
+            $isi = '';
+            foreach ($no_scan  as $data) {
+                $exp = explode("/",$data);
+
+                $noscan = $exp[0];
+                $nama = $exp[1];
+                $dept = $exp[2];
+                $tgl_masuk = $exp[3];
+                $tgl_evaluasi = $exp[4];
+                $jabatan = $exp[5];
+
+                $isi.= '
+                Nomor Absen : '.$noscan.'<br>
+                Nama karyawan : '. $nama.' <br>
+                Departemen : '.$dept.' <br>
+                Tanggal Masuk : '.$tgl_masuk.'<br>
+                Tanggal Evaluasi Akhir : '.$tgl_evaluasi.'<br>
+                Jabatan : '.$jabatan.'<br>
+                <br><br>'; 
+
+                $data_status = array (
+                    'status_email_kontrak'   => '2'
+                    );
+                    $this->db->where('no_scan', $noscan);
+                    $this->db->update('tbl_makar', $data_status);
+            }
+            // $querydept = $dept;
+                
+                // Ubah query SQL untuk menyertakan kolom dept_mail
+                $query = $this->db->query("SELECT 
+                                                makar.no_scan,
+                                                makar.nama,
+                                                makar.dept,
+                                                makar.jabatan,
+                                                makar.tgl_masuk,
+                                                makar.tgl_evaluasi,
+                                                dm.dept_email1 as dept_email1,
+                                                dm.dept_email2 as dept_email2,
+                                                dm.dept_email3 as dept_email3,
+                                                dm.dept_email4 as dept_email4,
+                                                dm.dept_email5 as dept_email5
+                                            FROM tbl_makar makar
+                                            LEFT JOIN dept_mail dm ON dm.code = makar.dept 
+                                            WHERE makar.dept = '$dept'
+                ")->row();
+                
+                $dept_mail1 = $query->dept_email1;     
+                $dept_mail2 = $query->dept_email2; 
+                $dept_mail3 = $query->dept_email3; 
+                $dept_mail4 = $query->dept_email4; 
+                $dept_mail5 = $query->dept_email5;                   
+
+            // Konfigurasi SMTP
+            $mail->isSMTP();
+            $mail->Host = 'mail.indotaichen.com'; 
+            $mail->SMTPAuth = true;
+            $mail->Username = 'dept.it@indotaichen.com'; 
+            $mail->Password = 'Xr7PzUWoyPA'; 
+            $mail->SMTPSecure = 'ssl';
+            $mail->Port = 465;
+
+            $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
+            $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
+            
+          
+            if ($dept == 'MKT'){
+                // Menambahkan penerima
+                $mail->addAddress('irwan.mulyadi@indotaichen.com');
+                $mail->addAddress('bunbun@indotaichen.com');
+                $mail->addAddress('bambang@indotaichen.com');
+                $mail->addAddress('frans@indotaichen.com');
+                $mail->addAddress('suhemi@indotaichen.com');
+                $mail->addAddress('stefanus.pranjana@indotaichen.com');
+                $mail->addAddress('Iso.hrd@indotaichen.com');
+                $mail->addAddress('Hrd@indotaichen.com');
+                // $mail->addAddress('prs.absensi@indotaichen.com');
+                // $mail->addAddress('prs01@indotaichen.com');
+                $mail->addAddress('asep.pauji@indotaichen.com');
+                $mail->addAddress($dept_mail1);
+                $mail->addAddress($dept_mail2);
+                $mail->addAddress($dept_mail3);
+                $mail->addAddress($dept_mail4);
+                $mail->addAddress($dept_mail5);
+            }else{
+                // Menambahkan penerima
+                $mail->addAddress('stefanus.pranjana@indotaichen.com');
+                $mail->addAddress('Iso.hrd@indotaichen.com');
+                $mail->addAddress('Hrd@indotaichen.com');
+                // $mail->addAddress('prs.absensi@indotaichen.com');
+                // $mail->addAddress('prs01@indotaichen.com');
+                $mail->addAddress('asep.pauji@indotaichen.com');
+                $mail->addAddress($dept_mail1);
+                $mail->addAddress($dept_mail2);
+                $mail->addAddress($dept_mail3);
+                $mail->addAddress($dept_mail4);
+                $mail->addAddress($dept_mail5);
+            }                
+               
+            $mail->Subject = 'Evaluasi Karyawan Baru'; 
+            // Mengatur format email ke HTML
+            $mail->isHTML(true);
+         
+            $mail->Body = $isi;
+            // $mail->send();
+           
+            if ($mail->send()) {
+               $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"><b>Your Email not successfully sent.</b>'.$mail->ErrorInfo.'</center>');
+            } else {
+               $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Your Email successfully sent.</b></center>');
+            } 
+            redirect('home/karyawanbaru2');
+        }
+    }
+    
     public function habiskontrak()
     {
         $data['user'] = $this->db->get_where('user', array('name' =>
@@ -275,6 +411,133 @@ class Home extends CI_Controller
         $this->load->view('template/footer');
     }
 
+    public function habiskontrak2()
+    {
+         $data['user'] = $this->db->get_where('user', array('name' =>
+        $this->session->userdata('name')))->row_array(); //Select * from user where name = '$name'
+        // echo 'selemat datang ' . $data['user']['name'];
+        $data['title'] = 'Karyawan Habis Kontrak';
+        $this->load->view('template/header', $data);
+        $this->load->view('home/habiskontrak2');
+        $this->load->view('template/footer');
+    }
+
+    public function Kirim_email_habiskontrak()
+    {
+        $this->load->library('phpmailer_lib'); 
+        $mail = $this->phpmailer_lib->load();
+
+        if (isset($_POST['kirim_email'])) {
+            $no_scan = $_POST['no_scan'];
+            $isi = '';
+            foreach ($no_scan  as $data) {
+                $exp = explode("/",$data);
+
+                $noscan = $exp[0];
+                $nama = $exp[1];
+                $dept = $exp[2];
+                $kontrak_akhir = $exp[3];
+                $ket = $exp[4];
+
+                $isi.= '
+                Nomor Absen : '.$noscan.'<br>
+                Nama karyawan : '. $nama.' <br>
+                Departemen : '.$dept.' <br>
+                Tanggal Habis Kontrak : '.$kontrak_akhir.'<br>
+                Keterangan : '.$ket.'<br>
+                <br><br>'; 
+
+                $data_status = array (
+                    'status_email_kontrak'   => '1'
+                    );
+                    $this->db->where('no_scan', $noscan);
+                    $this->db->update('tbl_makar', $data_status);
+            }
+
+             // Ubah query SQL untuk menyertakan kolom dept_mail
+             $query = $this->db->query("SELECT 
+                            makar.no_scan,
+                            makar.nama,
+                            makar.dept,
+                            makar.jabatan,
+                            makar.tgl_masuk,
+                            makar.tgl_evaluasi,
+                            dm.dept_email1 as dept_email1,
+                            dm.dept_email2 as dept_email2,
+                            dm.dept_email3 as dept_email3,
+                            dm.dept_email4 as dept_email4,
+                            dm.dept_email5 as dept_email5
+                        FROM tbl_makar makar
+                        LEFT JOIN dept_mail dm ON dm.code = makar.dept 
+                        WHERE makar.dept = '$dept'
+                ")->row();
+
+                $dept_mail1 = $query->dept_email1;     
+                $dept_mail2 = $query->dept_email2; 
+                $dept_mail3 = $query->dept_email3; 
+                $dept_mail4 = $query->dept_email4; 
+                $dept_mail5 = $query->dept_email5;    
+
+            // Konfigurasi SMTP
+            $mail->isSMTP();
+            $mail->Host = 'mail.indotaichen.com'; 
+            $mail->SMTPAuth = true;
+            $mail->Username = 'dept.it@indotaichen.com'; 
+            $mail->Password = 'Xr7PzUWoyPA'; 
+            $mail->SMTPSecure = 'ssl';
+            $mail->Port = 465;
+
+            $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
+            $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
+            
+            if ($dept == 'MKT'){
+                // Menambahkan penerima
+                $mail->addAddress('irwan.mulyadi@indotaichen.com');
+                $mail->addAddress('bunbun@indotaichen.com');
+                $mail->addAddress('bambang@indotaichen.com');
+                $mail->addAddress('frans@indotaichen.com');
+                $mail->addAddress('suhemi@indotaichen.com');
+                $mail->addAddress('stefanus.pranjana@indotaichen.com');
+                $mail->addAddress('Iso.hrd@indotaichen.com');
+                $mail->addAddress('Hrd@indotaichen.com');
+                // $mail->addAddress('prs.absensi@indotaichen.com');
+                // $mail->addAddress('prs01@indotaichen.com');
+                $mail->addAddress('asep.pauji@indotaichen.com');
+                $mail->addAddress($dept_mail1);
+                $mail->addAddress($dept_mail2);
+                $mail->addAddress($dept_mail3);
+                $mail->addAddress($dept_mail4);
+                $mail->addAddress($dept_mail5);
+            }else{
+                // Menambahkan penerima
+                $mail->addAddress('stefanus.pranjana@indotaichen.com');
+                $mail->addAddress('Iso.hrd@indotaichen.com');
+                $mail->addAddress('Hrd@indotaichen.com');
+                // $mail->addAddress('prs.absensi@indotaichen.com');///
+                // $mail->addAddress('prs01@indotaichen.com');
+                $mail->addAddress('asep.pauji@indotaichen.com');
+                $mail->addAddress($dept_mail1);
+                $mail->addAddress($dept_mail2);
+                $mail->addAddress($dept_mail3);
+                $mail->addAddress($dept_mail4);
+                $mail->addAddress($dept_mail5);
+            }                
+               
+            $mail->Subject = 'Karyawan Habis Kontrak'; 
+            // Mengatur format email ke HTML
+            $mail->isHTML(true);
+         
+            $mail->Body = $isi;
+           
+            if ($mail->send()) {
+               $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"><b>Your Email not successfully sent.</b>'.$mail->ErrorInfo.'</center>');
+            } else {
+               $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Your Email successfully sent.</b></center>');
+            } 
+            redirect('home/habiskontrak2');
+        }
+    }
+    
     public function kedisiplinan()
     {
         $data['user'] = $this->db->get_where('user', array('name' =>

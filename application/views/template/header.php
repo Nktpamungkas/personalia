@@ -1,7 +1,7 @@
 <?php
         $sql= $this->db->query( "SELECT count(*) as jumlah
                                 FROM tbl_makar
-                                where status_karyawan like '%kont%' and status_seragam ='belum' and status_idcard ='belum'and masa_kerja =6")->row();
+                                where status_karyawan like '%Kontrak%' and status_seragam ='Belum' and status_idcard ='Belum'and masa_kerja = 6 and status_aktif = 1")->row();
 ?>
 <?php
 if ($user['name']) : ?>
@@ -77,7 +77,7 @@ if ($user['name']) : ?>
       </div>
       <div class="top-menu">
             <ul class="nav pull-right top-menu">
-                <li><a class="logout" href="<?= base_url('auth/logout/') . $user['name']; ?>">Logout</a></li>
+                <li><a class="logout" id="logout" href="<?= base_url('auth/logout/') . $user['name']; ?>">Logout</a></li>
             </ul>
         </div>
     </header>
@@ -110,9 +110,19 @@ if ($user['name']) : ?>
                                     <li <?php if ($title == "Dashboard Karyawan Baru") {
                                             echo 'class="active"';
                                         } ?>><a href="<?= base_url('home/karyawanbaru'); ?>">Karyawan Baru</a></li>
+                                    <!-- <?php if ($role_id == 1 || $role_id == 2 || $role_id == 5) : ?>
+                                        <li <?php if ($title == "Dashboard Karyawan Baru 2") {
+                                        echo 'class="active"';
+                                         } ?>><a href="<?= base_url('home/karyawanbaru2'); ?>">Karyawan Baru (test kirim email)</a></li>    
+                                    <?php endif; ?>  -->
                                     <li <?php if ($title == "Karyawan Habis Kontrak") {
                                             echo 'class="active"';
                                         } ?>><a href="<?= base_url('home/habiskontrak'); ?>">Habis Kontrak</a></li>
+                                    <!-- <?php if ($role_id == 1 || $role_id == 2 || $role_id == 5) : ?>
+                                        <li <?php if ($title == "Karyawan Habis Kontrak 2") {
+                                            echo 'class="active"';
+                                        } ?>><a href="<?= base_url('home/habiskontrak2'); ?>">Habis Kontrak (test kirim email)</a></li>    
+                                    <?php endif; ?>  -->
                                     <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6) : ?>
                                         <li <?php if ($title == "Status Seragam Dan ID card Karyawan Dept") {
                                                 echo 'class="active"';
@@ -239,7 +249,7 @@ if ($user['name']) : ?>
                             </ul>
                         </li>
                         <li class="sub-menu">
-                            <a <?php if ($title == "Time Attendance | Izin Cuti" || $title == "Time Attendance | Lembur" || $title == "Time Attendance | Laporan Absen" || $title == "Time Attendance | Generate Cuti") {
+                            <a <?php if ($title == "Time Attendance | Izin Cuti" || $title == "Time Attendance | Lembur" || $title == "Time Attendance | Laporan Absen" || $title == "Time Attendance | Generate Cuti"||$title == "Time Attendance | Lembur Test") {
                                     echo 'class="active"';
                                 } ?> href="javascript:;">
                                 <i class="fa fa-clock-o"></i>
@@ -251,6 +261,12 @@ if ($user['name']) : ?>
                                             echo 'class="active"';
                                         } ?>><a href="<?= base_url('pci'); ?>">Izin Cuti</a></li>
                                 <?php endif; ?>
+
+                                <!-- <?php if ($role_id == 1 || $role_id == 5) : ?>
+                                    <li <?php if ($title == "Time Attendance | Lembur Test") {
+                                            echo 'class="active"';
+                                        } ?>><a href="<?= base_url('pkl2'); ?>">Lembur Test </a></li>
+                                <?php endif; ?> -->
 
                                 <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7) : ?>
                                     <li <?php if ($title == "Time Attendance | Lembur") {

@@ -750,8 +750,22 @@
                                                 <option value="<?= $da['kode']; ?>" <?php if ($da['kode'] == $makar->kode_jabatan) { echo "SELECTED"; } ?>><?= $da['kode'] .' - '. $da['jabatan']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
-                                    </label>
+                                    </label>                                    
                                </th>
+                               <th>
+                               <?php if ($user['name'] == "DIT") : ?>
+                                    <label>
+                                        <span>Tanggal Resign Karyawan</span><br>
+                                        <input class="form-control input-sm input-sm" value="<?= $makar->tgl_resign; ?>" id="tglresign" name="tgl_resign" type="date">
+                                    <?php endif; ?>
+                                </th>
+                                <th>
+                                    <label>
+                                        <span>Tgl Evaluasi Karyawan Baru </span><br>
+                                        <input type="date" id="tgl_evaluasi" name="tgl_evaluasi" placeholder="Tanggal Evaluasi Karyawan"  value="<?= $makar->tgl_evaluasi; ?>" readonly>
+                                    </label>
+                                    <span id="tgl_evaluasi"></span>
+                                </th>
                             </tr>
                             <tr>
                                 <th><br><br>
@@ -769,3 +783,22 @@
         </div>
     </section>
 </section>
+<script>
+    // Ambil nilai dari input tanggal masuk
+    var tglMasukValue = "<?= $makar->tgl_masuk; ?>";
+
+    // Periksa apakah nilai tglMasukValue tidak null dan tidak kosong
+    if (tglMasukValue && tglMasukValue.trim() !== "") {
+        // Ubah nilai tglMasukValue menjadi objek Date
+        var tglMasuk = new Date(tglMasukValue);
+
+        // Tambahkan 90 hari
+        tglMasuk.setDate(tglMasuk.getDate() + 90);
+
+        // Format tanggal untuk input tanggal evaluasi
+        var tglEvaluasi = tglMasuk.toISOString().split('T')[0];
+
+        // Set nilai pada input tanggal evaluasi
+        document.getElementById('tgl_evaluasi').value = tglEvaluasi;
+    }
+</script>

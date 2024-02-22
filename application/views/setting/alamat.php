@@ -44,8 +44,8 @@
                             <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="alamat">
                             <thead>
                                 <tr>
-                                    <th>Kabupaten</th>
                                     <th>Kecamatan</th>
+                                    <th>Kabupaten</th>
                                     <th>Provinsi</th>
                                     <th>Kode Pos</th>
                                     <th>Option</th>
@@ -59,9 +59,9 @@
                                 ?>
                                 <?php foreach ($dataAlamat as $da) : ?>
                                 <tr class="gradeX">
-                                    <td><?= $da['provinsi'] ?></td>
-                                    <td><?= $da['kabupaten'] ?></td>
                                     <td><?= $da['kecamatan'] ?></td>
+                                    <td><?= $da['kabupaten'] ?></td>
+                                    <td><?= $da['provinsi'] ?></td>
                                     <td><?= $da['kode_pos'] ?></td>
                                     <td>
                                         <a href="#" data-toggle="modal" data-target="#modalEdit<?= $da['kode']; ?>"><i class="fa fa-edit"></i>Edit</a>

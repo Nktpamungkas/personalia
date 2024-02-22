@@ -3,12 +3,12 @@
         <h4><i class="fa fa-angle-right"></i> Time Attendance <i class="fa fa-angle-right"></i> Form Lembur </h4>
         <div class="col-md-6">
             <p>
-                <form action="<?= base_url('pkl/show_verifikasi'); ?>" method="POST">
-                    <a href="<?= base_url('pkl'); ?>" class="btn btn-warning"><i class=" fa fa-reply"></i>&nbsp;&nbsp;Back</a>
+                <form action="<?= base_url('pkl2/show_verifikasi'); ?>" method="POST">
+                    <a href="<?= base_url('pkl2'); ?>" class="btn btn-warning"><i class=" fa fa-reply"></i>&nbsp;&nbsp;Back</a>
                     <a href="#" data-toggle="modal" data-target="#modalExport" class="btn btn-info">Export to Excel</a>
                 </form>
                 <div class="modal fade" id="modalExport" tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
-                    <form action="<?= base_url('pkl/export_excel') ?>" method="POST">
+                    <form action="<?= base_url('pkl2/export_excel') ?>" method="POST">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -53,11 +53,11 @@
                         <thead>
                             <tr>
                                 <th width="150px">Kode Lembur</th>
-                                <th width="100px">Tanggal</th>
-                                <th>Department</th>
-                                <th>Shift</th>
-                                <th>Tujuan Lembur</th>
-                                <th>Dibuat Oleh</th>
+                                <th width="150px">Tanggal</th>
+                                <th width="150px">Department</th>
+                                <th width="100px">Shift</th>
+                                <th width="500px">Tujuan Lembur</th>
+                                <th >Dibuat Oleh</th>
                                 <th>Option</th>
                             </tr>
                         </thead>
@@ -86,7 +86,7 @@
                     function tampil_data_index_all(){
                         $.ajax({
                             type  : 'ajax',
-                            url   : '<?= base_url()?>pkl/data_index_all',
+                            url   : '<?= base_url()?>pkl2/data_index_all',
                             async : false,
                             dataType : 'json',
                             success : function(data){
@@ -94,42 +94,43 @@
                                 var i;
                                 var no = 1;
                                 for(i = 0; i < data.length; i++){
-                                    html += '<tr class="gradeX">'+
-                                                '<td style="font-size: 12px;"><a href="#" style="text-decoration: underline;">'+data[i].kode_lembur+'</a></td>'+
+                                    html += 
+                                    '<tr class="gradeX">'+
+                                        '<td style="font-size: 12px;"><a href="#" style="text-decoration: underline;">'+data[i].kode_lembur+'</a></td>'+
 
-                                                `<td>`+data[i].tgl_format+`</td>`+
-                                                
-                                                '<td>'+data[i].dept+'</td>'+
+                                        `<td>`+data[i].tgl_format+`</td>`+
+                                        
+                                        '<td>'+data[i].dept+'</td>'+
 
-                                                '<td>'+data[i].shift+'</td>'+
+                                        '<td>'+data[i].shift+'</td>'+
 
-                                                '<td>'+data[i].tujuan_lembur+'</td>'+
+                                        '<td>'+data[i].tujuan_lembur+'</td>'+
 
-                                                '<td>'+data[i].dibuat_oleh_nama+'</td>'+
+                                        '<td>'+data[i].dibuat_oleh_nama+'</td>'+
 
-                                                `<td>
-                                                    <a href="<?= base_url(); ?>pkl/add_overtime_list/`+data[i].kode_lembur+`" class="btn btn-warning btn-xs"><span class="fa fa-check" title="verifikasi"></span></a>
+                                        `<td>
+                                            <a href="<?= base_url(); ?>pkl2/add_overtime_list/`+data[i].kode_lembur+`" class="btn btn-warning btn-xs"><span class="fa fa-check" title="verifikasi"></span></a>
 
-                                                    <a href="#" data-toggle="modal" data-target="#modal-delete`+data[i].id+`" class="btn btn-danger btn-xs"><span class="fa fa-trash" title="Hapus"></span></a>
-                                                    <div class="modal fade" id="modal-delete`+data[i].id+`">
-                                                        <div class="modal-dialog ">
-                                                            <div class="modal-content">
-                                                                <form class="form-horizontal" action="<?= base_url(); ?>pkl/hapus_permohonan_lembur/`+data[i].kode_lembur+`" method="post">
-                                                                    <div class="modal-header">
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span></button>
-                                                                        <h4 class="modal-title" id="myModalLabel"><span class="fa fa-trash"> Apakah anda yakin ingin mengahapus data ini?</span></h4>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-danger" name="submit">Delete</button>
-                                                                    </div>
-                                                                </form>
+                                            <a href="#" data-toggle="modal" data-target="#modal-delete`+data[i].id+`" class="btn btn-danger btn-xs"><span class="fa fa-trash" title="Hapus"></span></a>
+                                            <div class="modal fade" id="modal-delete`+data[i].id+`">
+                                                <div class="modal-dialog ">
+                                                    <div class="modal-content">
+                                                        <form class="form-horizontal" action="<?= base_url(); ?>pkl2/hapus_permohonan_lembur/`+data[i].kode_lembur+`" method="post">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                                <h4 class="modal-title" id="myModalLabel"><span class="fa fa-trash"> Apakah anda yakin ingin mengahapus data ini?</span></h4>
                                                             </div>
-                                                        </div>
-                                                    </div> 
-                                                </td>`
-                                            '</tr>';
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-danger" name="submit">Delete</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </td>`
+                                    '</tr>';
                                 }
                                 $('#show_data').html(html);
                             }
@@ -150,12 +151,12 @@
                         <thead>
                             <tr>
                                 <th width="150px">Kode Lembur</th>
-                                <th width="100px">Tanggal</th>
-                                <th>Department</th>
-                                <th>Shift</th>
-                                <th>Tujuan Lembur</th>
+                                <th width="150px">Tanggal</th>
+                                <th width="150px">Department</th>
+                                <th width="100px">Shift</th>
+                                <th width="500px">Tujuan Lembur</th>
                                 <th>Dibuat Oleh</th>
-                                <th>Option</th>
+                                <th  width="150px">Status</th>
                             </tr>
                         </thead>
                         <tbody id="show_data2">
@@ -183,7 +184,7 @@
                             function tampil_data_index_all_verifikasi(){
                                 $.ajax({
                                     type  : 'ajax',
-                                    url   : '<?= base_url()?>pkl/data_index_all_verifikasi',
+                                    url   : '<?= base_url()?>pkl2/data_index_all_verifikasi',
                                     async : false,
                                     dataType : 'json',
                                     success : function(data){
@@ -191,8 +192,8 @@
                                         var i;
                                         var no = 1;
                                         for(i = 0; i < data.length; i++){
-                                            html += '<tr class="gradeX">'+
-                                                        '<td style="font-size: 12px;"><a href="#" style="text-decoration: underline;">'+data[i].kode_lembur+'</a></td>'+
+                                            html += '<tr class="gradeY">'+
+                                                        '<td style="font-size: 12px;"> <a href="<?= base_url(); ?>pkl2/add_overtime_list2/'+data[i].kode_lembur+'" style="text-decoration: underline;">'+data[i].kode_lembur+'</a></td>'+
                                                             
                                                         `<td>`+data[i].tgl_format+`</td>`+
                                                         
@@ -204,29 +205,7 @@
 
                                                         '<td>'+data[i].dibuat_oleh_nama+'</td>'+
 
-                                                        `<td>
-                                                            <a href="<?= base_url(); ?>pkl/add_overtime_list/`+data[i].kode_lembur+`" class="btn btn-info btn-xs"><span class="fa fa-pencil" title="verifikasi"></span></a>
-                                                            
-                                                            <a href="#" data-toggle="modal" data-target="#modal-delete`+data[i].id+`" class="btn btn-danger btn-xs"><span class="fa fa-trash" title="Hapus"></span></a>
-                                                            
-                                                            <div class="modal fade" id="modal-delete`+data[i].id+`">
-                                                                <div class="modal-dialog ">
-                                                                    <div class="modal-content">
-                                                                        <form class="form-horizontal" action="<?= base_url(); ?>pkl/hapus_permohonan_lembur/`+data[i].kode_lembur+`" method="post">
-                                                                            <div class="modal-header">
-                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span></button>
-                                                                                <h4 class="modal-title" id="myModalLabel"><span class="fa fa-trash"> Apakah anda yakin ingin mengahapus data ini?</span></h4>
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                                                <button type="submit" class="btn btn-danger" name="submit">Delete</button>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div> 
-                                                        </td>`
+                                                        '<td>'+data[i].status+'</td>'+
                                                     '</tr>';
                                         }
                                         $('#show_data2').html(html);

@@ -14,6 +14,7 @@ function functionGaji() {
         document.getElementById('upah').value = " "
     }
 }
+   
 </script>
 <section id="main-content">
     <section class="wrapper">
@@ -58,48 +59,73 @@ function functionGaji() {
                                 </div>
                             </div>
                             <div class="form-group col-sm-12">
-                                <label class="control-label col-lg-2">Tgl kontrak awal</label>
-                                <div class="col-lg-4">
-                                    <input class="form-control input-sm" value="<?= set_value('kontrak_awal'); ?>" id="kontrak_awal" name="kontrak_awal" type="date" required>
-                                </div>
+                            <label class="control-label col-lg-2">Tgl kontrak awal</label>
+                            <div class="col-lg-4">
+                                <input class="form-control input-sm" value="<?= set_value('kontrak_awal'); ?>" id="kontrak_awal" name="kontrak_awal" type="date" required>
                             </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-lg-2">Durasi</label>
-                                <div class="col-lg-2">
-                                    <input class="form-control input-sm" id="durasi" name="durasi" type="text" required>/Bulan <br><i style="font-size: 10px">(To change, please press "Tab")</i>
-                                </div>
-                            </div>
-                            <!-- <script src="<?= base_url(); ?>lib/jquery/jquery.min.js"></script>
-                                <script type="text/javascript">
-                                    $(document).ready(function(){
-                                        $('#durasi').change(function(){
-                                            var duration = document.getElementById('durasi').value;
-                                            var hariKedepan = new Date(new Date(document.getElementById('kontrak_awal').value).getTime()+(duration*24*60*60*1000    ));
-                                            let formatted_date = hariKedepan.getDate() + "-" + (hariKedepan.getMonth() + 1) + "-" + hariKedepan.getFullYear()
+                        </div>
 
-                                            document.getElementById('kontrak_akhir').value = formatted_date;
-                                        });
-                                        
-                                        $('#kontrak_awal').change(function(){
-                                            var duration = document.getElementById('durasi').value;
-                                            var hariKedepan = new Date(new Date(document.getElementById('kontrak_awal').value).getTime()+(duration*24*60*60*1000));
-                                            let formatted_date = hariKedepan.getDate() + "-" + (hariKedepan.getMonth() + 1) + "-" + hariKedepan.getFullYear()
-
-                                            document.getElementById('kontrak_akhir').value = formatted_date;
-                                        });
-                                    });
-                                </script> -->
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-lg-2">Tgl kontrak akhir</label>
-                                <div class="col-lg-4">
-                                    <input class="form-control input-sm" id="kontrak_akhir" name="kontrak_akhir" type="date" required>
-                                </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-lg-2">Durasi</label>
+                            <div class="col-lg-2">
+                                <!-- <input class="form-control input-sm" id="durasi" name="durasi" type="text" required>/Bulan <br><i style="font-size: 10px">(To change, please press "Tab")</i> -->
+                                <input class="form-control input-sm" type="number" id="durasi" name="durasi" placeholder="Jumlah Bulan" value="" min="1" required>
+                                                        
                             </div>
+                        </div>
+
+                        <script src="<?= base_url(); ?>lib/jquery/jquery.min.js"></script>
+                        <!-- Tambahkan skrip JavaScript berikut -->
+                            <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // Mendapatkan elemen input
+                                var inputKontrakAwal = document.getElementById('kontrak_awal');
+                                var inputDurasi = document.getElementById('durasi');
+                                var inputKontrakAkhir = document.getElementById('kontrak_akhir');
+
+                                // Menonaktifkan input tanggal masuk
+                                inputKontrakAwal.disabled = true;
+
+                                // Menambahkan event listener pada input jumlah bulan
+                                inputDurasi.addEventListener('input', function() {
+                                    // Aktifkan tanggal masuk setelah jumlah bulan diisi
+                                    inputKontrakAwal.disabled = false;
+
+                                    // Ambil nilai dari input tanggal masuk
+                                    var kontrakAwal = new Date(inputKontrakAwal.value);
+
+                                    // Ambil nilai dari input jumlah bulan
+                                    var jumlahBulan = parseInt(inputDurasi.value, 10);
+
+                                    // Tambahkan jumlah bulan ke tanggal masuk
+                                    kontrakAwal.setMonth(kontrakAwal.getMonth() + jumlahBulan);
+
+                                    // Kurangkan 1 hari dari tanggal akhir
+                                    kontrakAwal.setDate(kontrakAwal.getDate() - 1);
+
+                                    // Format tanggal untuk input tanggal evaluasi
+                                    var kontrakAkhir = kontrakAwal.toISOString().split('T')[0];
+
+                                    // Set nilai pada input tanggal evaluasi
+                                    inputKontrakAkhir.value = kontrakAkhir;
+                                });
+                            });
+
+                            </script>
+
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-lg-2">Tgl kontrak akhir</label>
+                            <div class="col-lg-4">
+                                <input class="form-control input-sm" id="kontrak_akhir" name="kontrak_akhir" type="date" readonly>
+                            </div>
+                        </div>
+
                             <div class="form-group col-sm-12">
-                                <label class="control-label col-lg-2">Keterangan Libur</label>
+                                <label class="control-label col-lg-2">Keterangan</label>
                                 <div class="col-lg-4">
-                                    <input class="form-control input-sm" name="libur" type="text" placeholder="Kosongkan jika tidak ada libur" required>
-                                    <label style="font-size: 10px;">(Contoh: 01 Maret 2020 - 02 Maret 2020)</label>
+                                    <input class="form-control input-sm" name="libur" type="text" placeholder="Keterangan" required>
+                                    <!-- <label style="font-size: 10px;">(Contoh: 01 Maret 2020 - 02 Maret 2020)</label> -->
                                 </div>
                             </div>
 
@@ -124,6 +150,7 @@ function functionGaji() {
                                 </p>
                                 <?php if($user['dept'] == "HRD"): ?>
                                     <a href="<?= base_url(); ?>PKWT/printPKWT/<?= $makar->no_scan; ?>" class="btn btn-warning">Print PKWT Terakhir</a>
+                                    <a href="<?= base_url(); ?>PKWT/PrintKaryawanPKWT/<?= $makar->no_scan; ?>" class="btn btn-info">Print Data Karyawan PKWT</a>
                                 <?php endif; ?>
                             </div>
                             <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="mydata">

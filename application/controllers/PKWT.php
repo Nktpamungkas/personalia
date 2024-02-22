@@ -32,7 +32,7 @@ class PKWT extends CI_Controller
                                         b.kontrak_akhir AS f_kontrak_akhir,
                                         b.keterangan,
                                         b.gaji,
-                                        b.status,
+                                        b.status,                                       
                                         b.libur
                                     FROM
                                         tbl_makar a
@@ -40,6 +40,22 @@ class PKWT extends CI_Controller
                                         WHERE b.no_scan = '$no_scan' ORDER BY b.id DESC")->result_array();
                                         $no = 1;
         echo json_encode($data);
+    }
+
+    public function PrintKaryawanPKWT($no_scan)
+    {
+        $data['user'] = $this->db->get_where('user', array('name' => $this->session->userdata('name')))->row_array(); 
+        $data['makar'] = $this->db->query("SELECT *, date_format(tk.kontrak_awal, '%d') AS tgl_masuk_hari, date_format(tk.kontrak_awal, '%M') AS tgl_masuk_bulan, date_format(tk.kontrak_awal, '%y') AS tgl_masuk_tahun,SUBSTR(makar.alamat_domisili, 1, LOCATE('RT', makar.alamat_domisili)-1) as Domisili,SUBSTR(SUBSTR(makar.alamat_domisili, LOCATE('/', makar.alamat_domisili)+ 1), LOCATE('/', SUBSTR(makar.alamat_domisili, LOCATE('/', makar.alamat_domisili)+ 1))+ 13) AS  kelurahan
+                                            FROM tbl_makar makar  
+                                            left join tbl_kontrak tk on
+                                            tk.no_scan = makar.no_scan 
+                                            WHERE makar.no_scan = '$no_scan'
+                                            order by 
+                                            date_format(tk.kontrak_awal, '%y')desc , date_format(tk.kontrak_awal, '%m') desc")->row();
+        $data['no_scan'] = $no_scan;
+        
+        $data['title'] = 'Print Data Karyawan';
+        $this->load->view('PKWT/PrintKaryawanPKWT', $data);
     }
 
     public function ExportToExcell()
@@ -175,7 +191,8 @@ class PKWT extends CI_Controller
                 $inputHistory = $this->db->insert('tbl_kontrak', $data2);
 
                 $data = array(
-                    'status_karyawan'       => $this->input->post('status_karyawan', true)
+                    'status_karyawan'       => $this->input->post('status_karyawan', true),
+                    'status_email_kontrak' => ''
                 );
                 $this->db->where('no_scan', $_noscan);
                 $updateMakar = $this->db->update('tbl_makar', $data);
@@ -253,6 +270,7 @@ class PKWT extends CI_Controller
                                                         DATE_FORMAT( b.kontrak_awal, '%d %M %Y' ) AS kontrak_awal,
                                                         DATE_FORMAT( b.kontrak_akhir, '%d %M %Y' ) AS kontrak_akhir,
                                                         b.durasi,
+                                                        DATE_FORMAT( ( b.kontrak_awal - INTERVAL '1' DAY) , '%d %M %Y' ) AS ttd_kontrak_awal,
                                                         b.gaji
                                                     FROM
                                                         tbl_makar a

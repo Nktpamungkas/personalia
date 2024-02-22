@@ -57,16 +57,16 @@ class pkl extends CI_Controller
         $data = $this->db->query("SELECT a.id, a.kode_lembur,
                                         a.dept,
                                         b.tanggal_permohonan,
-                                        a.shift,
+                                        upper(a.shift) as shift,
                                         DATE_FORMAT(  b.tanggal_permohonan, '%d %b %Y' ) AS tgl_format,
                                         SUBSTRING( a.tujuan_lembur, 1, 60 ) AS tujuan_lembur,
                                         a.target_lembur,
                                         SUBSTRING( a.penyebab_lembur, 1, 60 ) AS penyebab_lembur,
-                                        a.dibuat_oleh_nama,
+                                        upper(b.dibuat_oleh_nama) as dibuat_oleh_nama,
                                         b.`status` 
                                     FROM
                                         permohonan_kerja_lembur a
-                                        LEFT JOIN ( SELECT b.id_pkl, b.`status`, b.tanggal_permohonan FROM daftar_lembur b ) b ON b.id_pkl = a.id
+                                        LEFT JOIN ( SELECT b.id_pkl, b.`status`, b.tanggal_permohonan, b.dibuat_oleh_nama FROM daftar_lembur b ) b ON b.id_pkl = a.id
                                     WHERE
                                         b.`status` = 'Printed' 
                                         AND b.tanggal_permohonan BETWEEN DATE_ADD( now( ), INTERVAL -2 MONTH ) AND DATE_ADD( now( ), INTERVAL 5 MONTH )
@@ -85,16 +85,16 @@ class pkl extends CI_Controller
         $data = $this->db->query("SELECT a.id, a.kode_lembur,
                                         a.dept,
                                         b.tanggal_permohonan,
-                                        a.shift,
+                                        upper(a.shift) as shift,
                                         DATE_FORMAT(  b.tanggal_permohonan, '%d %b %Y' ) AS tgl_format,
                                         SUBSTRING( a.tujuan_lembur, 1, 60 ) AS tujuan_lembur,
                                         a.target_lembur,
                                         SUBSTRING( a.penyebab_lembur, 1, 60 ) AS penyebab_lembur,
-                                        a.dibuat_oleh_nama,
+                                        upper(b.dibuat_oleh_nama) as dibuat_oleh_nama,
                                         b.`status` 
                                     FROM
                                         permohonan_kerja_lembur a
-                                        LEFT JOIN ( SELECT b.id_pkl, b.`status`, b.tanggal_permohonan FROM daftar_lembur b ) b ON b.id_pkl = a.id
+                                        LEFT JOIN ( SELECT b.id_pkl, b.`status`, b.tanggal_permohonan, b.dibuat_oleh_nama FROM daftar_lembur b ) b ON b.id_pkl = a.id
                                     WHERE
                                         b.`status` IN ( 'Verifikasi' )
                                         AND  b.tanggal_permohonan BETWEEN DATE_ADD( now( ), INTERVAL -2 MONTH ) AND DATE_ADD( now( ), INTERVAL 5 MONTH )
@@ -170,8 +170,9 @@ class pkl extends CI_Controller
             foreach ($data_name as $key) {
                 array_push($value, array(
                     'kode_lembur'               => "FL-".date('Ym')."-".sprintf('%07s', $id_terakhir->last_id),
-                    'dept'                      =>  $this->input->post('dept', true),
+                    'dept'                      =>  $this->input->post('dept', true),                    
                     'no_scan'                   =>  $key,
+                    // 'status_tipe_lembur'        =>  $this->input->post('status_tipe_lembur', true),
                     // 'tujuan_lembur'             =>  $this->input->post('tujuan_lembur', true),
                     // 'target_lembur'             =>  $this->input->post('target_lembur', true),
                     // 'tipe_lembur'               =>  $this->input->post('tipe_lembur', true),
@@ -226,6 +227,7 @@ class pkl extends CI_Controller
                         'kode_lembur'               =>  $this->input->post('kode_lembur', true),
                         'dept'                      =>  $this->input->post('dept', true),
                         'shift'                     =>  $this->input->post('shift', true),
+                        // 'status_tipe_lembur'        =>  $this->input->post('status_tipe_lembur', true),
                         'no_scan'                   =>  $key
                     ));
                 }
@@ -274,6 +276,7 @@ class pkl extends CI_Controller
                     'dept'                      =>  $this->input->post('dept', true),
                     'shift'                     =>  $this->input->post('shift', true),
                     'no_scan'                   =>  $data_name[$index],
+                    // 'status_tipe_lembur'        =>  $this->input->post('status_tipe_lembur', true),
                     // 'tujuan_lembur'             =>  $this->input->post('tujuan_lembur', true),
                     // 'target_lembur'             =>  $this->input->post('target_lembur', true),
                     // 'tipe_lembur'               =>  $this->input->post('tipe_lembur', true),
@@ -335,28 +338,13 @@ class pkl extends CI_Controller
                 $this->load->view('template/footer');
             }
         }
-         // START OVERTIME LIST
-         public function add_overtime_list2($kodelembur)
-         {
-             $data['user'] = $this->db->get_where('user', array('name' =>
-             $this->session->userdata('name')))->row_array();
- 
-             $cari_data =  $this->db->query("SELECT COUNT(*) AS count FROM daftar_lembur WHERE kode_lembur = '$kodelembur' ")->row();
- 
-             if ($cari_data->count) { // Jika data ada. EDIT Surat perintah lembur ATAU UNTUK VERIFIKASI
-                 $data['dl'] = $this->db->query("SELECT * FROM daftar_lembur WHERE kode_lembur = '$kodelembur' ")->row();
-                 $data['title'] = 'Time Attendance | Edit Lembur';
-                 $this->load->view('template/header', $data);
-                 $this->load->view('pkl/edit_ol2', $data);
-                 $this->load->view('template/footer');
-             } 
-         }
-
+        
         public function add_ol($username)
         {
             $this->db->trans_start();
             $nama                   = $this->input->post('nama', true);                     // Array
-            $id                     = $this->input->post('id', true);                       // Array
+            $id                     = $this->input->post('id', true);
+            $status_tipe_lembur     = $this->input->post('status_tipe_lembur', true);       // Array
             $no_absen               = $this->input->post('no_absen', true);                 // Array
             $waktu_lembur_start     = $this->input->post('wl_1', true);                     // Array
             $waktu_lembur_stop      = $this->input->post('wl_2', true);                     // Array
@@ -386,6 +374,7 @@ class pkl extends CI_Controller
                     'disetujui_oleh_nama'       => $this->input->post('disetujui_oleh_nama', true),
                     'disetujui_oleh_jabatan'    => $this->input->post('disetujui_oleh_jabatan', true),
                     'tanggal_ttd'               => $this->input->post('tanggal_ttd', true),
+                    'status_tipe_lembur'        =>  $status_tipe_lembur[$index],
                     'tanggal_permohonan'        => $this->input->post('tanggal', true)
                 ));
                 $index++;
@@ -398,6 +387,7 @@ class pkl extends CI_Controller
                 foreach ($nama as $DataKey) {
                     array_push($_value, array(
                         'nama'                      =>  $DataKey,
+                        'status_tipe_lembur'        =>  $status_tipe_lembur[$_index],
                         'id'                        =>  $id[$_index]
                     ));
                     $_index++;
@@ -415,6 +405,7 @@ class pkl extends CI_Controller
             if (isset($checked) == 1) {
                 $id                     = $this->input->post('id', true);                       // Array
                 $id_pkl                 = $this->input->post('id_pkl', true);                   // Array
+                $status_tipe_lembur     = $this->input->post('status_tipe_lembur', true);       // Array  
                 $nama                   = $this->input->post('nama', true);                     // Array
                 $no_absen               = $this->input->post('no_absen', true);                 // Array
                 $waktu_lembur_start     = $this->input->post('wl_1', true);                     // Array
@@ -445,6 +436,8 @@ class pkl extends CI_Controller
                         'disetujui_oleh_nama'       => $this->input->post('disetujui_oleh_nama', true),
                         'disetujui_oleh_jabatan'    => $this->input->post('disetujui_oleh_jabatan', true),
                         'tanggal_ttd'               => $this->input->post('tanggal_ttd', true),
+                        'tanggal_permohonan'        => $this->input->post('tanggal', true),
+                        'status_tipe_lembur'        =>  $status_tipe_lembur[$index],
                         'status'                    => 'Verifikasi'
                     ));
                     $index++;
@@ -457,6 +450,7 @@ class pkl extends CI_Controller
                     array_push($_value, array(
                         'nama'                      => $DataKey,
                         'no_scan'                   => $no_absen[$_index],
+                        'status_tipe_lembur'        => $status_tipe_lembur[$_index],
                         'id'                        => $id_pkl[$_index],
                         'status'                    => 'Verifikasi'
                     ));
@@ -472,6 +466,7 @@ class pkl extends CI_Controller
                 $id_pkl                 = $this->input->post('id_pkl', true);                   // Array
                 $nama                   = $this->input->post('nama', true);                     // Array
                 $no_absen               = $this->input->post('no_absen', true);                 // Array
+                $status_tipe_lembur     = $this->input->post('status_tipe_lembur', true);       // Array  
                 $waktu_lembur_start     = $this->input->post('wl_1', true);                     // Array
                 $waktu_lembur_stop      = $this->input->post('wl_2', true);                     // Array
                 $istirahat              = $this->input->post('istirahat', true);                // Array
@@ -490,6 +485,7 @@ class pkl extends CI_Controller
                         'id'                        => $id[$index],
                         'waktu_lembur_start'        => $waktu_lembur_start[$index],
                         'waktu_lembur_stop'         => $waktu_lembur_stop[$index],
+                        'status_tipe_lembur'        => $status_tipe_lembur[$index],
                         'istirahat'                 => $istirahat[$index],
                         'total_jam_lembur'          => $total_jam_lembur[$index],
                         'keterangan'                => $keterangan[$index],
@@ -499,7 +495,8 @@ class pkl extends CI_Controller
                         'diperiksa_oleh_jabatan'    => $this->input->post('diperiksa_oleh_jabatan', true),
                         'disetujui_oleh_nama'       => $this->input->post('disetujui_oleh_nama', true),
                         'disetujui_oleh_jabatan'    => $this->input->post('disetujui_oleh_jabatan', true),
-                        'tanggal_ttd'               => $this->input->post('tanggal_ttd', true)
+                        'tanggal_ttd'               => $this->input->post('tanggal_ttd', true),
+                        'tanggal_permohonan'        => $this->input->post('tanggal', true)
                     ));
                     $index++;
                 }
@@ -511,6 +508,7 @@ class pkl extends CI_Controller
                     array_push($_value, array(
                         'nama'                      => $DataKey,
                         'no_scan'                   => $no_absen[$_index],
+                        'status_tipe_lembur'        => $status_tipe_lembur[$index],
                         'id'                        => $id_pkl[$_index]
                     ));
                     $_index++;
@@ -521,7 +519,22 @@ class pkl extends CI_Controller
                 redirect('pkl');
             }
         }
+        // cek hasil verifikasi
+        public function add_overtime_list2($kodelembur)
+        {
+            $data['user'] = $this->db->get_where('user', array('name' =>
+            $this->session->userdata('name')))->row_array();
 
+            $cari_data =  $this->db->query("SELECT COUNT(*) AS count FROM daftar_lembur WHERE kode_lembur = '$kodelembur' ")->row();
+
+            if ($cari_data->count) { // Jika data ada. EDIT Surat perintah lembur ATAU UNTUK VERIFIKASI
+                $data['dl'] = $this->db->query("SELECT * FROM daftar_lembur WHERE kode_lembur = '$kodelembur' ")->row();
+                $data['title'] = 'Time Attendance | Edit Lembur';
+                $this->load->view('template/header', $data);
+                $this->load->view('pkl/edit_ol2', $data);
+                $this->load->view('template/footer');
+            } 
+        }
         public function print_daftar_lembur($kodelembur)
         {
             $cari_data =  $this->db->query("SELECT COUNT(*) AS count FROM daftar_lembur WHERE kode_lembur = '$kodelembur'")->row();
@@ -592,4 +605,317 @@ class pkl extends CI_Controller
             redirect($this->agent->referrer());
         }
     // END OVERTIME LIST
+
+    //START EDIT OVERTIME LIST REVISI BEFORE VERIFICATION
+    public function tambah_revisi($kodelembur)
+    {   
+        $data['user'] = $this->db->get_where('user', array('name' =>
+        $this->session->userdata('name')))->row_array(); 
+            $data['title'] = 'Time Attendance | Edit Lembur';
+            $data['dpkl'] = $this->db->query("SELECT * FROM permohonan_kerja_lembur WHERE kode_lembur = '$kodelembur'")->row();
+            $this->load->view('template/header', $data);
+            $this->load->view('pkl/tambah_revisi', $data);
+            $this->load->view('template/footer');
+   }
+
+    public function tambah_proses_revisi($username)
+    {
+        if ($this->input->post('no_scan[]', true)) {
+            
+            $data_name = $this->input->post('no_scan[]', true);
+            $value = array();
+            foreach ($data_name as $key) {
+                array_push($value, array(
+                    'kode_lembur'               =>  $this->input->post('kode_lembur', true),
+                    'dept'                      =>  $this->input->post('dept', true),
+                    'shift'                     =>  $this->input->post('shift', true),
+                    'status_tipe_lembur'        =>  $this->input->post('status_tipe_lembur2', true),
+                    'status'                    => 'Printed',
+                    'no_scan'                   =>  $key
+                ));
+            }
+            $execute_insert = $this->db->insert_batch('permohonan_kerja_lembur', $value);
+            $id_dl                     = $this->input->post('id', true);  
+            $_value = array();
+            $_index = 0;
+            foreach ($data_name as $DataKey) {
+                array_push($_value, array(
+                    'no_absen'                   => $DataKey[$_index],
+                    'id'                        => $id_dl[$_index]                
+                ));
+                $_index++;
+            }
+            $this->db->update_batch('daftar_lembur', $_value, 'id');
+           
+            if ($execute_insert) {
+                $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert" style="font-size: 14px"><b>Your Request for Overtime Work has been updated.</b></center>');
+                redirect('pkl/index_all');
+            } else {
+                $this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert" style="font-size: 14px"><b>Your Request for Overtime Work NOT ADDED.</b></center>');
+                redirect('pkl/index_all');
+            }
+        } else {
+            $this->session->set_flashdata('message', '<center class="alert alert-info" role="alert" style="font-size: 14px"><b>Your Request for overtime Work is empty.</b></center>');
+            redirect('pkl/index_all');
+        }
+    }
+    public function add_overtime_list_revisi($kodelembur)
+    {
+        $data['user'] = $this->db->get_where('user', array('name' =>
+        $this->session->userdata('name')))->row_array();
+
+        $cari_data =  $this->db->query("SELECT COUNT(*) AS count FROM daftar_lembur WHERE kode_lembur = '$kodelembur' ")->row();
+
+        if ($cari_data->count) { // Jika data ada. EDIT Surat perintah lembur ATAU UNTUK VERIFIKASI
+            $data['dl'] = $this->db->query("SELECT * FROM daftar_lembur WHERE kode_lembur = '$kodelembur' ")->row();
+            $data['title'] = 'Time Attendance | Edit Lembur';
+            $this->load->view('template/header', $data);
+            $this->load->view('pkl/edit_ol_revisi', $data);
+            $this->load->view('template/footer');
+        } else { // Jika data tidak ada. NEW Surat perintah lembur
+            $data['dl'] = $this->db->query("SELECT * FROM permohonan_kerja_lembur WHERE kode_lembur = '$kodelembur' ")->row();
+            $data['title'] = 'Time Attendance | Lembur';
+            $this->load->view('template/header', $data);
+            $this->load->view('pkl/add_ol_revisi', $data);
+            $this->load->view('template/footer');
+        }
+    }
+    
+    public function edit_ol_revisi($dept) 
+    {
+        $checked = $this->input->post('verifikasi', true);
+        // JIKA DATANYA TERCEKLIS ATAU TERVERIFIKASI KHUSUS special_user 1
+        if (isset($checked) == 1) {
+            $id                     = $this->input->post('id', true);                       // Array
+            $id_pkl                 = $this->input->post('id_pkl', true);                   // Array
+            $nama                   = $this->input->post('nama', true);                     // Array
+            $no_absen               = $this->input->post('no_absen', true);                 // Array
+            $waktu_lembur_start     = $this->input->post('wl_1', true);                     // Array
+            $waktu_lembur_stop      = $this->input->post('wl_2', true);                     // Array
+            $istirahat              = $this->input->post('istirahat', true);                // Array
+            $total_jam_lembur       = $this->input->post('total_jam_lembur', true);         // Array
+            $status_tipe_lembur     = $this->input->post('status_tipe_lembur', true);
+            $keterangan             = $this->input->post('keterangan', true);               // Array
+            $value                  = array();
+            $index                  = 0;                                                    // Set Index Awal 0
+            foreach ($nama as $key) {                                                       // Buat Perulangan berdasarkan nama sampai akhir
+                array_push($value, array(
+                    'kode_lembur'               => $this->input->post('kode_lembur', true),
+                    'dept'                      => $this->input->post('dept', true),
+                    'shift'                     => $this->input->post('shift', true),
+                    'tanggal'                   => $this->input->post('tanggal', true),
+                    'nama'                      => $key,
+                    'no_absen'                  => $no_absen[$index],
+                    'id'                        => $id[$index],
+                    'waktu_lembur_start'        => $waktu_lembur_start[$index],
+                    'waktu_lembur_stop'         => $waktu_lembur_stop[$index],
+                    'istirahat'                 => $istirahat[$index],
+                    'total_jam_lembur'          => $total_jam_lembur[$index],
+                    'keterangan'                => $keterangan[$index],
+                    'dibuat_oleh_nama'          => $this->input->post('dibuat_oleh_nama', true),
+                    'dibuat_oleh_jabatan'       => $this->input->post('dibuat_oleh_jabatan', true),
+                    'diperiksa_oleh_nama'       => $this->input->post('diperiksa_oleh_nama', true),
+                    'diperiksa_oleh_jabatan'    => $this->input->post('diperiksa_oleh_jabatan', true),
+                    'disetujui_oleh_nama'       => $this->input->post('disetujui_oleh_nama', true),
+                    'disetujui_oleh_jabatan'    => $this->input->post('disetujui_oleh_jabatan', true),
+                    'tanggal_ttd'               => $this->input->post('tanggal_ttd', true),
+                    'tanggal_permohonan'        => $this->input->post('tanggal', true),
+                    'status_tipe_lembur'        => $status_tipe_lembur[$index],
+                    'status'                    => 'Verifikasi'
+                ));
+                $index++;
+            }
+            $this->db->update_batch('daftar_lembur', $value , 'id');
+
+            $_value = array();
+            $_index = 0;
+            foreach ($nama as $DataKey) {
+                array_push($_value, array(
+                    'nama'                      => $DataKey,
+                    'no_scan'                   => $no_absen[$_index],
+                    'tanggal'                   => $tanngal[$_index],
+                    'id'                        => $id_pkl[$_index],
+                    'status'                    => 'Verifikasi'
+                ));
+                $_index++;
+            }
+            $this->db->update_batch('permohonan_kerja_lembur', $_value, 'id');
+
+            $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert" style="font-size: 14px"><b>Your Overtime list has been verified.</b></center>');
+            redirect('pkl/index_all');
+        // JIKA DATANYA TIDAK TERCEKLIS ATAU TERVERIFIKASI
+        } else {
+            $id                     = $this->input->post('id', true);                       // Array
+            $id_pkl                 = $this->input->post('id_pkl', true);                   // Array
+            $nama                   = $this->input->post('nama', true);                     // Array
+            $no_absen               = $this->input->post('no_absen', true);                 // Array
+            $waktu_lembur_start     = $this->input->post('wl_1', true);                     // Array
+            $waktu_lembur_stop      = $this->input->post('wl_2', true);                     // Array
+            $istirahat              = $this->input->post('istirahat', true);                // Array
+            $total_jam_lembur       = $this->input->post('total_jam_lembur', true);         // Array
+            $keterangan             = $this->input->post('keterangan', true);    
+            $status_tipe_lembur     = $this->input->post('status_tipe_lembur', true);           // Array
+            $value                  = array();
+            $index                  = 0;                                                    // Set Index Awal 0
+            foreach ($nama as $key) {                                                       // Buat Perulangan berdasarkan nama sampai akhir
+                array_push($value, array(
+                    'kode_lembur'               => $this->input->post('kode_lembur', true),
+                    'dept'                      => $this->input->post('dept', true),
+                    'shift'                     => $this->input->post('shift', true),
+                    'tanggal'                   => $this->input->post('tanggal', true),
+                    'nama'                      => $key,
+                    'no_absen'                  => $no_absen[$index],
+                    'id'                        => $id[$index],
+                    'waktu_lembur_start'        => $waktu_lembur_start[$index],
+                    'waktu_lembur_stop'         => $waktu_lembur_stop[$index],
+                    'istirahat'                 => $istirahat[$index],
+                    'total_jam_lembur'          => $total_jam_lembur[$index],
+                    'keterangan'                => $keterangan[$index],
+                    'dibuat_oleh_nama'          => $this->input->post('dibuat_oleh_nama', true),
+                    'dibuat_oleh_jabatan'       => $this->input->post('dibuat_oleh_jabatan', true),
+                    'diperiksa_oleh_nama'       => $this->input->post('diperiksa_oleh_nama', true),
+                    'diperiksa_oleh_jabatan'    => $this->input->post('diperiksa_oleh_jabatan', true),
+                    'disetujui_oleh_nama'       => $this->input->post('disetujui_oleh_nama', true),
+                    'disetujui_oleh_jabatan'    => $this->input->post('disetujui_oleh_jabatan', true),
+                    'tanggal_ttd'               => $this->input->post('tanggal_ttd', true),
+                    'status_tipe_lembur'        => $status_tipe_lembur[$index]
+                ));
+                $index++;
+            }
+            $this->db->update_batch('daftar_lembur', $value, 'id');
+            
+            $_value = array();
+            $_index = 0;
+            foreach ($nama as $DataKey) {
+                array_push($_value, array(
+                    'nama'                      => $DataKey,
+                    'no_scan'                   => $no_absen[$_index],
+                    'tanggal'                   => $tanngal[$_index],
+                    'id'                        => $id_pkl[$_index]
+                ));
+                $_index++;
+            }
+            $this->db->update_batch('permohonan_kerja_lembur', $_value, 'id');
+
+            $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert" style="font-size: 14px"><b>Your Overtime list has been updated.</b></center>');
+            redirect('pkl');
+        }
+    }
+    public function add_Revisi()
+    {
+        $data['user'] = $this->db->get_where('user', array('name' =>
+        $this->session->userdata('name')))->row_array(); 
+        $data['title'] = 'Time Attendance | Lembur';
+        $this->load->view('template/header', $data);
+        $this->load->view('pkl/add_revisi');
+        $this->load->view('template/footer');
+    }
+
+    public function add_overtime_revisi($kodelembur)
+    {
+        $data['user'] = $this->db->get_where('user', array('name' =>
+        $this->session->userdata('name')))->row_array();
+
+        // Jika data tidak ada. NEW Surat perintah lembur
+        $q_cek_lembur_edit = "SELECT distinct 
+                                    pkl.id,
+                                    pkl.dept,
+                                    pkl.kode_lembur,
+                                    pkl.no_scan,
+                                    case 
+                                        when pkl.nama = '' then tm.nama
+                                    end as nama,
+                                    dl.keterangan,
+                                    pkl.shift,
+                                    dl.status_tipe_lembur,
+                                    dl.tanggal,
+                                    dl.tanggal_permohonan,
+                                    dl.dibuat_oleh_nama,
+                                    dl.dibuat_oleh_jabatan,
+                                    dl.diperiksa_oleh_nama,
+                                    dl.diperiksa_oleh_jabatan,
+                                    dl.disetujui_oleh_nama,
+                                    dl.disetujui_oleh_jabatan 
+                                FROM 
+                                    permohonan_kerja_lembur pkl 
+                                    LEFT JOIN tbl_makar tm on pkl.no_scan = tm.no_scan 
+                                    LEFT JOIN daftar_lembur dl on pkl.kode_lembur = dl.kode_lembur and not pkl.no_scan = dl.no_absen 
+                                WHERE
+                                    pkl.nama = '' and pkl.kode_lembur = '$kodelembur'";
+        $row_cek_lembur_edit    = $this->db->query($q_cek_lembur_edit)->row();
+
+        if(!empty($row_cek_lembur_edit)){
+            $data['dl'] = $this->db->query($q_cek_lembur_edit)->row();
+            $data['title'] = 'Time Attendance | Lembur';
+            $this->load->view('template/header', $data);
+            $this->load->view('pkl/add_ol_revisi', $data);
+            $this->load->view('template/footer');
+        }else{
+            $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"  style="font-size: 14px"><b>Revisi Data Karyawan Lembur Sudah ditambahkan.<br><center>Permohonan Lembur Dapat di Verifikasi Sekarang</center></b></center>');
+            $this->add_overtime_list_revisi($kodelembur);
+
+        }
+    }
+    public function add_ol_revisi($username)
+        {
+            $this->db->trans_start();
+            $nama                   = $this->input->post('nama', true);                     // Array
+            $id                     = $this->input->post('id', true);                       // Array
+            $no_absen               = $this->input->post('no_absen', true);                 // Array
+            $waktu_lembur_start     = $this->input->post('wl_1', true);                     // Array
+            $waktu_lembur_stop      = $this->input->post('wl_2', true);                     // Array
+            $istirahat              = $this->input->post('istirahat', true);                // Array
+            $total_jam_lembur       = $this->input->post('total_jam_lembur', true);         // Array
+            $status_tipe_lembur     = $this->input->post('status_tipe_lembur', true);    
+            $keterangan             = $this->input->post('keterangan', true);               // Array
+            $value                  = array();
+            $index                  = 0;                                                    // Set Index Awal 0
+            foreach ($nama as $key) {                                                       // Buat Perulangan berdasarkan nama sampai akhir
+                array_push($value, array(
+                    'kode_lembur'               => $this->input->post('kode_lembur', true),
+                    'dept'                      => $this->input->post('dept', true),
+                    'shift'                     => $this->input->post('shift', true),
+                    'tanggal'                   => $this->input->post('tanggal', true),
+                    'nama'                      => $key,
+                    'id_pkl'                    => $id[$index],
+                    'no_absen'                  => $no_absen[$index],
+                    'waktu_lembur_start'        => $waktu_lembur_start[$index],
+                    'waktu_lembur_stop'         => $waktu_lembur_stop[$index],
+                    'istirahat'                 => $istirahat[$index],
+                    'total_jam_lembur'          => $total_jam_lembur[$index],
+                    'keterangan'                => $keterangan[$index],
+                    'dibuat_oleh_nama'          => $this->input->post('dibuat_oleh_nama', true),
+                    'dibuat_oleh_jabatan'       => $this->input->post('dibuat_oleh_jabatan', true),
+                    'diperiksa_oleh_nama'       => $this->input->post('diperiksa_oleh_nama', true),
+                    'diperiksa_oleh_jabatan'    => $this->input->post('diperiksa_oleh_jabatan', true),
+                    'disetujui_oleh_nama'       => $this->input->post('disetujui_oleh_nama', true),
+                    'disetujui_oleh_jabatan'    => $this->input->post('disetujui_oleh_jabatan', true),
+                    'tanggal_ttd'               => $this->input->post('tanggal_ttd', true),
+                    'tanggal_permohonan'        => $this->input->post('tanggal', true),
+                    'status_tipe_lembur'        => $status_tipe_lembur[$index],
+                    'status'                    => 'Printed'
+                ));
+                $index++;
+            }
+                $this->db->insert_batch('daftar_lembur', $value);
+                $this->db->trans_complete();
+
+                $_value = array();
+                $_index = 0;
+                foreach ($nama as $DataKey) {
+                    array_push($_value, array(
+                        'nama'                      =>  $DataKey,
+                        'id'                        =>  $id[$_index]
+                    ));
+                    $_index++;
+                }
+                $this->db->update_batch('permohonan_kerja_lembur', $_value, 'id');
+
+                $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"  style="font-size: 14px"><b>Revisi Data Karyawan lembur telah Berhasil.</b></center>');
+                // redirect($this->agent->referrer());
+                $kodelembur = $this->input->post('kode_lembur', true);
+
+                $this->add_overtime_list_revisi($kodelembur);
+        }
+        // END OVERTIME LIST REVISI
 }

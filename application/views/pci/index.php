@@ -50,7 +50,7 @@
                                                                 LEFT JOIN (SELECT * FROM tbl_makar) b ON a.nip = b.no_scan
                                                                 LEFT JOIN cuti c ON c.kode_cuti = a.ket
                                                             WHERE
-                                                                a.dept = '$dept' AND a.kode_cuti LIKE '%FIC%' AND tgl_surat_pemohon BETWEEN '2020-01-01' AND '2023-12-31' AND b.status_aktif = 1
+                                                                a.dept = '$dept' AND a.kode_cuti LIKE '%FIC%' AND tgl_surat_pemohon BETWEEN '2021-01-01' AND '2025-12-31' AND b.status_aktif = 1
                                                             ORDER BY
                                                                 a.tgl_surat_pemohon DESC")->result_array(); 
                             ?>
@@ -61,21 +61,21 @@
                                         <a href="#" class="fa fa-align-justify" data-toggle="dropdown"></a>
                                         <?php if($result['status'] == "Verifikasi") : ?>
                                         <ul class="dropdown-menu">
-                                            <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Ubah tidak aktif">Ubah</a></li>
+                                            <!-- <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Ubah tidak aktif">Ubah</a></li> -->
                                             <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Cetak tidak aktif">Cetak</a></li>
                                             <li class="divider"></li>
                                             <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Hapus tidak aktif">Hapus</a></li>
                                         </ul>
                                         <?php elseif($result['status'] == "Printed") : ?>
                                         <ul class="dropdown-menu">
-                                            <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Ubah tidak aktif">Ubah</a></li>
+                                            <!-- <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Ubah tidak aktif">Ubah</a></li> -->
                                             <li><a href="<?= base_url(); ?>pci/print_izin_cuti/<?= $result['id']; ?>" style="color: black; font-size:13px;" title="Cetak">Cetak</a></li>
                                             <li class="divider"></li>
                                             <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Hapus tidak aktif">Hapus</a></li>
                                         </ul>
                                         <?php else : ?>
                                         <ul class="dropdown-menu">
-                                            <li><a href="<?= base_url(); ?>pci/edit_Request/<?= $result['id']; ?>" style="color: black; font-size:13px;">Ubah</a></li>
+                                            <!-- <li><a href="<?= base_url(); ?>pci/edit_Request/<?= $result['id']; ?>" style="color: black; font-size:13px;">Ubah</a></li> -->
                                             <li><a href="<?= base_url(); ?>pci/print_izin_cuti/<?= $result['id']; ?>" style="color: black; font-size:13px;">Cetak</a></li>
                                             <li class="divider"></li>
                                             <li><a href="#" style="color: black; font-size:13px;" data-target="#modal-delete<?= $result['id']; ?>" data-toggle="modal">Hapus</a></li>

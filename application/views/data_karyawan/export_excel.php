@@ -51,6 +51,7 @@
             <th>Nama Ayah Kandung</th>
             <th>Nama Ibu Kandung</th>
             <th>No Kartu Keluarga</th>
+            <th>Keterangan Keluar</th>
         </tr>
     </thead>
     <tbody>
@@ -60,7 +61,8 @@
                                                 WHEN LEFT(no_ktp, 1) = '''' THEN SUBSTRING(no_ktp, 2,100)
                                                 ELSE no_ktp
                                             END AS no_ktp_kutip,
-                                            tbl_makar.* FROM tbl_makar")->result_array();
+                                            tbl_makar.* FROM tbl_makar
+                                            order by CAST(no_scan AS INTEGER) asc")->result_array();
         ?>
         <?php foreach ($data as $dd) : ?>
         <tr>
@@ -162,6 +164,7 @@
                 ?>
             </td>
             <td class='str'><?= $dd['kartu_keluarga']; ?></td>
+            <td class='str'><?= $dd['keterangan_resign']; ?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>

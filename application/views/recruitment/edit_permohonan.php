@@ -110,7 +110,7 @@
                                     <option value="closed" <?php if ($pemohon->status == "closed") { echo 'SELECTED';} ?>>CLOSED</option>
                                     <option value="hold" <?php if ($pemohon->status == "hold") { echo 'SELECTED';} ?>>HOLD</option>
                                     <option value="khusus" <?php if ($pemohon->status == "khusus") { echo 'SELECTED';} ?>>KHUSUS</option>
-                                    <option value="khusus" <?php if ($pemohon->status == "cancel") { echo 'SELECTED';} ?>>CANCEL</option>
+                                    <option value="cancel" <?php if ($pemohon->status == "cancel") { echo 'SELECTED';} ?>>CANCEL</option>
                                 </select>
                             </div>
                         </div>
