@@ -30,10 +30,9 @@ class Auth extends CI_Controller
                         status_karyawan = 'Tetap' 
                         AND gaji IS NULL 
                         AND status_aktif = 1 
-                        -- AND DATE_FORMAT( tgl_tetap, '%d %M' ) = DATE_FORMAT(CURDATE(),'%d %M') 
-                        -- and not year(tgl_tetap) = year(CURDATE())
-                        -- and not tgl_generate_cuti = CURDATE()
-                        and no_scan ='1129'
+                        AND DATE_FORMAT( tgl_tetap, '%d %M' ) = DATE_FORMAT(CURDATE(),'%d %M') 
+                        and not year(tgl_tetap) = year(CURDATE())
+                        and not tgl_generate_cuti = CURDATE()
                     ORDER BY
                         ( tgl_tetap + INTERVAL '12' MONTH - INTERVAL '1' DAY ) DESC";           
         // $sheet_gen  = $this->db->query($sql_sheet." LIMIT 1 ")->row(); 
@@ -160,10 +159,10 @@ class Auth extends CI_Controller
         $ipaddress = $_SERVER['REMOTE_ADDR']; //ip server
         $log_login = array(
             'username'      => $this->input->post('name'),
-            'date_login'    => time(),
+            'date_login'    => DATE('Y-m-d H:i:s'),
             'keterangan'    => gethostbyaddr($ipaddress)
         );
-        $this->db->insert('log_login', $log_login);
+        $this->db->insert('log_login_2', $log_login);
 
         // Script logged
         $dataLogged = array(

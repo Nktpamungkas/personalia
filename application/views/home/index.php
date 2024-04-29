@@ -1,3 +1,35 @@
+<?php
+        $sql= $this->db->query( "SELECT count(*) as jumlah
+                                FROM tbl_makar
+                                where status_karyawan like '%Kontrak%' and status_seragam ='Belum' and status_idcard ='Belum'and masa_kerja = 6 and status_aktif = 1")->row();
+$jumlahKaryawanBaru = $sql->jumlah;
+		$sql_karyawanbaru=$this->db->query( "SELECT
+											count(*) as jumlah_karyawan_Verifikasi
+											FROM
+												tbl_makar
+											WHERE
+												NOT status_karyawan IN ('Resigned', 'perubahan_status')
+												and year(tgl_evaluasi) = year(now())
+												and tgl_evaluasi BETWEEN DATE_SUB(tgl_evaluasi, INTERVAL 14 day) AND now() 
+												and status_email_kontrak is null
+											ORDER BY
+												tgl_masuk asc;")->row();
+		$jumlahVerifikasi = $sql_karyawanbaru->jumlah_karyawan_Verifikasi;
+
+		$datakontrak = $this->db->query("SELECT count(*) as jml_kontakhabis
+				FROM
+					tbl_makar a
+					INNER JOIN ( SELECT * FROM tbl_kontrak ) b ON b.no_scan = a.no_scan 
+				WHERE
+				b.kontrak_akhir BETWEEN NOW()
+							AND DATE_ADD( NOW(), INTERVAL '1' week )
+					and NOT a.status_karyawan in( 'Resigned' ,'perubahan_status')
+					and a.status_email_kontrak is null 
+				ORDER BY
+					b.kontrak_akhir ASC")->row();
+		$humlahkontrak = $datakontrak->jml_kontakhabis;
+								
+?>
 <section id="main-content">
     <section class="wrapper">
 
@@ -6,7 +38,125 @@
                 <div class="border-head">
                     <h3>HUMAN RESOURCES INFORMATION SYSTEM</h3>
                 </div>
-                
+				<?php
+					// Misalnya, Anda memiliki variabel $peran yang berisi peran pengguna saat ini
+					$peran = $user['name'] == "iso.hrd";
+
+					if ($peran) {
+						// Jika peran pengguna adalah iso.hrd, maka tampilkan HTML
+					?>
+				<div class="col-md-4 col-sm-4 mb">
+                <div class="darkblue-panel pn">
+                  <div class="darkblue-header">
+                    <h5>Karyawn Baru (ID Card dan Seragam)</h5>
+                  </div>
+				  <a href="<?= base_url('home/statusseragam'); ?>">
+                  <h1 class="mt"><i class="fa fa-id-badge fa-2x"></i></h1>
+				  </a>
+                  <footer>
+                    <div class="centered">
+					<p> Karyawan Baru Masa Kerja 6 Bulan</p>
+					<h3 id="important" style="display: inline;"><span style="color: red;"><?= $jumlahKaryawanBaru; ?></span></h3>
+						<script>
+							// Fungsi untuk membuat teks berkelap-kelip
+							function blink() {
+								var element = document.getElementById('important');
+								var jumlahKaryawanBaru = <?= $jumlahKaryawanBaru; ?>; 
+
+								// Cek apakah jumlahKaryawanBaru bukan 0
+								if (jumlahKaryawanBaru !== 0) {
+									setInterval(function() {
+										element.style.visibility = (element.style.visibility == 'hidden' ? '' : 'hidden');
+									}, 500); // Interval dalam milidetik (500ms = setengah detik)
+								}
+							}
+							blink(); // Panggil fungsi blink untuk membuat teks berkelap-kelip jika jumlahKaryawanBaru tidak sama dengan 0
+						</script>
+
+						 <h5>Karyawan</h5>
+                    </div>
+                  </footer>
+                </div>
+                <!--  /darkblue panel -->
+              </div>
+
+			  <div class="col-md-4 col-sm-4 mb">
+                <div class="darkblue-panel pn">
+                  <div class="darkblue-header">
+                    <h5>Habis Kontrak</h5>
+                  </div>
+				  <a href="<?= base_url('home/habiskontrak'); ?>">
+                  <h1><i class="fa fa-file-text fa-2x"></i></h1>
+				  </a>
+                 <footer>
+                    <div class="centered">
+					 <p>Karyawan Yang Akan Habis Kontrak 7 hari kedepan</p>
+					 <h3 id="important3" style="display: inline;">
+						<?php if ($humlahkontrak == 0): ?>
+							<span style="color: white;"><?= $humlahkontrak; ?></span>
+						<?php else: ?>
+							<span style="color: red;"><?= $humlahkontrak; ?></span>
+						<?php endif; ?>
+					</h3>
+					<!-- <h3 id="important3" style="display: inline;"><span style="color: red;"><?= $humlahkontrak; ?></span></h3> -->
+					<script>
+							// Fungsi untuk membuat teks berkelap-kelip
+							function blink3() {
+								var element = document.getElementById('important3');
+								var humlahkontrak = <?= $humlahkontrak; ?>; 
+
+								// Cek apakah jumlahKaryawanBaru bukan 0
+								if (humlahkontrak !== 0) {
+									setInterval(function() {
+										element.style.visibility = (element.style.visibility == 'hidden' ? '' : 'hidden');
+									}, 500); // Interval dalam milidetik (500ms = setengah detik)
+								}
+							}
+							blink3(); // Panggil fungsi blink untuk membuat teks berkelap-kelip jika jumlahKaryawanBaru tidak sama dengan 0
+						</script>
+					  <h5>Karyawan</h5>
+                    </div>
+                  </footer>
+                </div>
+                <!--  /darkblue panel -->
+              </div>
+
+			  <div class="col-md-4 col-sm-4 mb">
+                <div class="darkblue-panel pn">
+                  <div class="darkblue-header">
+                    <h5>Evaluasi</h5>
+                  </div>
+				  <a href="<?= base_url('home/karyawanbaru'); ?>">
+                  <h1 class="mt"><i class="fa fa-user fa-2x"></i></h1>
+				  </a>
+                <footer>
+                    <div class="centered">
+					<p>karyawan baru yang harus di evaluasi</p>					
+					<h3 id="important2" style="display: inline;"><span style="color: red;"><?= $jumlahVerifikasi; ?></span></h3>
+					<script>
+							// Fungsi untuk membuat teks berkelap-kelip
+							function blink2() {
+								var element = document.getElementById('important2');
+								var jumlahVerifikasi = <?= $jumlahVerifikasi; ?>; 
+
+								// Cek apakah jumlahKaryawanBaru bukan 0
+								if (jumlahVerifikasi !== 0) {
+									setInterval(function() {
+										element.style.visibility = (element.style.visibility == 'hidden' ? '' : 'hidden');
+									}, 500); // Interval dalam milidetik (500ms = setengah detik)
+								}
+							}
+							blink2(); // Panggil fungsi blink untuk membuat teks berkelap-kelip jika jumlahKaryawanBaru tidak sama dengan 0
+						</script>
+					 <h5>Karyawan</h5>
+                    </div>
+                </footer>
+                </div>
+                <!--  /darkblue panel -->
+              </div>
+			  <?php
+				}
+			?>
                 <!-- SERVER STATUS PANELS -->
                 <div class="row mt">
                     <div class="col-md-3 col-sm-8 mb">

@@ -111,7 +111,7 @@
                                     document.getElementById("tgl_selesai").setAttribute("max", ye_akhir+'-'+mo_akhir+'-'+da_akhir);
 
                                     document.getElementById('sisa_cuti').innerHTML  = "Sisa cuti karyawan sebanyak <b>" + data[0].sisa_cuti + " Hari.</b> Periode pengambilan cuti yaitu bulan <b>" +da_awal+'-'+mo_awal+'-'+ye_awal+ "</b> s/d bulan <b>" +da_akhir+'-'+mo_akhir+'-'+ye_akhir+".</b> Diluar periode bulan yang sudah ditentukan, maka cuti tidak berlaku (ganti keterangan menjadi izin)."
-                                
+                               
                                 }else{ // jika belum digenerate, periode cuti ditahun sebelumnya
                                     if(mo_akhir >= 2){
                                         var ye_awal = yyyy - 1
@@ -132,7 +132,8 @@
                                     document.getElementById("tgl_selesai").setAttribute("max", ye_akhir+'-'+mo_akhir+'-'+da_akhir);
 
                                     document.getElementById('sisa_cuti').innerHTML  = "Sisa cuti karyawan sebanyak <b>" + data[0].sisa_cuti + " Hari.</b> Periode pengambilan cuti yaitu bulan <b>" +da_awal+'-'+mo_awal+'-'+ye_awal+ "</b> s/d bulan <b>" +da_akhir+'-'+mo_akhir+'-'+ye_akhir+".</b> Diluar periode bulan yang sudah ditentukan, maka cuti tidak berlaku (ganti keterangan menjadi izin)."
-                                	var _lama_izin      = document.getElementById('lama_izin').value;
+                                   
+                                    var _lama_izin      = document.getElementById('lama_izin').value;
                                 }
                             } else {
                                 document.getElementById('sisa_cuti').innerHTML  = "SILAHKAN HUBUNGI WATI/INDAH UNTUK MELIHAT SISA CUTI.."
@@ -146,64 +147,31 @@
 
                       // Ambil nilai sisa cuti dari data
                     var sisaCuti = data[0].sisa_cuti;
-                    var gajiatas = data[0].gaji == "atas"
                     var noscan= document.getElementById('no_scan').value;  
                     // Ambil nilai tanggal_tetap dari data (gantilah 'tanggal_tetap' dengan properti yang sesuai)
                     var tgl_generate_cuti = new Date(data[0].tgl_generate_cuti);
 
                     // Tanggal target (10 April 2024)
-                    var targetDate = new Date("2024-05-10");
+                    var targetDate = new Date("2024-04-10");
 
-                         // Periksa kondisi untuk tombol saimpan cuti
-                //     if (sisaCuti <= 0 || satuTahunKemudian <= targetDate) {
-                //         document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
-                //     } else if (sisaCuti <= 0 && satuTahunKemudian <= targetDate) {
-                //         document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
-                //     } else if (sisaCuti <= 0 && satuTahunKemudian >= targetDate) {
-                //         document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
-                //     }else if (sisaCuti <= 4 && satuTahunKemudian >= targetDate) {
-                //         document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
-                //     } else if (sisaCuti <= 4 && satuTahunKemudian <= targetDate) {
-                //         document.getElementById("Button").disabled = false; // Tombol diaktifkan
-                //     }else   if (sisaCuti >= 0  && gajiatas === "atas") {
-                //         document.getElementById("Button").disabled = false; // Tombol diaktifkan    
-                //     }else if (sisaCuti <= 0  && gajiatas === "atas") {
-                //         document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
-                //    } else {
-                //         document.getElementById("Button").disabled = false; // Tombol diaktifkan
-                //     }
-           		 		var tgl_generate_cuti_final;
+                    // Tambahkan 1 tahun ke tanggal_tetap
+                    var satuTahunKemudian = new Date(tgl_generate_cuti);
+                    satuTahunKemudian.setFullYear(satuTahunKemudian.getFullYear() + 1);
 
-                        // Mendapatkan tahun dan bulan dari tgl_generate_cuti dan targetDate
-                        var yearTglGenerate = tgl_generate_cuti.getFullYear();
-                        var monthTglGenerate = tgl_generate_cuti.getMonth();
-                        var yearTarget = targetDate.getFullYear();
-                        var monthTarget = targetDate.getMonth();
-
-                        // Membuat kondisi
-                        if (yearTglGenerate <= yearTarget && monthTglGenerate <= monthTarget) {
-                            // Tanggal generate cuti tidak perlu ditambah satu tahun
-                            tgl_generate_cuti_final = tgl_generate_cuti;
-                        } else {
-                            // Tambahkan satu tahun ke tanggal generate cuti
-                            var newYear = yearTglGenerate + 1;
-                            tgl_generate_cuti_final = new Date(newYear, monthTglGenerate, tgl_generate_cuti.getDate());
-                        }
-
-                        if (sisaCuti <= 0 && tgl_generate_cuti_final <= targetDate) {
-                        document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
-                        } else if(sisaCuti <= 1 && tgl_generate_cuti_final <= targetDate) {
+                    // Periksa kondisi
+                    if (noscan == 4234 || noscan == 4233 && sisaCuti !== 0 ){
                         document.getElementById("Button").disabled = false; // Tombol diaktifkan
-                        } else if(sisaCuti <= 1 && tgl_generate_cuti_final >= targetDate) {
+                    }else if (sisaCuti <= 0 && satuTahunKemudian >= targetDate) {
                         document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
-                        }else   if (sisaCuti >= 0  && gajiatas === "atas") {
-                        document.getElementById("Button").disabled = false; // Tombol diaktifkan    
-                        }else if (sisaCuti <= 0  && gajiatas === "atas") {
+                    } else if (sisaCuti <= 0 && satuTahunKemudian <= targetDate) {
                         document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
-                        }else {
+                    } else if (sisaCuti <= 7 && satuTahunKemudian >= targetDate) {
+                        document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
+                    } else if (sisaCuti <= 7 && satuTahunKemudian <= targetDate) {
+                        document.getElementById("Button").disabled = false; // Tombol dinonaktifkan
+                   } else {
                         document.getElementById("Button").disabled = false; // Tombol diaktifkan
-                        }
-
+                    }
 
                     }
                 } else {
@@ -547,7 +515,7 @@
                             <div class="form-group ">
                                 <label class="control-label col-lg-2">Mulai Tanggal</label>
                                 <div class="col-lg-2">
-                                    <input type="date" name="tgl_mulai" data-date="" data-date-format="DD MMMM YYYY" class="form-control input-sm" id="tgl_mulai" required>
+                                    <input type="date" name="tgl_mulai" class="form-control input-sm" id="tgl_mulai" required>
                                     <!-- <input type="date" name="tgl_mulai" class="form-control input-sm" required> -->
                                 </div>
                                 <label class="control-label col-lg-2">Lama Izin/Cuti</label>
@@ -615,4 +583,3 @@
         </div>
     </section>
 </section>
-

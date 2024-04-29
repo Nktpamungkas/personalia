@@ -675,12 +675,28 @@
                                 </th>
                             </tr>
                             <tr>
-							<th>
+                                <!-- <th>
                                     <label>
                                         <span>Atasan 1 </span><br>
+                                        <input value="<?= $makar->atasan1; ?>" name="atasan1" type="text" placeholder="Atasan 1">
+                                    </label>
+                                </th>
+                                <th>
+                                    <label>
+                                        <span>Atasan 2 </span><br>
+                                        <input value="<?= $makar->atasan2; ?>" name="atasan2" type="text" placeholder="Atasan 2">
+                                    </label>
+                                </th> -->
+								<th>
+                                    <label>
+                                        <span>Atasan 1 </span><br>
+                                        <!-- <input value="<?= set_value('atasan1'); ?>" name="atasan1" type="text" placeholder="Atasan 1"> -->
+                                        <!-- <input type="hidden" name="dept" value="<?= $user['dept']; ?>"> -->
                                     <select class="select2" data-placeholder="Atasan 1" name="atasan1" id="atasan1" required>
                                         <option value="" disabled selected></option>
                                         <?php
+                                            // $dept = $user['dept'];
+                                            // $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE dept = '$dept' AND NOT status_aktif = 0 AND NOT status_karyawan = 'Resigned' AND NOT status_karyawan = 'perubahan_status' ORDER BY nama")->result_array();
                                             $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE status_aktif = 1 AND NOT status_karyawan = 'perubahan_status' and GOLONGAN not in ('OPERATOR', 'STAFF' , 'DRIVER','SECURITY','ADMIN','Specialist') ORDER BY nama")->result_array();
                                         ?>
                                         <?php foreach ($queryShift as $dk) : ?>
@@ -692,9 +708,13 @@
                                 <th>
                                 <label>
                                         <span>Atasan 2 </span><br>
+                                        <!-- <input value="<?= set_value('atasan1'); ?>" name="atasan1" type="text" placeholder="Atasan 1"> -->
+                                        <!-- <input type="hidden" name="dept" value="<?= $user['dept']; ?>"> -->
                                     <select class="select2" data-placeholder="Atasan 2" name="atasan2" id="atasan2" required>
                                         <option value="" disabled selected></option>
                                         <?php
+                                            // $dept = $user['dept'];
+                                            // $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE dept = '$dept' AND NOT status_aktif = 0 AND NOT status_karyawan = 'Resigned' AND NOT status_karyawan = 'perubahan_status' ORDER BY nama")->result_array();
                                             $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE status_aktif = 1 AND NOT status_karyawan = 'perubahan_status' and GOLONGAN not in ('OPERATOR', 'STAFF' , 'DRIVER','SECURITY','ADMIN','Specialist') ORDER BY nama")->result_array();
                                         ?>
                                         <?php foreach ($queryShift as $dk) : ?>
@@ -703,6 +723,7 @@
                                     </select><br>
                                     </label>
                                 </th>
+
                                 <th>
                                     <label>
                                         <span>Status Aktif Karyawan<span style="color: red">(*)</span></span>

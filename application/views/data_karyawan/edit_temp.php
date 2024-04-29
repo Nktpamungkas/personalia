@@ -124,7 +124,7 @@
         <?= $this->session->flashdata('message'); ?>
             <div class="col-lg-12">
                 <h4><i class="fa fa-angle-right"></i><a href="<?= base_url('data_karyawan'); ?>"> Employee Information </a><i class="fa fa-angle-right"></i> Edit Form Employee</h4>
-                <form class="form-style-4" action="<?= base_url('data_karyawan/addEmployed/') . $user['name']. '/'. $makar->id; ?>" method="post">
+                <form class="form-style-4" action="<?= base_url('data_karyawan/add/') . $user['name']. '/'. $makar->id; ?>" method="post">
                     <div class="form-panel">
                         <div class="form">
                             <div class="form-group">
@@ -133,20 +133,19 @@
                                         <th>
                                             <label>
                                                 <span>Nomor KTP <span  style="color: red">(*)</span></span><br>
-                                                <input type="text" value="<?= $makar->no_ktp; ?>" name="no_ktp" placeholder="Nomor KTP" required autofocus>
-                                                <span style="color: red;"><i><b>Jika ingin duplicate data, tambahkan kutip (') hanya diawal karakter.</b></i></span>
+                                                <input type="text" value="<?= $makar->no_ktp; ?>" name="no_ktp" placeholder="Nomor KTP" readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>Nomor SCAN <span  style="color: red">(*)</span></span><br>
-                                                <input type="number" value="<?= $makar->no_scan; ?>" name="no_scan" placeholder="Nomor Absen/Scan" required>
+                                                <input type="number" value="<?= $makar->no_scan; ?>" name="no_scan" placeholder="Nomor Absen/Scan" readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>Nama Lengkap <span style="color: red">(*)</span></span><br>
-                                                <input type="text" value="<?= $makar->nama; ?>" onkeyup="this.value = this.value.toUpperCase();" name="nama" placeholder="Nama Lengkap"  required>
+                                                <input type="text" value="<?= $makar->nama; ?>" onkeyup="this.value = this.value.toUpperCase();" name="nama" placeholder="Nama Lengkap"  readonly>
                                             </label>
                                         </th>
                                     </tr>
@@ -154,19 +153,19 @@
                                         <th>
                                             <label>
                                                 <span>Tempat Lahir <span style="color: red">(*)</span></span><br>
-                                                <input type="text" value="<?= $makar->tempat_lahir; ?>" name="tempat_lahir" placeholder="Tempat Lahir" required>
+                                                <input type="text" value="<?= $makar->tempat_lahir; ?>" name="tempat_lahir" placeholder="Tempat Lahir" readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>Tanggal Lahir <span style="color: red">(*)</span></span><br>
-                                                <input type="date" value="<?= $makar->tgl_lahir; ?>" name="tgl_lahir" required>
+                                                <input type="date" value="<?= $makar->tgl_lahir; ?>" name="tgl_lahir" readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>Alamat KTP <span style="color: red">(*)</span></span><br>
-                                                <input type="text" onkeyup="this.value = this.value.toUpperCase();" value="<?= $makar->alamat_ktp; ?>" placeholder="Alamat Sesuai KTP" name="alamat_ktp" required>
+                                                <input type="text" onkeyup="this.value = this.value.toUpperCase();" value="<?= $makar->alamat_ktp; ?>" placeholder="Alamat Sesuai KTP" name="alamat_ktp" readonly>
                                             </label>
                                         </th>
                                     </tr>
@@ -174,19 +173,19 @@
                                         <th>
                                             <label>
                                                 <span>Alamat Domisili <span style="color: red">(*)</span></span><br>
-                                                <input type="text" onkeyup="this.value = this.value.toUpperCase();" value="<?= $makar->alamat_domisili; ?>" name="alamat_domisili" placeholder="Alamat Domisi/Tinggal" required>
+                                                <input type="text" onkeyup="this.value = this.value.toUpperCase();" value="<?= $makar->alamat_domisili; ?>" name="alamat_domisili" placeholder="Alamat Domisi/Tinggal" readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>RT <span style="color: red">(*)</span></span><br>
-                                                <input type="number" name="RT" value="<?= $makar->RT ?>" required>
+                                                <input type="number" name="RT" value="<?= $makar->RT ?>" readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>RW <span style="color: red">(*)</span></span><br>
-                                                <input type="number" name="RW" value="<?= $makar->RW ?>" required>
+                                                <input type="number" name="RW" value="<?= $makar->RW ?>" readonly>
                                             </label>
                                         </th>
                                     </tr>
@@ -194,19 +193,19 @@
                                         <th>
                                             <label>
                                                 <span>Kota/Kab Domisili <span style="color: red">(*)</span></span><br>
-                                                <input type="text" name="kabupaten_domisili" value="<?= $makar->kabupaten_domisili ?>" required>
+                                                <input type="text" name="kabupaten_domisili" value="<?= $makar->kabupaten_domisili ?>" readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>Kecamatan Domisili <span style="color: red">(*)</span></span><br>
-                                                <input type="text" name="kecamatan_domisili" value="<?= $makar->kecamatan_domisili ?>" required>
+                                                <input type="text" name="kecamatan_domisili" value="<?= $makar->kecamatan_domisili ?>" readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>Kode Pos <span style="color: red">(*)</span></span><br>
-                                                <input type="number" value="<?= $makar->kode_pos; ?>" name="kode_pos" placeholder="Kode Pos" required>
+                                                <input type="number" value="<?= $makar->kode_pos; ?>" name="kode_pos" placeholder="Kode Pos" readonly>
                                             </label>
                                         </th>
                                     </tr>
@@ -214,7 +213,7 @@
                                         <th>
                                             <label>
                                                 <span>Agama <span style="color: red">(*)</span></span><br>
-                                                <select name="agama" class="select2" data-placeholder="Pilih Agama" required>
+                                                <select name="agama" class="select2" data-placeholder="Pilih Agama" readonly>
                                                     <option value="" disabled selected>---------------------------------------------------</option>
                                                     <?php $queryReligion = $this->db->get('religion')->result_array(); ?>
                                                     <?php foreach ($queryReligion as $dr) : ?>
@@ -226,7 +225,7 @@
                                         <th>
                                             <label>
                                                 <span>Status Rumah <span style="color: red">(*)</span></span><br>
-                                                <select name="status_rumah" class="select2" data-placeholder="Pilih Status Rumah" required>
+                                                <select name="status_rumah" class="select2" data-placeholder="Pilih Status Rumah" readonly>
                                                     <option value="" disabled selected>---------------------------------------------------</option>
                                                     <?php $queryReligion = $this->db->get('status_rumah')->result_array(); ?>
                                                     <?php foreach ($queryReligion as $dr) : ?>
@@ -238,7 +237,7 @@
                                         <th>
                                             <label>
                                                 <span>Jenis Kelamin <span style="color: red">(*)</span></span><br>
-                                                <select class="select2" data-placeholder="Pilih Jenis Kelamin" name="jenis_kelamin" required>
+                                                <select class="select2" data-placeholder="Pilih Jenis Kelamin" name="jenis_kelamin" readonly>
                                                     <option value="" disabled selected>---------------------------------------------------</option>
                                                     <?php $queryJenisKelamin = $this->db->get('jenis_kelamin')->result_array(); ?>
                                                     <?php foreach ($queryJenisKelamin as $djk) : ?>
@@ -254,7 +253,7 @@
                                         <th>
                                             <label>
                                                 <span>Status Keluarga <span style="color: red">(*)</span></span><br>
-                                                <select class="select2" data-placeholder="Pilih Status Keluarga" name="status_kel" required>
+                                                <select class="select2" data-placeholder="Pilih Status Keluarga" name="status_kel" readonly>
                                                     <option value="" disabled selected>---------------------------------------------------</option>
                                                     <?php $queryReligion = $this->db->get('status_kel')->result_array(); ?>
                                                     <?php foreach ($queryReligion as $dr) : ?>
@@ -266,7 +265,7 @@
                                         <th>
                                             <label>
                                                 <span>Pendidikan Terakhir <span style="color: red">(*)</span></span><br>
-                                                <select class="select2" name="pendidikan" data-placeholder="Pilih Pendidikan Terakhir" required>
+                                                <select class="select2" name="pendidikan" data-placeholder="Pilih Pendidikan Terakhir" readonly>
                                                     <option value="" disabled selected>---------------------------------------------------</option>
                                                     <?php $queryPendidikan = $this->db->get('pendidikan')->result_array();?>
                                                     <?php foreach ($queryPendidikan as $dp) : ?>
@@ -279,7 +278,7 @@
                                         <th>
                                             <label>
                                                 <span>Nama Sekolah <span style="color: red">(*)</span></span><br>
-                                                <input value="<?= $makar->nama_sekolah ?>" name="nama_sekolah" type="text" placeholder="Nama Sekolah" required>
+                                                <input value="<?= $makar->nama_sekolah ?>" name="nama_sekolah" type="text" placeholder="Nama Sekolah" readonly>
                                             </label>
                                         </th>
                                     </tr>
@@ -287,19 +286,19 @@
                                         <th>
                                             <label>
                                                 <span>Jurusan </span><br>
-                                                <input value="<?= $makar->jurusan; ?>" name="jurusan" type="text" placeholder="Jurusan">
+                                                <input value="<?= $makar->jurusan; ?>" name="jurusan" type="text" placeholder="Jurusan" readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>Nilai Terakhir </span><br>
-                                                <input value="<?= $makar->ipk; ?>" name="ipk" type="number" placeholder="Nilai Terakhir">
+                                                <input value="<?= $makar->ipk; ?>" name="ipk" type="number" placeholder="Nilai Terakhir" readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>Golongan Darah <span style="color: red">(*)</span></span><br>
-                                                <select class="select2" name="gol_darah" data-placeholder="Pilih Golongan Darah">
+                                                <select class="select2" name="gol_darah" data-placeholder="Pilih Golongan Darah" readonly>
                                                     <option value="" disabled selected>---------------------------------------------------</option>
                                                     <?php $queryGoldar = $this->db->get('gol_darah')->result_array(); ?>
                                                     <?php foreach ($queryGoldar as $dg) : ?>
@@ -313,27 +312,27 @@
                                         <th>
                                             <label>
                                                 <span>Email Pribadi </span><br>
-                                                <input value="<?= $makar->email_pribadi; ?>" name="email_pribadi" type="text" placeholder="Email Pribadi">
+                                                <input value="<?= $makar->email_pribadi; ?>" name="email_pribadi" type="text" placeholder="Email Pribadi"readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>Pengalaman Kerja </span><br>
-                                                <input value="<?= $makar->pengalaman_kerja; ?>" name="pengalaman_kerja" type="text" placeholder="Pengalaman Kerja">
+                                                <input value="<?= $makar->pengalaman_kerja; ?>" name="pengalaman_kerja" type="text" placeholder="Pengalaman Kerja"readonly>
                                             </label>
                                         </th>
                                         <th>
                                             <label>
                                                 <span>Nomor Handphone </span><br>
-                                                <input value="<?= $makar->no_hp; ?>" name="no_hp" type="text" placeholder="Nomor Handphone">
+                                                <input value="<?= $makar->no_hp; ?>" name="no_hp" type="text" placeholder="Nomor Handphone"readonly>
                                             </label>
                                         </th>
-                                        </tr>
-                                        <tr>
+                                    </tr>
+                                    <tr>
                                         <th>
                                             <label>
                                                 <span>Nomor Kartu Keluarga </span><br>
-                                                <input value="<?= $makar->kartu_keluarga; ?>" name="kartu_keluarga" type="text" placeholder="Nomor Kartu Keluarga">
+                                                <input value="<?= $makar->kartu_keluarga; ?>" name="kartu_keluarga" type="text" placeholder="Nomor Kartu Keluarga"readonly>
                                             </label>
                                         </th>
                                         <th>
@@ -354,21 +353,8 @@
                                                     <?php endforeach; ?>
                                                 </select>
                                             </label>
-                                            <!-- <label>
-                                                <span>ID Card <span style="color: red">(*)</span></span><br>
-                                                <select name="status_idcard" class="select2" data-placeholder="Pilih Status Rumah" required>
-                                                    <option value="" disabled selected>---------------------------------------------------</option>
-                                                    <?php $queryidcard = $this->db->get('status_idcseragam')->result_array(); ?>
-                                                    <?php foreach ($queryidcard as $dcr) : ?>
-                                                        <option value="<?= $dcr['status_idcard']; ?>" <?php if($dcr['status_idcard'] == $makar->status_idcard ) { echo "selected"; } ?>><?= $dcr['status_idcard']; ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </label> -->
-                                        </th>
-
-
-
-                                        </tr>
+                                        </th>   
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -567,21 +553,8 @@
                                                 <option value="<?= $ds['id']; ?>" <?php if ($ds['id'] == $makar->status_karyawan) { echo "SELECTED"; } ?>><?= $ds['id']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
-                                        
                                     </label>
                                 </th>
-                                <!-- <th>
-                                    <label>
-                                        <span>Departemen <span style="color: red">(*)</span></span><br>
-                                        <select class="select2" data-placeholder="Pilih Satu Depatemen" name="dept" required>
-                                            <?php $queryDept = $this->db->get('dept')->result_array();?>
-                                            <option value="" disabled selected>---------------------------------------------------</option>
-                                            <?php foreach ($queryDept as $dd) : ?>
-                                                <option value="<?= $dd['code']; ?>" <?php if ($dd['code'] == $makar->dept) { echo "SELECTED"; } ?>><?= $dd['code'] . ' - ' . $dd['dept_name'] ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </label>
-                                </th> -->
                                 <th>
                                     <label>
                                         <span>Departemen <span style="color: red">(*)</span></span><br>
@@ -675,35 +648,19 @@
                                 </th>
                             </tr>
                             <tr>
-							<th>
+                                <th>
                                     <label>
                                         <span>Atasan 1 </span><br>
-                                    <select class="select2" data-placeholder="Atasan 1" name="atasan1" id="atasan1" required>
-                                        <option value="" disabled selected></option>
-                                        <?php
-                                            $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE status_aktif = 1 AND NOT status_karyawan = 'perubahan_status' and GOLONGAN not in ('OPERATOR', 'STAFF' , 'DRIVER','SECURITY','ADMIN','Specialist') ORDER BY nama")->result_array();
-                                        ?>
-                                        <?php foreach ($queryShift as $dk) : ?>
-                                            <option value="<?= $dk['nama'] ?>" <?php if ($dk['nama'] == $makar->atasan1) { echo "SELECTED";} ?>><?= $dk['nama'].' - '.$dk['dept'].' '.$dk['jabatan']; ?></option>
-                                        <?php endforeach ?>
-                                    </select><br>
+                                        <input value="<?= $makar->atasan1; ?>" name="atasan1" type="text" placeholder="Atasan 1">
                                     </label>
                                 </th>
                                 <th>
-                                <label>
+                                    <label>
                                         <span>Atasan 2 </span><br>
-                                    <select class="select2" data-placeholder="Atasan 2" name="atasan2" id="atasan2" required>
-                                        <option value="" disabled selected></option>
-                                        <?php
-                                            $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE status_aktif = 1 AND NOT status_karyawan = 'perubahan_status' and GOLONGAN not in ('OPERATOR', 'STAFF' , 'DRIVER','SECURITY','ADMIN','Specialist') ORDER BY nama")->result_array();
-                                        ?>
-                                        <?php foreach ($queryShift as $dk) : ?>
-                                            <option value="<?= $dk['nama'] ?>" <?php if ($dk['nama'] == $makar->atasan2) {echo "SELECTED";} ?>><?= $dk['nama'].' - '.$dk['dept'].' '.$dk['jabatan']; ?></option>
-                                        <?php endforeach ?>
-                                    </select><br>
+                                        <input value="<?= $makar->atasan2; ?>" name="atasan2" type="text" placeholder="Atasan 2">
                                     </label>
                                 </th>
-                                <th>
+                                 <th>
                                     <label>
                                         <span>Status Aktif Karyawan<span style="color: red">(*)</span></span>
                                         <select name="status_aktif" required>
@@ -714,7 +671,6 @@
                                     </label>
                                 </th>
                             </tr>
-                            <tr>
                             <tr>
                                 <th>
                                     <label>
@@ -728,13 +684,7 @@
                                         <input name="no_bpjs_kes" type="text" value="<?= $makar->no_bpjs_kes; ?>" placeholder="No. BPJS Kesehatan">
                                     </label>
                                 </th>
-                                <th>
-                                    <label>
-                                        <span>Ukuran T-Shirt</span>
-                                        <input name="ukuran_baju_shirt" type="text" value="<?= $makar->ukuran_baju_shirt; ?>" placeholder="No. BPJS Kesehatan">
-                                    </label>
-                                </th>
-                            </tr>
+                             </tr>
                             <tr>
                                <th>
                                     <label>
@@ -746,12 +696,6 @@
                                     <label>
                                         <span>No. NPWP</span>
                                         <input name="npwp" type="text" value="<?= $makar->npwp; ?>" placeholder="No. NPWP">
-                                    </label>
-                                </th>
-                                <th>
-                                    <label>
-                                        <span>Ukuran Baju Polo</span>
-                                        <input name="ukuran_baju_polo" type="text" value="<?= $makar->ukuran_baju_polo; ?>" placeholder="No. NPWP">
                                     </label>
                                 </th>
                             </tr>
@@ -766,29 +710,14 @@
                                                 <option value="<?= $da['kode']; ?>" <?php if ($da['kode'] == $makar->kode_jabatan) { echo "SELECTED"; } ?>><?= $da['kode'] .' - '. $da['jabatan']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
-                                    </label>                                    
-                               </th>
-                               <th>
-                               <?php if ($user['name'] == "DIT") : ?>
-                                    <label>
-                                        <span>Tanggal Resign Karyawan</span><br>
-                                        <input class="form-control input-sm input-sm" value="<?= $makar->tgl_resign; ?>" id="tglresign" name="tgl_resign" type="date">
-                                    <?php endif; ?>
-                                </th>
-                                <th>
-                                    <label>
-                                        <span>Tgl Evaluasi Karyawan Baru </span><br>
-                                        <input type="date" id="tgl_evaluasi" name="tgl_evaluasi" placeholder="Tanggal Evaluasi Karyawan"  value="<?= $makar->tgl_evaluasi; ?>" readonly>
                                     </label>
-                                    <span id="tgl_evaluasi"></span>
-                                </th>
+                               </th>
                             </tr>
                             <tr>
                                 <th><br><br>
                                     <label>
-                                        <button class="btn btn-primary btn-sm" type="submit" name="submit">Save</button>
-                                        <button class="btn btn-default btn-sm" type="submit" name="duplicate" value="1">Duplicate</button>
-                                        <a href="<?= base_url('data_karyawan'); ?>" class="btn btn-default btn-sm">Back</a>
+                                        <button class="btn btn-primary btn-sm" type="submit" name="submit">Verifikasi</button>
+                                       <a href="<?= base_url('users/index'); ?>" class="btn btn-default btn-sm">Back</a>
                                     </label>
                                 </th>
                             </tr>
@@ -799,22 +728,3 @@
         </div>
     </section>
 </section>
-<script>
-    // Ambil nilai dari input tanggal masuk
-    var tglMasukValue = "<?= $makar->tgl_masuk; ?>";
-
-    // Periksa apakah nilai tglMasukValue tidak null dan tidak kosong
-    if (tglMasukValue && tglMasukValue.trim() !== "") {
-        // Ubah nilai tglMasukValue menjadi objek Date
-        var tglMasuk = new Date(tglMasukValue);
-
-        // Tambahkan 90 hari
-        tglMasuk.setDate(tglMasuk.getDate() + 90);
-
-        // Format tanggal untuk input tanggal evaluasi
-        var tglEvaluasi = tglMasuk.toISOString().split('T')[0];
-
-        // Set nilai pada input tanggal evaluasi
-        document.getElementById('tgl_evaluasi').value = tglEvaluasi;
-    }
-</script>

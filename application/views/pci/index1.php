@@ -10,7 +10,6 @@
                     <a href="<?= base_url('pci/add_Request'); ?>" class="btn btn-info"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Add Form Izin Cuti</a>
 					<a href="#" data-toggle="modal" data-target="#modalExportdept" class="btn btn-success">Export to Excel</a>
                 <?php endif ?>
-				<a href="#" data-toggle="modal" data-target="#modalExportdept" class="btn btn-success">Export to Excel</a>
             </p>
         </div>
 		<div class="modal fade" id="modalExportdept" tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
@@ -91,7 +90,7 @@
                                                                 LEFT JOIN (SELECT * FROM tbl_makar) b ON a.nip = b.no_scan
                                                                 LEFT JOIN cuti c ON c.kode_cuti = a.ket
                                                             WHERE
-                                                                a.dept = '$dept' AND a.kode_cuti LIKE '%FIC%' AND tgl_surat_pemohon BETWEEN '2021-01-01' AND '2025-12-31' AND b.status_aktif = 1
+                                                                a.dept = '$dept' AND a.kode_cuti LIKE '%FIC%' AND tgl_surat_pemohon BETWEEN '2021-01-01' AND now() AND b.status_aktif = 1
                                                             ORDER BY
                                                                 a.tgl_surat_pemohon DESC")->result_array(); 
                             ?>
@@ -230,4 +229,3 @@
         </div>
     </section>
 </section>
-

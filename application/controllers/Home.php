@@ -32,7 +32,7 @@ class Home extends CI_Controller
                                     DATE_FORMAT((DATE_ADD(tgl_masuk, INTERVAL 6 month )), '%d-%m-%Y') as tgl_seragam                                   
                             FROM
                                     tbl_makar 
-                              WHERE
+                            WHERE
                                     dept = '$dept'
                                     AND status_karyawan IN ('Kontrak2','Kontrak1')
                                     AND masa_kerja <12
@@ -40,7 +40,6 @@ class Home extends CI_Controller
                                     masa_kerja desc")->result_array();
                                     echo json_encode($data);
                                 }
-      
     public function data_status_idcseragam_all_dept()
     { 
         $data = $this->db->query("SELECT a.no_scan,
@@ -59,11 +58,10 @@ class Home extends CI_Controller
                                         c.dept_email1,
                                         c.dept_email2,
                                         c.dept_email3,
-                                        c.dept_email4,
-                                        c.dept_email5
+                                        c.dept_email4
                                 FROM
                                         tbl_makar a
-                                        left JOIN  dept_mail c ON c.code = a.dept 
+                                        left JOIN  dept_mail_2 c ON c.code = a.dept 
                                         left JOIN status_email_idcard d ON d.no_scan = a.no_scan
                                     WHERE
                                         a.tgl_masuk BETWEEN a.tgl_masuk
@@ -90,11 +88,10 @@ class Home extends CI_Controller
                                         c.dept_email1,
                                         c.dept_email2,
                                         c.dept_email3,
-                                        c.dept_email4,
-                                        c.dept_email5
+                                        c.dept_email4
                                 FROM
                                         tbl_makar a
-                                        INNER JOIN ( SELECT * FROM dept_mail ) c ON c.code = a.dept 
+                                        INNER JOIN ( SELECT * FROM dept_mail_2 ) c ON c.code = a.dept 
                                     WHERE
                                         tgl_masuk BETWEEN tgl_masuk
                                         AND  DATE_ADD( NOW(), INTERVAL '6' MONTH ) 
@@ -105,8 +102,7 @@ class Home extends CI_Controller
                                         ORDER BY
                                         masa_kerja desc")->result_array();
                                         echo json_encode($data);
-    }
-                                   
+    }                                   
     public function data_habis_kontrak()
     {
         $data = $this->db->query("SELECT b.no_scan,
@@ -227,8 +223,7 @@ class Home extends CI_Controller
                                      tbl_makar
                                      WHERE
                                          status_karyawan = 'Proses Resign'
-                                     
-                                     ORDER BY
+                                    ORDER BY
                                      tgl_resign DESC")->result_array();; 
         echo json_encode($data);
     }
@@ -326,17 +321,20 @@ class Home extends CI_Controller
                                                 dm.dept_email2 as dept_email2,
                                                 dm.dept_email3 as dept_email3,
                                                 dm.dept_email4 as dept_email4,
-                                                dm.dept_email5 as dept_email5
+                                                dm.dept_email4 as dept_email5,
+                                                dm.dept_email4 as dept_email6,
+                                                dm.dept_email4 as dept_email7,
+                                                dm.dept_email4 as dept_email8,
+                                                dm.dept_email4 as dept_email9
                                             FROM tbl_makar makar
-                                            LEFT JOIN dept_mail dm ON dm.code = makar.dept 
+                                            LEFT JOIN dept_mail_2 dm ON dm.code = makar.dept 
                                             WHERE makar.dept = '$dept'
                 ")->row();
                 
                 $dept_mail1 = $query->dept_email1;     
                 $dept_mail2 = $query->dept_email2; 
                 $dept_mail3 = $query->dept_email3; 
-                $dept_mail4 = $query->dept_email4; 
-                $dept_mail5 = $query->dept_email5;                   
+                $dept_mail4 = $query->dept_email4;                    
 
             // Konfigurasi SMTP
             $mail->isSMTP();
@@ -344,13 +342,12 @@ class Home extends CI_Controller
             $mail->SMTPAuth = true;
             $mail->Username = 'dept.it@indotaichen.com'; 
             $mail->Password = 'Xr7PzUWoyPA'; 
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+			$mail->SMTPSecure = 'TLS';
+			$mail->Port = 587;
 
             $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
             $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
             
-          
             if ($dept == 'MKT'){
                 // Menambahkan penerima
                 $mail->addAddress('irwan.mulyadi@indotaichen.com');
@@ -368,7 +365,6 @@ class Home extends CI_Controller
                 $mail->addAddress($dept_mail2);
                 $mail->addAddress($dept_mail3);
                 $mail->addAddress($dept_mail4);
-                $mail->addAddress($dept_mail5);
             }else{
                 // Menambahkan penerima
                 $mail->addAddress('stefanus.pranjana@indotaichen.com');
@@ -381,22 +377,18 @@ class Home extends CI_Controller
                 $mail->addAddress($dept_mail2);
                 $mail->addAddress($dept_mail3);
                 $mail->addAddress($dept_mail4);
-                $mail->addAddress($dept_mail5);
-            }                
-               
+            }    
             $mail->Subject = 'Evaluasi Karyawan Baru'; 
             // Mengatur format email ke HTML
             $mail->isHTML(true);
-         
             $mail->Body = $isi;
             // $mail->send();
-           
             if ($mail->send()) {
                $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"><b>Your Email not successfully sent.</b>'.$mail->ErrorInfo.'</center>');
             } else {
                $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Your Email successfully sent.</b></center>');
             } 
-            redirect('home/karyawanbaru2');
+            redirect('home/karyawanbaru');
         }
     }
     
@@ -463,20 +455,16 @@ class Home extends CI_Controller
                             makar.tgl_masuk,
                             makar.tgl_evaluasi,
                             dm.dept_email1 as dept_email1,
-                            dm.dept_email2 as dept_email2,
-                            dm.dept_email3 as dept_email3,
-                            dm.dept_email4 as dept_email4,
-                            dm.dept_email5 as dept_email5
+                            dm.dept_email2 as dept_email8,
+                            dm.dept_email3 as dept_email9
                         FROM tbl_makar makar
-                        LEFT JOIN dept_mail dm ON dm.code = makar.dept 
+                        LEFT JOIN dept_mail_2 dm ON dm.code = makar.dept 
                         WHERE makar.dept = '$dept'
                 ")->row();
 
                 $dept_mail1 = $query->dept_email1;     
-                $dept_mail2 = $query->dept_email2; 
-                $dept_mail3 = $query->dept_email3; 
-                $dept_mail4 = $query->dept_email4; 
-                $dept_mail5 = $query->dept_email5;    
+                $dept_mail8 = $query->dept_email8; 
+                $dept_mail9 = $query->dept_email9;   
 
             // Konfigurasi SMTP
             $mail->isSMTP();
@@ -484,15 +472,14 @@ class Home extends CI_Controller
             $mail->SMTPAuth = true;
             $mail->Username = 'dept.it@indotaichen.com'; 
             $mail->Password = 'Xr7PzUWoyPA'; 
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+            $mail->SMTPSecure = 'TLS';
+        	$mail->Port = 587;
 
             $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
             $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
             
             if ($dept == 'MKT'){
                 // Menambahkan penerima
-                $mail->addAddress('irwan.mulyadi@indotaichen.com');
                 $mail->addAddress('bunbun@indotaichen.com');
                 $mail->addAddress('bambang@indotaichen.com');
                 $mail->addAddress('frans@indotaichen.com');
@@ -500,35 +487,24 @@ class Home extends CI_Controller
                 $mail->addAddress('stefanus.pranjana@indotaichen.com');
                 $mail->addAddress('Iso.hrd@indotaichen.com');
                 $mail->addAddress('Hrd@indotaichen.com');
-                // $mail->addAddress('prs.absensi@indotaichen.com');
-                // $mail->addAddress('prs01@indotaichen.com');
                 $mail->addAddress('asep.pauji@indotaichen.com');
                 $mail->addAddress($dept_mail1);
-                $mail->addAddress($dept_mail2);
-                $mail->addAddress($dept_mail3);
-                $mail->addAddress($dept_mail4);
-                $mail->addAddress($dept_mail5);
+                $mail->addAddress($dept_mail8);
+                $mail->addAddress($dept_mail9);
             }else{
                 // Menambahkan penerima
                 $mail->addAddress('stefanus.pranjana@indotaichen.com');
                 $mail->addAddress('Iso.hrd@indotaichen.com');
                 $mail->addAddress('Hrd@indotaichen.com');
-                // $mail->addAddress('prs.absensi@indotaichen.com');///
-                // $mail->addAddress('prs01@indotaichen.com');
                 $mail->addAddress('asep.pauji@indotaichen.com');
                 $mail->addAddress($dept_mail1);
-                $mail->addAddress($dept_mail2);
-                $mail->addAddress($dept_mail3);
-                $mail->addAddress($dept_mail4);
-                $mail->addAddress($dept_mail5);
-            }                
-               
+                $mail->addAddress($dept_mail8);
+                $mail->addAddress($dept_mail9);
+            }   
             $mail->Subject = 'Karyawan Habis Kontrak'; 
             // Mengatur format email ke HTML
             $mail->isHTML(true);
-         
             $mail->Body = $isi;
-           
             if ($mail->send()) {
                $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"><b>Your Email not successfully sent.</b>'.$mail->ErrorInfo.'</center>');
             } else {
@@ -586,8 +562,8 @@ class Home extends CI_Controller
         foreach($query AS $data) {
         $config = Array(
             'protocol' => 'smtp',
-                    'smtp_host' => 'ssl://smtp.googlemail.com',
-                    'smtp_port' => 465,
+                    'smtp_host' => 'TSL://smtp.googlemail.com',
+                    'smtp_port' => 587,
                     'smtp_user' => 'employees.indotaichen@gmail.com',
                     'smtp_pass' => '4dm1ndit',
                     'mailtype'  => 'html', 
@@ -665,8 +641,8 @@ class Home extends CI_Controller
             $mail->SMTPAuth = true;
             $mail->Username = 'dept.it@indotaichen.com'; 
             $mail->Password = 'Xr7PzUWoyPA'; 
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+            $mail->SMTPSecure = 'TLS';
+        	$mail->Port = 587;
 
             $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
             $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
@@ -677,7 +653,6 @@ class Home extends CI_Controller
                 $mail->addAddress($this->input->post('email3')); 
                 $mail->addAddress($this->input->post('email4')); 
                 $mail->addAddress($this->input->post('email5')); 
-            // $mail->addAddress('stefanus.pranjana@indotaichen.com');
             $mail->addAddress('Iso.hrd@indotaichen.com');
             $mail->addAddress('asep.pauji@indotaichen.com');
             $mail->addAddress('prs01@indotaichen.com');
@@ -720,7 +695,7 @@ class Home extends CI_Controller
 
         }elseif ($statusidcard == 'Sudah'){          
         $data = array(
-                // 'masa_kerja'           =>  '',
+                'masa_kerja'           =>  '',
                 // 'status_seragam'       => $this->input->post('status_seragam', true),
                 // 'status_idcard'        => $this->input->post('status_idcard', true)
                 'status_idcard'        =>'Sudah'
@@ -739,8 +714,8 @@ class Home extends CI_Controller
             $mail->SMTPAuth = true;
             $mail->Username = 'dept.it@indotaichen.com'; 
             $mail->Password = 'Xr7PzUWoyPA'; 
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+            $mail->SMTPSecure = 'TLS';
+        	$mail->Port = 587;
 
             $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
             $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
@@ -751,9 +726,7 @@ class Home extends CI_Controller
                 $mail->addAddress($this->input->post('email3')); 
                 $mail->addAddress($this->input->post('email4')); 
                 $mail->addAddress($this->input->post('email5')); 
-            // $mail->addAddress('stefanus.pranjana@indotaichen.com');
             $mail->addAddress('Iso.hrd@indotaichen.com');
-            // $mail->addAddress('asep.pauji@indotaichen.com');
             $mail->addAddress('prs01@indotaichen.com');
             $mail->addAddress('training@INDOTAICHEN.COM');
             // 
@@ -806,8 +779,8 @@ class Home extends CI_Controller
             $mail->SMTPAuth = true;
             $mail->Username = 'dept.it@indotaichen.com'; 
             $mail->Password = 'Xr7PzUWoyPA'; 
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+			$mail->SMTPSecure = 'TLS';
+			$mail->Port = 587;
 
             $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
             $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
@@ -818,9 +791,7 @@ class Home extends CI_Controller
                 $mail->addAddress($this->input->post('email3')); 
                 $mail->addAddress($this->input->post('email4')); 
                 $mail->addAddress($this->input->post('email5')); 
-            // $mail->addAddress('stefanus.pranjana@indotaichen.com');
             $mail->addAddress('Iso.hrd@indotaichen.com');
-            // $mail->addAddress('asep.pauji@indotaichen.com');
             $mail->addAddress('prs01@indotaichen.com');
             $mail->addAddress('training@INDOTAICHEN.COM');
 
@@ -879,19 +850,18 @@ class Home extends CI_Controller
              $mail->SMTPAuth = true;
              $mail->Username = 'dept.it@indotaichen.com'; 
              $mail->Password = 'Xr7PzUWoyPA'; 
-             $mail->SMTPSecure = 'ssl';
-             $mail->Port = 465;
+			 $mail->SMTPSecure = 'TLS';
+			 $mail->Port = 587;
  
              $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
              $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
              
              // Menambahkan penerima
-                 $mail->addAddress($this->input->post('email1')); 
-                 $mail->addAddress($this->input->post('email2')); 
-                 $mail->addAddress($this->input->post('email3')); 
-                 $mail->addAddress($this->input->post('email4')); 
-                 $mail->addAddress($this->input->post('email5')); 
-            //  $mail->addAddress('stefanus.pranjana@indotaichen.com');
+            $mail->addAddress($this->input->post('email1')); 
+            $mail->addAddress($this->input->post('email2')); 
+            $mail->addAddress($this->input->post('email3')); 
+            $mail->addAddress($this->input->post('email4')); 
+            $mail->addAddress($this->input->post('email5')); 
              $mail->addAddress('Iso.hrd@indotaichen.com');
              $mail->addAddress('asep.pauji@indotaichen.com');
              $mail->addAddress('prs01@indotaichen.com');

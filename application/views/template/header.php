@@ -2,6 +2,20 @@
         $sql= $this->db->query( "SELECT count(*) as jumlah
                                 FROM tbl_makar
                                 where status_karyawan like '%Kontrak%' and status_seragam ='Belum' and status_idcard ='Belum'and masa_kerja = 6 and status_aktif = 1")->row();
+$jumlahKaryawanBaru = $sql->jumlah;
+		$sql_karyawanbaru=$this->db->query( "SELECT
+											count(*) as jumlah_karyawan_Verifikasi
+											FROM
+												tbl_makar
+											WHERE
+												NOT status_karyawan IN ('Resigned', 'perubahan_status')
+												and year(tgl_evaluasi) = year(now())
+												and tgl_evaluasi BETWEEN DATE_SUB(tgl_evaluasi, INTERVAL 14 day) AND now() 
+												and status_email_kontrak is null
+											ORDER BY
+												tgl_masuk asc;")->row();
+		$jumlahVerifikasi = $sql_karyawanbaru->jumlah_karyawan_Verifikasi;
+								
 ?>
 <?php
 if ($user['name']) : ?>
@@ -48,29 +62,35 @@ if ($user['name']) : ?>
       <!--logo end-->
       <div class="nav notify-row" id="top_menu">
       <?php if($user['dept'] == "HRD") : ?>
-        <!--  notification start -->
-        <ul class="nav top-menu">
-          <!-- notification dropdown start-->
-          <li id="header_notification_bar" class="dropdown">
-            <a data-toggle="dropdown" class="dropdown-toggle"  aria-expanded="true">
-              <i class="fa fa-bell-o"></i>
-              <span class="badge bg-important"><?= $sql->jumlah; ?></span>
-              </a>
-            <ul class="dropdown-menu extended notification">
-              <div class="notify-arrow notify-arrow-yellow"></div>
-              <li>
-                <p class="yellow">Ada <?= $sql->jumlah; ?> Karyawan Baru Masa Kerja 6 Bulan</p>
-              </li>
-             <li>
-                <a href="<?= base_url('home\statusseragam'); ?>">
-                  <span class="label label-warning"><i class="far fa-id-badge"></i></span>
-                  <span class="small italic">Klik untuk Verifikasi</span>
-                  </a>
-              </li>
-              </ul>
-          </li>
-          <!-- notification dropdown end -->
-        </ul>
+		<ul class="nav top-menu">
+    <!-- notification dropdown start-->
+    <li id="header_notification_bar" class="dropdown">
+        <a data-toggle="dropdown" class="dropdown-toggle" aria-expanded="true">
+            <i class="fa fa-bell-o"></i>
+            <!-- buat hitungan jumlah notif karyawan baru seragam + karyawan baru verifikasi -->
+            <span class="badge bg-important"><?= $jumlahKaryawanBaru + $jumlahVerifikasi; ?></span>
+        </a>
+        <ul class="dropdown-menu extended notification">
+            <div class="notify-arrow notify-arrow-yellow"></div>
+            <li>
+                <p class="yellow">Ada <?= $jumlahKaryawanBaru; ?> Karyawan Baru Masa Kerja 6 Bulan</p>
+                <a href="<?= base_url('home/statusseragam'); ?>">
+                    <span class="label label-warning"><i class="far fa-id-badge"></i></span>
+                    <span class="small italic">Klik untuk Kirim Email</span>
+                </a>
+            </li>
+			<li>
+                <p class="green">Ada <?= $jumlahVerifikasi; ?> karyawan baru yang harus di evaluasi</p>
+                <a href="<?= base_url('home/karyawanbaru'); ?>">
+                    <span class="label label-success"><i class="far fa-id-badge"></i></span>
+                    <span class="small italic">Klik untuk untuk Email Evauasi</span>
+                </a>
+            </li>
+        </ul>            
+    </li>
+    <!-- notification dropdown end -->
+</ul>
+
         <?php endif; ?>
         <!--  notification end -->
        

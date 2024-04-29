@@ -246,15 +246,49 @@
             ]
         });
     });
-
     $(document).ready(function() {
         var oTable = $('#PKWT2').dataTable({
             "aoColumnDefs": [{
                 "bSortable": true,
                 "aTargets": [0]
-            }]
+            }],
+            "aaSorting": [
+                [4, 'desc']
+            ]
         });
     });
+    $(document).ready(function() {
+        var oTable = $('#PKWT2a').dataTable({
+            "aoColumnDefs": [{
+                "bSortable": true,
+                "aTargets": [0]
+            }],
+            "aaSorting": [
+                [5, 'asc']
+            ]
+        });
+    });
+
+	$(document).ready(function() {
+        var oTable = $('#listPKL').dataTable({
+            "aoColumnDefs": [{
+                "bSortable": true,
+                "aTargets": [3]
+            }],
+            "aaSorting": [
+                [5, 'asc']
+            ]
+        });
+    });
+
+    // $(document).ready(function() {
+    //     var oTable = $('#PKWT2').dataTable({
+    //         "aoColumnDefs": [{
+    //             "bSortable": true,
+    //             "aTargets": [0]
+    //         }]
+    //     });
+    // });
 
     $(document).ready(function() {
         var oTable = $('#PKWT3').dataTable({

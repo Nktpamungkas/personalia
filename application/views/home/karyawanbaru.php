@@ -7,6 +7,127 @@
                 </div>
                 <div class="row mb">
                     <p>
+                        <center><h4><b>DATA KARYAWAN BARU DEPARTEMEN</b></h4></center>
+                        <div class="content-panel">
+                            <form method="POST" action="">
+                                <table style="width:100%" cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="PKWT2a">
+                                    <thead>
+                                        <tr>
+                                            <?php if ($user['dept'] == "HRD") : ?>
+                                                <th width="25">*</th>
+                                            <?php else : ?>
+                                                <th width="25">No</th>
+                                            <?php endif; ?>
+                                            <th width="125">No Scan</th>
+                                            <th width="300">Nama</th>
+                                            <th width="100">Departemen</th>
+                                            <th width="200">Tgl Masuk</th>
+                                            <th width="200">Tgl Akhir Evaluasi</th>
+                                            <th width="50">Jabatan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $name = $user['name'];
+										$dept = $user['dept'];
+										if($name == "iso.hrd") {
+											$data = $this->db->query("SELECT
+																			no_scan,
+																			nama,
+																			dept,
+																			tgl_masuk,
+																			tgl_evaluasi,
+																			DATE_FORMAT(tgl_masuk, '%d %M %Y') AS ftgl_masuk,
+																			CASE
+																				WHEN tgl_evaluasi <> '' THEN DATE_FORMAT(tgl_evaluasi, '%d %M %Y')
+																				ELSE '-'
+																			END AS ftgl_evaluasi,
+																			jabatan,
+																			status_email_kontrak
+																		FROM
+																			tbl_makar
+																		WHERE
+																			NOT status_karyawan IN ('Resigned', 'perubahan_status') AND
+																			tgl_evaluasi BETWEEN '2024-03-03' AND DATE_ADD(tgl_evaluasi, INTERVAL 12 MONTH)
+																			AND status_email_kontrak = 2
+																		ORDER BY
+																			tgl_masuk DESC;")->result_array();
+										} else {
+											$data = $this->db->query("SELECT
+																			no_scan,
+																			nama,
+																			dept,
+																			tgl_masuk,
+																			tgl_evaluasi,
+																			DATE_FORMAT(tgl_masuk, '%d %M %Y') AS ftgl_masuk,
+																			CASE
+																				WHEN tgl_evaluasi <> '' THEN DATE_FORMAT(tgl_evaluasi, '%d %M %Y')
+																				ELSE '-'
+																			END AS ftgl_evaluasi,
+																			jabatan,
+																			status_email_kontrak
+																		FROM
+																			tbl_makar
+																		WHERE
+																			NOT status_karyawan IN ('Resigned', 'perubahan_status') AND
+																			tgl_evaluasi BETWEEN '2024-03-03' AND DATE_ADD(tgl_evaluasi, INTERVAL 12 MONTH)
+																			-- AND status_email_kontrak IS NULL
+																			AND dept = '$dept'
+																		ORDER BY
+																			tgl_masuk DESC;")->result_array();
+										}
+                                        $no = 1;
+                                        foreach ($data as $result) : ?>
+                                            <tr class="gradey">
+                                                <?php if ($user['dept'] == "HRD") : ?>
+                                                    <td>
+                                                        <?php if ($result['status_email_kontrak'] != 2) : ?>
+                                                            <input type="checkbox" class="checkbox" name="no_scan[]" value="<?= $result['no_scan'] ?>/<?= $result['nama'] ?>/<?= $result['dept'] ?>/<?= $result['tgl_masuk'] ?>/<?= $result['tgl_evaluasi'] ?>/<?= $result['jabatan'] ?>">
+                                                        <?php elseif ($user['dept'] == "HRD") : ?>
+                                                            <input type="checkbox" class="checkbox" name="no_scan[]" checked disabled>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                <?php else : ?>
+                                                    <td style="color: <?= ($result['status_email_kontrak'] == 2) ? 'blue' : 'black'; ?>"><?= $no++; ?></td>
+                                                <?php endif; ?>
+                                                <td style="color: <?= ($result['status_email_kontrak'] == 2) ? 'blue' : 'black'; ?>">
+                                                    <?= $result['no_scan'] ?>
+                                                </td>
+                                                <td style="color: <?= ($result['status_email_kontrak'] == 2) ? 'blue' : 'black'; ?>">
+                                                    <?= $result['nama'] ?>
+                                                </td>
+                                                <td style="color: <?= ($result['status_email_kontrak'] == 2) ? 'blue' : 'black'; ?>">
+                                                    <?= $result['dept'] ?>
+                                                </td>
+                                                <td style="color: <?= ($result['status_email_kontrak'] == 2) ? 'blue' : 'black'; ?>">
+                                                    <?= $result['ftgl_masuk'] ?>
+                                                </td>
+                                                <td style="color: <?= ($result['status_email_kontrak'] == 2) ? 'blue' : 'black'; ?>">
+                                                    <?= $result['ftgl_evaluasi'] ?>
+                                                </td>
+                                                <td style="color: <?= ($result['status_email_kontrak'] == 2) ? 'blue' : 'black'; ?>">
+                                                    <?= $result['jabatan'] ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                        <br>
+                        <ol>
+                            <br>
+                            <label><span style="color: red;">Note :</span></label><br>
+                            <label>Mohon kirim Evaluasi Karyawan Baru H-7 Sebelum Masa Training Berakhir.  </label>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt">
+            <div class="col-lg-12 main-chart">
+                <div class="row mb">
+                    <p>
                         <center><h4><b>DATA KARYAWAN BARU SEMUA DEPARTEMEN</b></h4></center>
                         <?php if ($user['dept'] == "DIT" OR $user['dept'] == "HRD" OR $user['dept'] == "GAC" OR $user['dept'] == "ACC") : ?>
                             <div class="row">
@@ -65,7 +186,9 @@
                                             <th width="300">Nama</th>
                                             <th width="100">Departemen</th>
                                             <th width="200">Tgl Masuk</th>
+                                            <?php if ($user['dept'] == "HRD") : ?>
                                             <th width="200">Tgl Akhir Evaluasi</th>
+                                            <?php endif; ?>
                                             <th width="50">Jabatan</th>
                                         </tr>
                                     </thead>
@@ -89,8 +212,9 @@
                                                                 WHERE
                                                                     NOT status_karyawan IN ('Resigned', 'perubahan_status') AND
                                                                     tgl_evaluasi BETWEEN '2024-03-03' AND DATE_ADD(tgl_evaluasi, INTERVAL 12 MONTH)
+																	AND status_email_kontrak IS NULL
                                                                 ORDER BY
-                                                                    tgl_evaluasi asc;")->result_array();
+                                                                tgl_masuk desc;")->result_array();
                                         $no = 1;
                                         foreach ($data as $result) : ?>
                                             <tr class="gradeX">
@@ -117,8 +241,10 @@
                                                 <td style="color: <?= ($result['status_email_kontrak'] == 2) ? 'blue' : 'black'; ?>">
                                                     <?= $result['ftgl_masuk'] ?>
                                                 </td>
+                                                <?php if ($user['dept'] == "HRD") : ?>
                                                 <td style="color: <?= ($result['status_email_kontrak'] == 2) ? 'blue' : 'black'; ?>">
                                                     <?= $result['ftgl_evaluasi'] ?>
+                                                <?php endif; ?>
                                                 </td>
                                                 <td style="color: <?= ($result['status_email_kontrak'] == 2) ? 'blue' : 'black'; ?>">
                                                     <?= $result['jabatan'] ?>
@@ -135,11 +261,6 @@
                             </form>
                         </div>
                         <br>
-                        <ol>
-                            <br>
-                            <label><span style="color: red;">Note :</span></label><br>
-                            <label>Semua karyawan baru yang sudah di kirim email pemberitahuan untuk evaluasi akhir oleh HRD, akan berwana biru.  </label>
-                        </ol>
                     </div>
                 </div>
             </div>

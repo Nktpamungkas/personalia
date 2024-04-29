@@ -12,9 +12,9 @@ $datablm = $this->db->query("SELECT b.no_scan,
                                     INNER JOIN ( SELECT * FROM tbl_kontrak ) b ON b.no_scan = a.no_scan 
                                 WHERE
                                 b.kontrak_akhir BETWEEN DATE_ADD( NOW(), INTERVAL -1 week )
-                                            AND DATE_ADD( NOW(), INTERVAL '1' week )
+                                AND DATE_ADD( NOW(), INTERVAL '1' week )
                                 AND a.status_email_kontrak = 1
-                                    AND b.`status` != 'diperpanjang'
+                                    -- AND b.`status` != 'diperpanjang'
                                     AND a.dept = '$dpt'
                                     and NOT a.status_karyawan in( 'Resigned' ,'perubahan_status')
 
@@ -168,7 +168,7 @@ foreach ($datablm as $data) {
                                         WHERE
                                             b.kontrak_akhir BETWEEN NOW()
                                             AND DATE_ADD( NOW(), INTERVAL '3' MONTH )
-                                            AND b.`status` != 'diperpanjang'
+                                            -- AND b.`status` != 'diperpanjang'
                                             and NOT a.status_karyawan in( 'Resigned' ,'perubahan_status')
                                         ORDER BY
                                             b.kontrak_akhir ASC")->result_array();
@@ -273,10 +273,10 @@ foreach ($datablm as $data) {
                                     tbl_makar a
                                     INNER JOIN ( SELECT * FROM tbl_kontrak ) b ON b.no_scan = a.no_scan 
                                 WHERE
-                                b.kontrak_akhir BETWEEN DATE_ADD( NOW(), INTERVAL -1 week )
+                                b.kontrak_akhir BETWEEN DATE_ADD( NOW(), INTERVAL -6 week )
                                                     AND DATE_ADD( NOW(), INTERVAL '1' week )
                                 AND a.status_email_kontrak = 1
-                                    AND b.`status` != 'diperpanjang'
+                                    -- AND b.`status` != 'diperpanjang'
                                     and NOT a.status_karyawan in( 'Resigned' ,'perubahan_status')
                                 ORDER BY
                                     b.kontrak_akhir ASC")->result_array();

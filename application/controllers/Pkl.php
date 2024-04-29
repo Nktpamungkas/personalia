@@ -124,6 +124,17 @@ class pkl extends CI_Controller
         redirect($this->agent->referrer());
     }
 
+    //tampil username
+    public function tampil_username()
+    {   $user_data = array(
+            'id' => $id->id,
+            'name' =>$id->name,
+            'name' =>$username,
+            'dpt' =>$dept,
+            'logged_in' => true
+        );
+
+    }
     public function hapus_daftar_lembur($kodelembur)
     {
         $cari_data_daftarlembur =  $this->db->query("SELECT COUNT(*) AS count FROM daftar_lembur WHERE kode_lembur = '$kodelembur' ")->row();
@@ -135,12 +146,24 @@ class pkl extends CI_Controller
             $this->db->where('kode_lembur', $kodelembur);
             $this->db->delete('permohonan_kerja_lembur');
             $this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert"  style="font-size: 14px"><b>Surat perintah lembur berhasil dihapus.</b></center>');
+            
+            $ipaddress = $_SERVER['REMOTE_ADDR']; //ip server
+            $log_hapus = array(
+                'username'      => $name,
+                'kode_lembur'   => $kodelembur,
+                'dept'          => $dept,
+                'tgl'           => DATE('Y-m-d H:i:s'),
+                'ket_hapus'    => gethostbyaddr($ipaddress)
+            );
+            $this->db->insert('log_pkl_hapus', $log_hapus);
+            
             redirect($this->agent->referrer());
         } else {
             $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"  style="font-size: 14px"><b>Data yang dihapus tidak tersedia. </b></center>');
             redirect($this->agent->referrer());
         }
         
+       
     }
 
     public function export_excel()

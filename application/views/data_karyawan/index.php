@@ -5,7 +5,7 @@
              <?php if($user['dept'] == "HRD") : ?>
                 <p class="inline">
                     <a href="<?= base_url('data_karyawan/addNewEmployee'); ?>" class="btn btn-info btn-sm"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Add New Employee</a></<a>
-                    <!-- <a href="<?= base_url('users/index'); ?>" class="btn btn-info btn-sm"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Upload Data New Employee</a></<a> -->
+                    <a href="<?= base_url('users/index'); ?>" class="btn btn-info btn-sm"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Upload Data New Employee</a></<a>
                     <a href="<?= base_url('data_karyawan/ExportToExcell'); ?>" class="btn btn-default btn-sm">Export to Excel</a>
             <?php endif; ?>
                 </p>

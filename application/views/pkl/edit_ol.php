@@ -98,7 +98,7 @@
                                                 </div>
                                             </th>
                                             <th>
-                                                 <div class="checkbox">
+                                                <div class="checkbox">
                                                         <label title="Berdasarkan data 1">
                                                             <input type="checkbox" class="check_as_one_tipeLembur" value=""><small><strong>Same as 1</strong></small>
                                                         </label>
@@ -108,8 +108,8 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                            $query_pkl = $this->db->get_where('daftar_lembur', array('kode_lembur' => $dl->kode_lembur))->result_array();
-                                            // $query_pkl = $this->db->query("SELECT * FROM daftar_lembur WHERE kode_lembur = '$dl->kode_lembur' ORDER BY no_absen ASC")->result_array();
+                                            // $query_pkl = $this->db->get_where('daftar_lembur', array('kode_lembur' => $dl->kode_lembur))->result_array();
+                                            $query_pkl = $this->db->query("SELECT * FROM daftar_lembur WHERE kode_lembur = '$dl->kode_lembur' ORDER BY no_absen ASC")->result_array();
                                             $no = 1;
                                         ?>
                                     <?php foreach ($query_pkl as $dp) : ?>

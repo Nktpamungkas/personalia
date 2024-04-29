@@ -112,7 +112,7 @@
                                                             <?php
                                                                 $kode = $dt['kode_training'];
                                                                 $tgltraining = $dt['tgl_training'];
-                                                                $query = $this->db->query("SELECT
+                                                                $query = $this->db->query("SELECT distinct
                                                                                                 a.no_scan,
                                                                                                 b.nama,
                                                                                                 b.dept,

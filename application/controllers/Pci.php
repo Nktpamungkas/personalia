@@ -83,7 +83,13 @@ class pci extends CI_Controller
         $data['tgl_selesai'] = $this->input->post('stop', true);
         $this->load->view('pci/exportToExcel', $data);
     }
-
+    public function export_excel_dept()
+    {
+        $data['tgl_mulai']   = $this->input->post('start', true);
+        $data['tgl_selesai'] = $this->input->post('stop', true);
+		$data['dept'] = $this->input->post('dept', true);
+        $this->load->view('pci/exportToExcel_dept', $data);
+    }
     public function export_sisa_cuti_diuangkan()
     {   
         $data['tgl_mulai']   = $this->input->post('start', true);

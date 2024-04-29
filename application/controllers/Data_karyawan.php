@@ -196,24 +196,18 @@ class Data_Karyawan extends CI_Controller
         $mail->SMTPAuth = true;
         $mail->Username = 'dept.it@indotaichen.com'; 
         $mail->Password = 'Xr7PzUWoyPA'; 
-        $mail->SMTPSecure = 'ssl';
-        $mail->Port = 465;
+		$mail->SMTPSecure = 'TLS';
+        $mail->Port = 587;
 
         $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
         $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
 
         // Menambahkan penerima
-        $mail->addAddress('nilo.pamungkas@indotaichen.com');
-        $mail->addAddress('bintoro.dy@indotaichen.com');
-        $mail->addAddress('ryan.wong@indotaichen.com');
-        $mail->addAddress('yohanes.william@indotaichen.com');  
-        $mail->addAddress('meyliana@indotaichen.com');
         $mail->addAddress('stefanus.pranjana@indotaichen.com');
         $mail->addAddress('Iso.hrd@indotaichen.com');
         $mail->addAddress('Hrd@indotaichen.com');
         $mail->addAddress('prs.absensi@indotaichen.com');
         $mail->addAddress('prs01@indotaichen.com');
-        // $mail->addAddress('denie@indotaichen.com');
         $mail->Subject = 'Informasi Karyawan baru'; 
         // Mengatur format email ke HTML
         $mail->isHTML(true);
@@ -383,7 +377,7 @@ class Data_Karyawan extends CI_Controller
                                                 dm.dept_email4 as dept_email4,
                                                 dm.dept_email5 as dept_email5
                                             FROM tbl_makar makar
-                                            LEFT JOIN dept_mail dm ON dm.code = makar.dept 
+                                            LEFT JOIN dept_mail_2 dm ON dm.code = makar.dept 
                                             WHERE makar.no_scan = '$noscan'
                 ")->row();
                 
@@ -401,24 +395,18 @@ class Data_Karyawan extends CI_Controller
                 $mail->SMTPAuth = true;
                 $mail->Username = 'dept.it@indotaichen.com'; 
                 $mail->Password = 'Xr7PzUWoyPA'; 
-                $mail->SMTPSecure = 'ssl';
-                $mail->Port = 465;
+				$mail->SMTPSecure = 'TLS';
+				$mail->Port = 587;
 
                 $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
                 $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
                 
                 if ($dept == 'MKT'){
                     // Menambahkan penerima
-                    $mail->addAddress('irwan.mulyadi@indotaichen.com');
                     $mail->addAddress('bunbun@indotaichen.com');
                     $mail->addAddress('bambang@indotaichen.com');
                     $mail->addAddress('frans@indotaichen.com');
                     $mail->addAddress('suhemi@indotaichen.com');
-                    $mail->addAddress('nilo.pamungkas@indotaichen.com');
-                    $mail->addAddress('bintoro.dy@indotaichen.com');
-                    $mail->addAddress('ryan.wong@indotaichen.com');
-                    $mail->addAddress('yohanes.william@indotaichen.com');  
-                    $mail->addAddress('meyliana@indotaichen.com');
                     $mail->addAddress('stefanus.pranjana@indotaichen.com');
                     $mail->addAddress('Iso.hrd@indotaichen.com');
                     $mail->addAddress('Hrd@indotaichen.com');
@@ -432,11 +420,6 @@ class Data_Karyawan extends CI_Controller
                     $mail->addAddress($dept_mail5);
                 }else{
                     // Menambahkan penerima
-                    $mail->addAddress('nilo.pamungkas@indotaichen.com');
-                    $mail->addAddress('bintoro.dy@indotaichen.com');
-                    $mail->addAddress('ryan.wong@indotaichen.com');
-                    $mail->addAddress('yohanes.william@indotaichen.com');  
-                    $mail->addAddress('meyliana@indotaichen.com');
                     $mail->addAddress('stefanus.pranjana@indotaichen.com');
                     $mail->addAddress('Iso.hrd@indotaichen.com');
                     $mail->addAddress('Hrd@indotaichen.com');
@@ -449,7 +432,6 @@ class Data_Karyawan extends CI_Controller
                     $mail->addAddress($dept_mail4);
                     $mail->addAddress($dept_mail5);
                 }                
-                // $mail->addAddress('denie@indotaichen.com');
 
                 $mail->Subject = 'Informasi Karyawan baru'; 
                 // Mengatur format email ke HTML
@@ -550,7 +532,6 @@ class Data_Karyawan extends CI_Controller
             $data2 = array(
                 'tgl_tetap' => $tgl_tetap
             );
-          
             $this->dual_db_model->update_data_in_second_database('tblkrynhrd', 'idk', $no_scan, $data2);
             // $this->dual_db_model->save_data_to_both_databases($data2);
             // $this->dual_db_model->update_data_in_second_database('tblkrynhrd', 'nik', $this->input->post('no_scan', true), $data2);
@@ -756,6 +737,25 @@ class Data_Karyawan extends CI_Controller
             $noscan = $this->input->post('no_scan', true);
             $query = $this->db->query("SELECT * FROM tbl_makar WHERE no_scan = '$noscan'")->row();
 
+			// KIRIM EMAIL KARYAWAN resign
+			$noscan = $this->input->post('no_scan', true);
+			$dept = $this->input->post('dept', true);
+			$queryemail = $this->db->query("SELECT 
+                            makar.no_scan,
+                            makar.nama,
+                            makar.dept,
+                            makar.jabatan,
+                            makar.tgl_masuk,
+                            makar.tgl_evaluasi,
+                            dm.dept_email1 as dept_email1,
+                            dm.dept_email2 as dept_email8,
+                            dm.dept_email3 as dept_email9
+                        FROM tbl_makar makar
+                        LEFT JOIN dept_mail_2 dm ON dm.code = makar.dept 
+                        WHERE makar.dept = '$dept'
+                ")->row();
+
+                $dept_mail1 = $queryemail->dept_email1;   
             $this->load->library('phpmailer_lib'); 
             $mail = $this->phpmailer_lib->load();
             // Konfigurasi SMTP
@@ -764,24 +764,19 @@ class Data_Karyawan extends CI_Controller
             $mail->SMTPAuth = true;
             $mail->Username = 'dept.it@indotaichen.com'; 
             $mail->Password = 'Xr7PzUWoyPA'; 
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+            $mail->SMTPSecure = 'TLS';
+        	$mail->Port = 587;
 
             $mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
             $mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
 
             // Menambahkan penerima
-            $mail->addAddress('yohanes.william@indotaichen.com');  
-            $mail->addAddress('nilo.pamungkas@indotaichen.com');
-            $mail->addAddress('bintoro.dy@indotaichen.com');
-            $mail->addAddress('ryan.wong@indotaichen.com');
-            $mail->addAddress('meyliana@indotaichen.com');
             $mail->addAddress('stefanus.pranjana@indotaichen.com');
             $mail->addAddress('Iso.hrd@indotaichen.com');
             $mail->addAddress('Hrd@indotaichen.com');
             $mail->addAddress('prs.absensi@indotaichen.com');
             $mail->addAddress('prs01@indotaichen.com');
-            // $mail->addAddress('denie@indotaichen.com');
+			$mail->addAddress($dept_mail1);
             $mail->Subject = 'Informasi Karyawan Resign'; 
             // Mengatur format email ke HTML
             $mail->isHTML(true);
