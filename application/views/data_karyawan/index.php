@@ -17,16 +17,24 @@
                     <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="mydata">
                         <thead>
                             <tr>
+								<?php if($user['dept'] == "HRD") : ?>
                                 <th width="50"></th>
+								<?php endif; ?>
                                 <th><center>No</center></th>
+								<?php if($user['dept'] == "HRD") : ?>
                                 <th><center>No Scan</center></th>
+								<?php endif; ?>
                                 <th><center>Nama Karyawan</center></th>
                                 <th><center>Department</center></th>
+								<?php if($user['dept'] == "HRD") : ?>
                                 <th><center>Bagian</center></th>
+								<?php endif; ?>
                                 <th><center>Jabatan</center></th>
+								<?php if($user['dept'] == "HRD") : ?>
                                 <th><center>Tanggal Masuk</center></th>
                                 <th><center>Tanggal Tetap</center></th>
                                 <th><center>Status Karyawan</center></th>
+								<?php endif; ?>
                             </tr>
                         </thead>
                         <tbody id="show_data">
@@ -41,13 +49,13 @@
                             $('#mydata').dataTable({
                                 "aoColumnDefs": [{
                                 "bSortable": true,
-                                "aTargets": [0]
+                                "aTargets": [1]
                                 }],
                                 "aaSorting": [
-                                    [3, 'asc']
+                                    [0, 'asc']
                                 ]
                             });
-                            
+                       
                             //fungsi tampil employee
                             function tampil_data_employee(){
                                 $.ajax({
@@ -61,6 +69,7 @@
                                         var no = 1;
                                         for(i = 0; i < data.length; i++){
                                             html += '<tr class="gradeX">'+
+											<?php if($user['dept'] == "HRD") : ?>
                                                     `<td>
                                                         <?php if ($user['special_user'] == 1) : ?>
                                                             <li class="dropdown" style="list-style-type:none;">
@@ -162,15 +171,22 @@
                                                             </form>
                                                         </div>                  
                                                     </td>`+
+													<?php endif; ?>
                                                     '<td>'+[no++]+'</td>'+
+													<?php if($user['dept'] == "HRD") : ?>
                                                     '<td>'+data[i].no_scan+'</td>'+
+													<?php endif; ?>
                                                     '<td>'+data[i].nama+'</td>'+
                                                     '<td>'+data[i].dept+'</td>'+
+													<?php if($user['dept'] == "HRD") : ?>
                                                     '<td>'+data[i].bagian+'</td>'+
+													<?php endif; ?>
                                                     '<td>'+data[i].jabatan+'</td>'+
+													<?php if($user['dept'] == "HRD") : ?>
                                                     '<td><center>'+data[i].tgl_masuk+'</center></td>'+
                                                     '<td><center>'+data[i].tgl_tetap+'</center></td>'+
                                                     '<td>'+data[i].status_karyawan+'</td>'+
+													<?php endif; ?>
                                                 '</tr>';
                                         }
                                         $('#show_data').html(html);
@@ -182,6 +198,7 @@
                 </div>
             </div>
         </div>
+		<?php if($user['dept'] == "HRD") : ?>
         <div class="row mb col-sm-12">
             <div class="content-panel">
                 <div class="adv-table">
@@ -231,6 +248,7 @@
                     </table>  
                 </div>
             </div>
-        </div>
+        </div>		
+		<?php endif; ?>
     </section>
 </section>

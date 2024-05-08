@@ -179,7 +179,7 @@ if ($user['name']) : ?>
                                     <span>EMPLOYEE</span>
                                 </a>
                                 <ul class="sub">
-                                    <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5) : ?>
+                                    <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6) : ?>
                                         <li <?php if ($title == "Employee Information") {
                                                 echo 'class="active"';
                                             } ?>><a href="<?= base_url('data_karyawan'); ?>">Employee Information</a></li>

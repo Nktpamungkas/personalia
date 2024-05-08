@@ -22,6 +22,44 @@
                 <?= $this->session->flashdata('message'); ?>
                 <div class="form-panel">
                     <h4><i class="fa fa-angle-right"></i><a href="<?= base_url('training_report'); ?>"> Training Report </a><i class="fa fa-angle-right"></i> Form Training</h4><br>
+							<!-- <a href="<?= base_url('training_report/addTraining'); ?>" class="btn btn-info btn-sm"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Add New Training</a> -->
+							<a href="#" data-toggle="modal" data-target="#modalExport" class="btn btn-default btn-sm">Export Record Training</a>
+							<div class="modal fade" id="modalExport" tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
+								<form action="<?= base_url('Training_report/export_excel') ?>" method="POST">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+												<h4 class="modal-title"><i class="fa fa-calendar"></i> Range Tanggal Export </h4>
+											</div>
+											<div class="modal-body">
+												<div class="container">
+													<div class="row">
+														<div class="form-group col-sm-12">
+															<b>Range tanggal berdasarkan Tanggal Training</b>
+															<h4 class="modal-title"><i class="fa fa-calendar"></i></h4>
+															<label>
+																Tanggal Mulai
+																<input type="date" name="start" class="form-control input-sm" required>
+															</label>
+															<label> s/d </label>
+															<label>
+																Tanggal Akhir
+																<input type="date" name="stop" class="form-control input-sm" required>
+															</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+												<button type="submit" name="submit" class="btn btn-primary">Export Sekarang</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div></div>
                     <div class=" form">
                         <form class="cmxform form-horizontal style-form" action="<?= base_url('training_report/add/') . $user['name']; ?>" method="post">
                             <div class="form-group">
