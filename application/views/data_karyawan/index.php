@@ -17,20 +17,18 @@
                     <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="mydata">
                         <thead>
                             <tr>
-								<?php if($user['dept'] == "HRD") : ?>
-                                <th width="50"></th>
+							<?php if($user['dept'] == "HRD" || $user['dept'] == "DIT") : ?>
+                                <th width="50">*</th>
 								<?php endif; ?>
                                 <th><center>No</center></th>
-								<?php if($user['dept'] == "HRD") : ?>
                                 <th><center>No Scan</center></th>
-								<?php endif; ?>
                                 <th><center>Nama Karyawan</center></th>
                                 <th><center>Department</center></th>
-								<?php if($user['dept'] == "HRD") : ?>
+								<?php if($user['dept'] == "HRD" || $user['dept'] == "DIT") : ?>
                                 <th><center>Bagian</center></th>
 								<?php endif; ?>
                                 <th><center>Jabatan</center></th>
-								<?php if($user['dept'] == "HRD") : ?>
+								<?php if($user['dept'] == "HRD" || $user['dept'] == "DIT") : ?>
                                 <th><center>Tanggal Masuk</center></th>
                                 <th><center>Tanggal Tetap</center></th>
                                 <th><center>Status Karyawan</center></th>
@@ -69,7 +67,7 @@
                                         var no = 1;
                                         for(i = 0; i < data.length; i++){
                                             html += '<tr class="gradeX">'+
-											<?php if($user['dept'] == "HRD") : ?>
+											<?php if($user['dept'] == "HRD" || $user['dept'] == "DIT") : ?>
                                                     `<td>
                                                         <?php if ($user['special_user'] == 1) : ?>
                                                             <li class="dropdown" style="list-style-type:none;">
@@ -78,7 +76,6 @@
                                                                     <li><a href="<?= base_url(); ?>data_karyawan/edit_employee/`+data[i].no_scan+`"><i class="fa fa-edit"></i> Edit</a></li>
                                                                     <li><a href="#" data-toggle="modal" data-target="#modalResign`+data[i].no_scan+`"><i class="fa fa-sign-out"></i>Pengajuan Resign</a></li>
                                                                     <li><a href="<?= base_url(); ?>data_karyawan/print_datakaryawan/`+data[i].no_scan+`"><i class="fa fa-print"></i> Print</a></li>
-                                                                    <li><a href="<?= base_url(); ?>data_karyawan/tanda_tangan/`+data[i].no_scan+`"><i class="fa fa-gears"></i> Buat Tanda Tangan</a></li>
                                                                     <li><a href="<?= base_url(); ?>Career_adm/AddCareerTransition/`+data[i].no_scan+`"><i class="fa fa-gears"></i> Career Transition</a></li>
                                                                     <li class="divider"></li>
                                                                     <li><a href="#" data-toggle="modal" data-target="#modalDelete`+data[i].no_scan+`"><i class="fa fa-trash"></i> Delete</a></li>
@@ -173,16 +170,14 @@
                                                     </td>`+
 													<?php endif; ?>
                                                     '<td>'+[no++]+'</td>'+
-													<?php if($user['dept'] == "HRD") : ?>
                                                     '<td>'+data[i].no_scan+'</td>'+
-													<?php endif; ?>
                                                     '<td>'+data[i].nama+'</td>'+
                                                     '<td>'+data[i].dept+'</td>'+
-													<?php if($user['dept'] == "HRD") : ?>
+													<?php if($user['dept'] == "HRD" || $user['dept'] == "DIT") : ?>
                                                     '<td>'+data[i].bagian+'</td>'+
 													<?php endif; ?>
                                                     '<td>'+data[i].jabatan+'</td>'+
-													<?php if($user['dept'] == "HRD") : ?>
+													<?php if($user['dept'] == "HRD" || $user['dept'] == "DIT") : ?>
                                                     '<td><center>'+data[i].tgl_masuk+'</center></td>'+
                                                     '<td><center>'+data[i].tgl_tetap+'</center></td>'+
                                                     '<td>'+data[i].status_karyawan+'</td>'+
@@ -198,7 +193,7 @@
                 </div>
             </div>
         </div>
-		<?php if($user['dept'] == "HRD") : ?>
+		<?php if($user['dept'] == "HRD" || $user['dept'] == "DIT") : ?>
         <div class="row mb col-sm-12">
             <div class="content-panel">
                 <div class="adv-table">
