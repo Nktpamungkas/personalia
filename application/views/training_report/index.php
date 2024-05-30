@@ -70,7 +70,7 @@
                                                                 LEFT JOIN ( SELECT b.id, b.nama_training FROM training b ) b ON b.id = a.kode_training
                                                                 LEFT JOIN ( SELECT c.no_scan,c.nama FROM tbl_makar c ) c ON c.no_scan = a.trainer
                                                             WHERE
-                                                                a.tgl_training BETWEEN '2020-01-01' 
+                                                                a.tgl_training BETWEEN '2023-06-01' 
                                                                 AND now() 
                                                             GROUP BY
                                                                 a.tgl_training,
