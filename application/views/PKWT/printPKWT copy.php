@@ -114,8 +114,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* overflow: hidden; */
-			overflow-wrap: break-word;
+            overflow: hidden;
             display: block;
             transform-origin: 0 0;
             -ms-transform-origin: 0 0;
@@ -2179,14 +2178,15 @@
                 </div>				
                 <div class="c x8 y19 w9 h5">
                     <div class="t m0 x4 h2 y16 ff1 fs0 fc0 sc0 ls1 ws0">Pihak ke I akan<span class="_ _1"></span> mempekerjakan pih<span class="_ _1"></span>ak ke II di Perusahaa<span class="_ _1"></span>n dengan status PEKERJA <span class="_ _1"></span>KONTRAK diperbantu<span class="_ _1"></span>kan di Dept </div>
-                    <div class="t m0 x4 h7 y8 ff1 fs0 fc0 sc0 ls1 ws0"><?= $kontrak->dept; ?> sebagai <?= $kontrak->jabatan; ?> untuk pekerjaan yang sekali selesai atau sementara sifatnya dengan waktu penyelesaian pekerjaan tidak lebih dari lima tahun.<span class="_ _1"></span><span class="fs2"> </span></div>
-				</div>
-					
+                    <div class="t m0 x4 h7 y8 ff1 fs0 fc0 sc0 ls1 ws0"><?= $kontrak->dept; ?> sebagai <?= $kontrak->jabatan; ?> untuk pekerjaan yang sekali selesai atau sementara sifatnya dengan waktu<span class="_ _1"></span><span class="fs2"> penyelesaian pekerjaan tidak lebih dari lima tahun.</span></div>
+					<div class="t m0 x4 h7 y9 ff1 fs0 fc0 sc0 ls1 ws0">diatas ini, tanp<span class="_ _1"></span>a imbalan apapun<span class="_ _1"></span> 
+					</div>
+                </div>
                 <div class="c x2 y1a w8 ha">
                     <div class="t m0 x4 h2 yc ff1 fs0 fc0 sc0 ls4 ws0">2.<span class="ls1"> </span></div>
                 </div>
                 <div class="c x8 y1a w9 ha">
-                    <div class="t m0 x4 h7 yc ff1 fs0 fc0 sc0 ls1 ws0">Hari kerja Sesuai denga<span class="_ _1"></span>n PKB<span class="_ _1"></span> tentang waktu kerja.<span class="_ _1"></span><span class="_ _1"></span><span class="fs2"> </span></div>
+                    <div class="t m0 x4 h7 yc ff1 fs0 fc0 sc0 ls1 ws0">Hari kerja Senin sampai denga<span class="_ _1"></span>n Sabtu<span class="_ _1"></span> dan tiap hari Jam <span class="_ _1"></span>07:00 <span class="_ _1"></span>- 15:00.<span class="fs2"> </span></div>
                     <div class="t m0 x4 h2 y8 ff1 fs0 fc0 sc0 ls1 ws0">Dengan penghasilan:<span class="_ _1"></span> </div>
                 </div>
                 <div class="c x2 y1b w8 h8">
@@ -2214,8 +2214,9 @@
                     <div class="t m0 x4 h2 y1e ff1 fs0 fc0 sc0 ls4 ws0">3.<span class="ls1"> </span></div>
                 </div>
                 <div class="c x8 y1d w9 hb">
-                    <div class="t m0 x4 hc y1f ff1 fs0 fc0 sc0 ls1 ws0">Masa kontrak kerja mu<span class="_ _1"></span>lai Tgl <span class="ff2"> <?= $kontrak->kontrak_awal; ?><span class="_ _1"></span><span class="fs2"> s/d <?= $kontrak->kontrak_akhir; ?> </span></span>(<?= $kontrak->durasi; ?> Bulan). Masa kontrak kerja berakhir secara  <span class="_ _8"> </span><span class="fs2"> </span></div>
-                    <div class="t m0 x4 h2 y20 ff1 fs0 fc0 sc0 ls1 ws0"><span class="_ _1"></span><span class="_ _1"></span>otomatis apabila batas waktu<span class="_ _1"></span> yang diperjan<span class="_ _1"></span>jikan berakhir seperti <span class="_ _4"></span>yang tercantum diatas ini, tanpa imbalan apapun.</div>
+                    <div class="t m0 x4 hc y1f ff1 fs0 fc0 sc0 ls1 ws0">Masa kontrak kerja mu<span class="_ _1"></span>lai Tgl <span class="ff2"> <?= $kontrak->kontrak_awal; ?><span class="_ _1"></span><span class="fs2"> s/d <?= $kontrak->kontrak_akhir; ?> </span></span>(<?= $kontrak->durasi; ?> Bulan). <span class="_ _8"> </span><span class="fs2"> </span></div>
+                    <div class="t m0 x4 h2 y20 ff1 fs0 fc0 sc0 ls1 ws0">Masa kontrak kerja b<span class="_ _1"></span>erakhir secara otomatis apabila <span class="_ _1"></span>batas waktu<span class="_ _1"></span> yang diperjan<span class="_ _1"></span>jikan berakhirseperti <span class="_ _4"></span>yang tercantum </div>
+                    <div class="t m0 x4 h2 y21 ff1 fs0 fc0 sc0 ls1 ws0">diatas ini, tanp<span class="_ _1"></span>a imbalan apapun<span class="_ _1"></span> </div>
                 </div>
                 <div class="c x2 y22 w8 hd">
                     <div class="t m0 x4 h2 yc ff1 fs0 fc0 sc0 ls4 ws0">4.<span class="ls1"> </span></div>
@@ -2263,8 +2264,8 @@
                 </div>
                 <div class="c x8 y28 w9 he">
                     <div class="t m0 x4 h2 y29 ff1 fs0 fc0 sc0 ls1 ws0">Dilarang mengoperasikan H<span class="_ _1"></span>P selama jam kerja.<span class="_ _1"></span> </div>
-                    <div class="t m0 x4 h2 yc ff1 fs0 fc0 sc0 ls1 ws0">Dilarang merokok didalam k<span class="_ _1"></span>omplek perusahaan kecuali ditempat yang telah disediakan.<span class="_ _1"></span><span class="_ _1"></span> </div>
-                    <div class="t m0 x4 h2 y8 ff1 fs0 fc0 sc0 ls1 ws0">Berpakaian rapih,<span class="_ _1"></span> memakai sepatu dan<span class="_ _1"></span> ID Card yang telah di berikan oleh perusahaan.<span class="_ _1"></span> </div>
+                    <div class="t m0 x4 h2 yc ff1 fs0 fc0 sc0 ls1 ws0">Dilarang merokok didalam k<span class="_ _1"></span>omplek perusahaa<span class="_ _1"></span>n.<span class="_ _1"></span> </div>
+                    <div class="t m0 x4 h2 y8 ff1 fs0 fc0 sc0 ls1 ws0">Berpakaian rapih d<span class="_ _1"></span>an memakai sepatu dan<span class="_ _1"></span> ID Card<span class="_ _1"></span> </div>
                 </div>
                 <div class="c x2 y2a w8 h5">
                     <div class="t m0 x4 h2 y16 ff1 fs0 fc0 sc0 ls4 ws0">13.<span class="ls1"> </span></div>

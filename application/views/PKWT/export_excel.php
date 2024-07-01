@@ -20,6 +20,7 @@
             <th>Verifikasi</th>
             <th>Libur</th>
             <th>Status Aktif (*1 Aktif/ 0 Tdk aktif)</th>
+			<th>Nomor Kontrak</th>
         </tr>
     </thead>
     <tbody>
@@ -56,7 +57,10 @@
             <td><?= $dd['status']; ?></td>
             <td><?php if($dd['verifikasi'] == 1) { echo "Terverifikasi Oleh HRD."; } else { echo "On Proses."; } ?></td>
             <td><?= $dd['libur']; ?></td>
-            <td><?= $dd['status_aktif']; ?></td>
+            <td align="center"><?= $dd['status_aktif']; ?></td>
+			<td><?= $dd['no_scan']; ?>/ITC-PKWT/<?php $date = date_create($dd['kontrak_awal']);
+                                                    echo date_format($date, "m"); ?>/<?php $date = date_create($dd['kontrak_awal']);
+                                                                                        echo date_format($date, "Y");  ?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>

@@ -192,9 +192,9 @@
 
                         if (sisaCuti <= 0 && tgl_generate_cuti_final <= targetDate) {
                         document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
-                        } else if(sisaCuti <= 1 && tgl_generate_cuti_final <= targetDate) {
+                        } else if(sisaCuti <= 0 && tgl_generate_cuti_final <= targetDate) {
                         document.getElementById("Button").disabled = false; // Tombol diaktifkan
-                        } else if(sisaCuti <= 1 && tgl_generate_cuti_final >= targetDate) {
+                        } else if(sisaCuti <= 0 && tgl_generate_cuti_final >= targetDate) {
                         document.getElementById("Button").disabled = true; // Tombol dinonaktifkan
                         }else   if (sisaCuti >= 0  && gajiatas === "atas") {
                         document.getElementById("Button").disabled = false; // Tombol diaktifkan    

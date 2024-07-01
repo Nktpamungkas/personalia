@@ -372,11 +372,10 @@
             <td class="column0 style29 s style31" colspan="12">JENJANG KARIR AWAL BEKERJA</td>
           </tr>
           <tr class="row18">
-            <td class="column0 style12 s">&nbspMasuk</td>
-            <td class="column1 style89 s style90" colspan="3"><span style="color:#000000; font-family:'Times New Roman'; font-size:9pt">&nbspTgl : <?= $makar->tgl_masuk_hari; ?></span></td>
-            <td class="column4 style90 s style90" colspan="2"><span style="color:#000000; font-family:'Times New Roman'; font-size:9pt">Bulan : <?= $makar->tgl_masuk_bulan; ?></span></td>
-            <td class="column6 style93 s"><span style="color:#000000; font-family:'Times New Roman'; font-size:9pt">Th : <?= $makar->tgl_masuk_tahun; ?></span></td>
-          </tr>
+					<td class="column0 style12 s">&nbspMasuk</td>
+            <!-- <td class="column1 style100 s style102" colspan="11">Tgl : //<?= $makar->tgl_masuk_hari; ?> Bulan : <?= $makar->tgl_masuk_bulan; ?> Th : <?= $makar->tgl_masuk_tahun; ?></td> -->
+            <td class="column1 style100 s style102" colspan="11">Tgl : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bulan : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Th : </td>
+         </tr>
           <tr class="row19">
             <td class="column0 style27 s style28" rowspan="5">&nbspDepartemen</td>
             <td class="column1 style89 s style90" colspan="3"><?php if($makar->dept == "HRD"){ echo "R"; } else { echo "*"; } ?><span style="color:#000000; font-family:'Times New Roman'; font-size:9pt"> HRD</span></td>
@@ -421,9 +420,11 @@
           <tr class="row24">
             <td class="column0 style12 s">&nbsp Status Kerja</td>
             <td class="column1 style108 null style109" colspan="3"></td>
-            <td class="column4 style86 s style86" colspan="3"><?php if($makar->status_karyawan == "Kontrak1" || $makar->status_karyawan == "Kontrak2"){ echo "R"; } else { echo "*"; } ?><span style="color:#000000; font-family:'Times New Roman'; font-size:9pt"> Kontrak</span></td>
-            <td class="column7 style86 s style87" colspan="5"><?php if($makar->status_karyawan == "Tetap"){ echo "R"; } else { echo "*"; } ?><span style="color:#000000; font-family:'Times New Roman'; font-size:9pt"> Karyawan Tetap</span></td>
-          </tr>
+            <!-- <td class="column4 style86 s style86" colspan="3"><?php if($makar->status_karyawan == "Kontrak1" || $makar->status_karyawan == "Kontrak2"){ echo "R"; } else { echo "*"; } ?><span style="color:#000000; font-family:'Times New Roman'; font-size:9pt"> Kontrak</span></td>
+            <td class="column7 style86 s style87" colspan="5"><?php if($makar->status_karyawan == "Tetap"){ echo "R"; } else { echo "*"; } ?><span style="color:#000000; font-family:'Times New Roman'; font-size:9pt"> Karyawan Tetap</span></td> -->
+						<td class="column4 style86 s style86" colspan="3"><?php  { echo "*"; } ?><span style="color:#000000; font-family:'Times New Roman'; font-size:9pt"> Kontrak</span></td>
+            <td class="column7 style86 s style87" colspan="5"><?php  { echo "*"; } ?><span style="color:#000000; font-family:'Times New Roman'; font-size:9pt"> Karyawan Tetap</span></td>
+           </tr>
           <tr class="row25">
             <td class="column0 style76 null style76" colspan="12"></td>
           </tr>
@@ -445,10 +446,11 @@
             <td class="column8 style36 s style36" colspan="4">Pekerjaan</td>
           </tr>
           <?php 
+					$no_scan_ = $makar->no_scan;
               $query = $this->db->query("SELECT a.no_scan , a.nama , a.hubungan, a.tempat ,a.pekerjaan,b.countnama, a.tgl_lahir as tgl_Lahir, DATE_FORMAT(a.tgl_lahir, '%d %M %Y') AS ftgl_lahir FROM data_keluarga a
-              left join (select b.no_scan, count(b.nama) as countnama from data_keluarga b where b.no_scan ='$no_scan' ) b on 
+              left join (select b.no_scan, count(b.nama) as countnama from data_keluarga b where b.no_scan ='$no_scan_' ) b on 
               b.no_scan = a.no_scan 
-              WHERE a.no_scan='$no_scan'")->result_array(); 
+              WHERE a.no_scan='$no_scan_'")->result_array(); 
           ?>
           <?php foreach($query AS $result) : ?>
           <tr class="row30">
@@ -487,7 +489,7 @@
             <td class="column8 style36 s style36" colspan="4">Masa Kerja</td>
           </tr>
           <?php 
-              $query = $this->db->query("SELECT * FROM data_pengalaman_kerja WHERE no_scan = '$no_scan'")->result_array(); 
+              $query = $this->db->query("SELECT * FROM data_pengalaman_kerja WHERE no_scan = '$no_scan_'")->result_array(); 
           ?>
           <?php foreach($query AS $key) : ?>
           <tr class="row35">

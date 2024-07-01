@@ -12,7 +12,7 @@ class Auth extends CI_Controller
 
     public function index()
     {      
-    //upadate Status Resigned
+    	//upadate Status Resigned
         $sql= "UPDATE tbl_makar set status_aktif = 0 WHERE tgl_resign between tgl_resign AND NOW() AND status_karyawan = 'Resigned'"; 
         $this->db->query($sql);
 

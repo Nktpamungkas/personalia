@@ -570,18 +570,6 @@
                                         
                                     </label>
                                 </th>
-                                <!-- <th>
-                                    <label>
-                                        <span>Departemen <span style="color: red">(*)</span></span><br>
-                                        <select class="select2" data-placeholder="Pilih Satu Depatemen" name="dept" required>
-                                            <?php $queryDept = $this->db->get('dept')->result_array();?>
-                                            <option value="" disabled selected>---------------------------------------------------</option>
-                                            <?php foreach ($queryDept as $dd) : ?>
-                                                <option value="<?= $dd['code']; ?>" <?php if ($dd['code'] == $makar->dept) { echo "SELECTED"; } ?>><?= $dd['code'] . ' - ' . $dd['dept_name'] ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </label>
-                                </th> -->
                                 <th>
                                     <label>
                                         <span>Departemen <span style="color: red">(*)</span></span><br>
@@ -736,13 +724,13 @@
                                 </th>
                             </tr>
                             <tr>
-                               <th>
+                                <th>
                                     <label>
                                         <span>Alamat NPWP</span>
                                         <input name="alamat_npwp" type="text" value="<?= $makar->alamat_npwp; ?>" placeholder="Alamat NPWP">
                                     </label>
-                               </th>
-                               <th>
+                                </th>
+                                <th>
                                     <label>
                                         <span>No. NPWP</span>
                                         <input name="npwp" type="text" value="<?= $makar->npwp; ?>" placeholder="No. NPWP">
@@ -756,7 +744,7 @@
                                 </th>
                             </tr>
                             <tr>
-                               <th colspan="2">
+                                <th colspan="2">
                                     <label>
                                         <span>Kode Jabatan</span>
                                         <select class="select2" data-placeholder="Kode Jabatan" name="kode_jabatan">
@@ -767,20 +755,20 @@
                                             <?php endforeach; ?>
                                         </select>
                                     </label>                                    
-                               </th>
-                               <th>
-                               <?php if ($user['name'] == "DIT") : ?>
-                                    <label>
-                                        <span>Tanggal Resign Karyawan</span><br>
-                                        <input class="form-control input-sm input-sm" value="<?= $makar->tgl_resign; ?>" id="tglresign" name="tgl_resign" type="date">
-                                    <?php endif; ?>
                                 </th>
                                 <th>
-                                    <label>
-                                        <span>Tgl Evaluasi Karyawan Baru </span><br>
-                                        <input type="date" id="tgl_evaluasi" name="tgl_evaluasi" placeholder="Tanggal Evaluasi Karyawan"  value="<?= $makar->tgl_evaluasi; ?>" readonly>
-                                    </label>
-                                    <span id="tgl_evaluasi"></span>
+							    <?php if ($user['name'] == "DIT") : ?>
+									<label>
+										<span>Tanggal Resign Karyawan</span><br>
+										<input class="form-control input-sm" value="<?= $makar->tgl_resign; ?>" id="tglresign" name="tgl_resign" type="date">
+									</label>
+								<?php else : ?>
+									<label>
+										<span>Tgl Evaluasi Karyawan Baru </span><br>
+										<input type="date" id="tgl_evaluasi" name="tgl_evaluasi" placeholder="Tanggal Evaluasi Karyawan" value="<?= $makar->tgl_evaluasi; ?>" readonly>
+									</label>
+									<span id="tgl_evaluasi"></span>
+								<?php endif; ?>
                                 </th>
                             </tr>
                             <tr>

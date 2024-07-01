@@ -96,7 +96,6 @@ class Training_report extends CI_Controller
         }
         // print_r($value); // atau var_dump($value);
         $proses = $this->db->insert_batch('tbl_training', $value);
-
         redirect($this->agent->referrer());
     }
 
@@ -207,6 +206,37 @@ class Training_report extends CI_Controller
         $this->db->delete('tbl_training');
         $this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert"><b>Karyawan Training telah dihapus.</b></center>');
         redirect($this->agent->referrer());
+    }
+
+    public function hapus_training()
+    {
+        $kode_training = $this->input->post('kode_training', true);
+        $tgl = $this->input->post('tgl_training', true);
+        $trainer = $this->input->post('trainer', true);
+        // Pastikan ID yang dikirim tidak kosong
+
+        if (!empty($kode_training) && !empty($tgl) && !empty($trainer)) {
+            $this->db->where('kode_training', $kode_training);
+            $this->db->where('tgl_training', $tgl);
+            $this->db->where('trainer', $trainer);
+            $this->db->delete('tbl_training');
+
+            // $count = $this->db->count_all_results('tbl_training');
+
+            // echo $count;
+
+            // Periksa apakah penghapusan berhasil
+            if ($this->db->affected_rows() > 0) {
+                $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert"><b>Training telah dihapus.</b></div>');
+            } else {
+                $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert"><b>Gagal menghapus training.</b></div>');
+            }
+        } else {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert"><b>ID training tidak valid.</b></div>');
+        }
+
+        // Redirect kembali ke halaman Training_report
+        redirect('Training_report');
     }
     // END DELETE TRAINING
 }

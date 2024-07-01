@@ -8,8 +8,17 @@ class pkl extends CI_Controller
     {
         parent::__construct();
         $this->load->library('form_validation');
-    }
+		$this->load->library('encryption');		
 
+		// $decrypt_kd_lembur = urldecode($encrypt_kode_lembur);
+		// $kodelembur = $this->encrypt->decode($decrypt_kd_lembur);
+    }
+	public function decrypt_kodelembur()
+	{
+		$encrypt_kd_lembur = $this->input->post('encrypt_kd_lembur', true);
+		$decrypt_kd_lembur = urldecode($encrypt_kd_lembur);
+		$kodelembur_ = $this->encrypt->decode($decrypt_kd_lembur);
+	}
     public function index() 
     {
         $data['user'] = $this->db->get_where('user', array('name' =>
@@ -161,9 +170,8 @@ class pkl extends CI_Controller
         } else {
             $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"  style="font-size: 14px"><b>Data yang dihapus tidak tersedia. </b></center>');
             redirect($this->agent->referrer());
-        }
+        }      
         
-       
     }
 
     public function export_excel()
@@ -328,12 +336,12 @@ class pkl extends CI_Controller
             }
         }
 
-        public function print_permohonan($kodelembur)
+        public function print_permohonan($kodelembur_)
         {
             $data['user'] = $this->db->get_where('user', array('name' =>
             $this->session->userdata('name')))->row_array(); 
 
-            $data['pkl'] = $this->db->query("SELECT * FROM permohonan_kerja_lembur WHERE kode_lembur = '$kodelembur'")->row();
+            $data['pkl'] = $this->db->query("SELECT * FROM permohonan_kerja_lembur WHERE kode_lembur = '$kodelembur_'")->row();
             $this->load->view('pkl/print_permohonan', $data);
             
         }
@@ -558,63 +566,111 @@ class pkl extends CI_Controller
                 $this->load->view('template/footer');
             } 
         }
-        public function print_daftar_lembur($kodelembur)
-        {
-            $cari_data =  $this->db->query("SELECT COUNT(*) AS count FROM daftar_lembur WHERE kode_lembur = '$kodelembur'")->row();
-            if ($cari_data->count) {
-                $data['user'] = $this->db->get_where('user', array('name' =>
-                $this->session->userdata('name')))->row_array();
+        // public function print_daftar_lembur($encrypt_kd_lembur)
+        // {
+		// 	$decrypt_kd_lembur = urldecode($encrypt_kd_lembur);
+		// 	$kodelembur_ = $this->encrypt->decode($decrypt_kd_lembur);
 
-                $data['dl'] = $this->db->query("SELECT  id,
-                                                        kode_lembur,
-                                                        id_pkl,
-                                                        dept, 
-                                                        tanggal_ttd, 
-                                                        shift, 
-                                                        tanggal, 
-                                                        dibuat_oleh_nama, 
-                                                        dibuat_oleh_jabatan, 
-                                                        diperiksa_oleh_nama, 
-                                                        diperiksa_oleh_jabatan,
-                                                        disetujui_oleh_nama, 
-                                                        disetujui_oleh_jabatan 
-                                                    FROM 
-                                                        daftar_lembur 
-                                                    WHERE 
-                                                    kode_lembur = '$kodelembur'")->row();
+        //     $cari_data =  $this->db->query("SELECT COUNT(*) AS count FROM daftar_lembur WHERE kode_lembur = '$kodelembur_'")->row();
+        //     if ($cari_data->count) {
+        //         $data['user'] = $this->db->get_where('user', array('name' =>
+        //         $this->session->userdata('name')))->row_array();
 
-                $select_id = $this->db->query("SELECT  id,
-                                                        kode_lembur,
-                                                        id_pkl,
-                                                        dept, 
-                                                        tanggal_ttd, 
-                                                        shift, 
-                                                        tanggal, 
-                                                        dibuat_oleh_nama, 
-                                                        dibuat_oleh_jabatan, 
-                                                        diperiksa_oleh_nama, 
-                                                        diperiksa_oleh_jabatan,
-                                                        disetujui_oleh_nama, 
-                                                        disetujui_oleh_jabatan 
-                                                    FROM 
-                                                        daftar_lembur 
-                                                    WHERE 
-                                                        kode_lembur = '$kodelembur'")->result_array();
-                foreach ($select_id as $value) {
-                    $update_printed = $this->db->query("UPDATE daftar_lembur SET `status` = 'Printed' WHERE id = '$value[id]' "); 
-                }
+        //         $data['dl'] = $this->db->query("SELECT  id,
+        //                                                 kode_lembur,
+        //                                                 id_pkl,
+        //                                                 dept, 
+        //                                                 tanggal_ttd, 
+        //                                                 shift, 
+        //                                                 tanggal, 
+        //                                                 dibuat_oleh_nama, 
+        //                                                 dibuat_oleh_jabatan, 
+        //                                                 diperiksa_oleh_nama, 
+        //                                                 diperiksa_oleh_jabatan,
+        //                                                 disetujui_oleh_nama, 
+        //                                                 disetujui_oleh_jabatan 
+        //                                             FROM 
+        //                                                 daftar_lembur 
+        //                                             WHERE 
+        //                                             kode_lembur = '$kodelembur_'")->row();
 
-                foreach ($select_id as $value) {
-                    $update_printed = $this->db->query("UPDATE permohonan_kerja_lembur SET `status` = 'Printed' WHERE id = '$value[id_pkl]' "); 
-                }
+        //         $select_id = $this->db->query("SELECT  id,
+        //                                                 kode_lembur,
+        //                                                 id_pkl,
+        //                                                 dept, 
+        //                                                 tanggal_ttd, 
+        //                                                 shift, 
+        //                                                 tanggal, 
+        //                                                 dibuat_oleh_nama, 
+        //                                                 dibuat_oleh_jabatan, 
+        //                                                 diperiksa_oleh_nama, 
+        //                                                 diperiksa_oleh_jabatan,
+        //                                                 disetujui_oleh_nama, 
+        //                                                 disetujui_oleh_jabatan 
+        //                                             FROM 
+        //                                                 daftar_lembur 
+        //                                             WHERE 
+        //                                                 kode_lembur = '$kodelembur_'")->result_array();
+        //         foreach ($select_id as $value) {
+        //             $update_printed = $this->db->query("UPDATE daftar_lembur SET `status` = 'Printed' WHERE id = '$value[id]' "); 
+        //         }
+
+        //         foreach ($select_id as $value) {
+        //             $update_printed = $this->db->query("UPDATE permohonan_kerja_lembur SET `status` = 'Printed' WHERE id = '$value[id_pkl]' "); 
+        //         }
                 
-                $this->load->view('pkl/print_daftar_lembur', $data);
-            } else {
-                $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"  style="font-size: 14px"><b>Tidak bisa `Print Surat Perintah Lembur`, data masih kosong! Silahkan `Buat Surat Perintah Lembur`.</b></center>');
-                redirect($this->agent->referrer());
-            }
+        //         $this->load->view('pkl/print_daftar_lembur', $data);
+        //     } else {
+        //         $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"  style="font-size: 14px"><b>Tidak bisa `Print Surat Perintah Lembur`, data masih kosong! Silahkan `Buat Surat Perintah Lembur`.</b></center>');
+        //         redirect($this->agent->referrer());
+        //     }
             
-        }
+        // }
+		public function print_daftar_lembur($encrypt_kd_lembur)
+		{
+			if (strlen($encrypt_kd_lembur) !== 48 || strpos($encrypt_kd_lembur, '==') === false) {
+				$this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert" style="font-size: 14px"><b>Error 404. !!.</b></center>');
+				redirect('pkl/');
+				return;
+			}
+
+			$decrypt_kd_lembur = urldecode($encrypt_kd_lembur);
+			$kodelembur_ = $this->encrypt->decode($decrypt_kd_lembur);
+
+			$cari_data = $this->db->query("SELECT COUNT(*) AS count FROM daftar_lembur WHERE kode_lembur = ?", [$kodelembur_])->row();
+
+			if (!$cari_data->count) {
+				$this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert" style="font-size: 14px"><b>Invalid or non-existent kode lembur. Unable to print the Surat Perintah Lembur.</b></center>');
+				redirect($this->agent->referrer());
+				return;
+			}
+
+			$data['user'] = $this->db->get_where('user', ['name' => $this->session->userdata('name')])->row_array();
+
+			$data['dl'] = $this->db->query(
+				"SELECT id, kode_lembur, id_pkl, dept, tanggal_ttd, shift, tanggal, dibuat_oleh_nama, dibuat_oleh_jabatan, diperiksa_oleh_nama, diperiksa_oleh_jabatan, disetujui_oleh_nama, disetujui_oleh_jabatan 
+				FROM daftar_lembur 
+				WHERE kode_lembur = ?",
+				[$kodelembur_]
+			)->row();
+
+			$select_id = $this->db->query(
+				"SELECT id, kode_lembur, id_pkl, dept, tanggal_ttd, shift, tanggal, dibuat_oleh_nama, dibuat_oleh_jabatan, diperiksa_oleh_nama, diperiksa_oleh_jabatan, disetujui_oleh_nama, disetujui_oleh_jabatan 
+				FROM daftar_lembur 
+				WHERE kode_lembur = ?",
+				[$kodelembur_]
+			)->result_array();
+
+			foreach ($select_id as $value) {
+				$this->db->query("UPDATE daftar_lembur SET status = 'Printed' WHERE id = ?", [$value['id']]);
+			}
+
+			foreach ($select_id as $value) {
+				$this->db->query("UPDATE permohonan_kerja_lembur SET status = 'Printed' WHERE id = ?", [$value['id_pkl']]);
+			}
+
+			$this->load->view('pkl/print_daftar_lembur', $data);
+		}
 
         public function delete_overtime_list($id)
         {

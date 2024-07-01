@@ -48,7 +48,7 @@
                             </span>
                         </label>
                         <button type="submit" class="btn btn-theme btn-block"><i class="fa fa-lock"></i> SIGN IN</button><br>
-                        <center>Your IP Address : <?php $ipaddress = $_SERVER['REMOTE_ADDR']; echo gethostbyaddr($ipaddress); ?></center>
+                        <!-- <center>Your IP Address : <?php $ipaddress = $_SERVER['REMOTE_ADDR']; echo gethostbyaddr($ipaddress); ?></center> -->
                     </form>
 					<div class="download-link">
 						<br>

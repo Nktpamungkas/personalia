@@ -27,8 +27,8 @@ date_default_timezone_set('Asia/Jakarta');
 | Jika ingin bisa buka di hp gunakan ip address jangan menggunakan nama alias
 */
 // $config['base_url'] = 'http://localhost/personalia/';
-// $config['base_url'] = 'https://online.indotaichen.com/personalia/';
-$config['base_url'] = 'http://172.16.18.70/personalia/';
+$config['base_url'] = 'https://online.indotaichen.com/personalia/';
+// $config['base_url'] = 'http://10.0.5.22/personalia/';
 
 /*
 |--------------------------------------------------------------------------
@@ -163,8 +163,8 @@ $config['composer_autoload'] = false;
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
 */
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
-
+// $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-@\=+';
 /*
 |--------------------------------------------------------------------------
 | Enable Query Strings
@@ -329,7 +329,7 @@ $config['cache_query_string'] = false;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '';
+$config['encryption_key'] = '!@AbcDeFGHIJkLMn!@';
 
 /*
 |--------------------------------------------------------------------------

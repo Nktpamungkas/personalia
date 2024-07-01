@@ -2210,17 +2210,17 @@
                 <div class="c x9 y1c wd h4">
                     <div class="t m0 x4 h2 y8 ff1 fs0 fc0 sc0 ls1 ws0">-Disediakan satu kali <span class="_ _1"></span>makan dikantin<span class="_ _1"></span> perusahaan d<span class="_ _1"></span>engan <span class="_ _1"></span>menukar Kupon<span class="_ _1"></span> Makan. </div>
                 </div>
-                <div class="c x2 y1d w8 hb">
+                <div class="c x2 y1d w8 ha">
                     <div class="t m0 x4 h2 y1e ff1 fs0 fc0 sc0 ls4 ws0">3.<span class="ls1"> </span></div>
                 </div>
-                <div class="c x8 y1d w9 hb">
+                <div class="c x8 y1d w9 ha">
                     <div class="t m0 x4 hc y1f ff1 fs0 fc0 sc0 ls1 ws0">Masa kontrak kerja mu<span class="_ _1"></span>lai Tgl <span class="ff2"> <?= $kontrak->kontrak_awal; ?><span class="_ _1"></span><span class="fs2"> s/d <?= $kontrak->kontrak_akhir; ?> </span></span>(<?= $kontrak->durasi; ?> Bulan). Masa kontrak kerja berakhir secara  <span class="_ _8"> </span><span class="fs2"> </span></div>
                     <div class="t m0 x4 h2 y20 ff1 fs0 fc0 sc0 ls1 ws0"><span class="_ _1"></span><span class="_ _1"></span>otomatis apabila batas waktu<span class="_ _1"></span> yang diperjan<span class="_ _1"></span>jikan berakhir seperti <span class="_ _4"></span>yang tercantum diatas ini, tanpa imbalan apapun.</div>
                 </div>
-                <div class="c x2 y22 w8 hd">
+                <div class="c x2 y22 w8 hb">
                     <div class="t m0 x4 h2 yc ff1 fs0 fc0 sc0 ls4 ws0">4.<span class="ls1"> </span></div>
                 </div>
-                <div class="c x8 y22 w9 hd">
+                <div class="c x8 y22 w9 hb">
                     <div class="t m0 x4 h2 yc ff1 fs0 fc0 sc0 ls1 ws0">Selama bekerja di Perusahaa<span class="_ _1"></span>n p<span class="_ _1"></span>ihak ke II WAJIB mengikuti <span class="_ _1"></span>semua Peraturan d<span class="_ _1"></span>an Tata Tertib y<span class="_ _1"></span>ang berlaku d<span class="_ _1"></span>i </div>
                     <div class="t m0 x4 h2 y8 ff1 fs0 fc0 sc0 ls1 ws0">Perusahaan </div>
                 </div>
@@ -2230,17 +2230,17 @@
                 <div class="c x8 y23 w9 h4">
                     <div class="t m0 x4 h2 y8 ff1 fs0 fc0 sc0 ls1 ws0">Pihak ke II wajib mengi<span class="_ _1"></span>si ABSENSI SIDIK JARI s<span class="_ _1"></span>endiri saat masuk/ <span class="_ _1"></span>pulang kerja.<span class="_ _1"></span> </div>
                 </div>
-                <div class="c x2 y24 w8 h5">
-                    <div class="t m0 x4 h2 yc ff1 fs0 fc0 sc0 ls4 ws0">6.<span class="ls1"> </span></div>
+                <div class="c x2 y24 w9 h5">
+                    <div class="t m0 x4 h6 yc ff1 fs0 fc0 sc0 ls4 ws0">6.<span class="ls1"> </span></div>
                 </div>
                 <div class="c x8 y24 w9 h5">
                     <div class="t m0 x4 h2 yc ff1 fs0 fc0 sc0 ls1 ws0">Pihak ke II bersedia mengiku<span class="_ _1"></span>ti kerja lembur apabila dibuthkan tenaganya <span class="_ _1"></span>oleh perusahaan. </div>
                 </div>
-                <div class="c x2 y25 w8 h4">
-                    <div class="t m0 x4 h2 y8 ff1 fs0 fc0 sc0 ls4 ws0">7.<span class="ls1"> </span></div>
+                <div class="c x2 y25 w8 h5">
+                    <div class="t m0 x4 h6 y8 ff1 fs0 fc0 sc0 ls4 ws0">7.<span class="ls1"> </span></div>
                 </div>
-                <div class="c x8 y25 w9 h4">
-                    <div class="t m0 x4 h2 y8 ff1 fs0 fc0 sc0 ls1 ws0">Pihak ke II bersedia mengikuti kerja Shift.<span class="_ _4"></span> </div>
+                <div class="c x8 y25 w9 h5">
+                    <div class="t m0 x4 h2 y8 ff1 fs0 fc0 sc0 ls1 ws0">Pihak ke II bersedia mengikuti kerja Shift.<span class="_ _1"></span> </div>
                 </div>
                 <div class="c x2 y26 w8 h5">
                     <div class="t m0 x4 h2 yc ff1 fs0 fc0 sc0 ls4 ws0">8.<span class="ls1"> </span></div>

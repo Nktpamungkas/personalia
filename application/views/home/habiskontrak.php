@@ -17,7 +17,6 @@ $datablm = $this->db->query("SELECT b.no_scan,
                                     -- AND b.`status` != 'diperpanjang'
                                     AND a.dept = '$dpt'
                                     and NOT a.status_karyawan in( 'Resigned' ,'perubahan_status')
-
                                 ORDER BY
                                     b.kontrak_akhir ASC")->result_array();
 
@@ -40,7 +39,7 @@ foreach ($datablm as $data) {
                 <?php if ($user['dept'] != "HRD" && $totaldata !==0 ):?>
                 <div class="row mb">
                     <p>
-                                               <br>
+                    <br>
                         <h5 style="display: inline;"><b>  Belum Tanda Tangan Kontrak</b></h5> <br>
                         <?php if ($totaldata >= 1) : ?>
                         <h4 id="important" style="display: inline;"><span style="color: red;">IMPORTANT...!!!  </span></h4>
@@ -53,7 +52,7 @@ foreach ($datablm as $data) {
                                     }, 500); // Interval dalam milidetik (500ms = setengah detik)
                                 }
                                 blink(); // Panggil fungsi blink untuk membuat teks berkelap-kelip
-                              </script>
+                            </script>
                         <?php endif; ?>
                     <div class="content-panel">
                             <table style="width:100%" cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="PKWT2">
@@ -94,7 +93,7 @@ foreach ($datablm as $data) {
                                 <?php foreach ($datablmTTD as $result2) : ?>
                                     <tr class="gradeY">
                                         <td>
-                                          <a style="color: <?= ($result2['status_email_kontrak'] == 1) ? 'blue' : 'black'; ?>"> <?= $no++; ?>
+                                            <a style="color: <?= ($result2['status_email_kontrak'] == 1) ? 'blue' : 'black'; ?>"> <?= $no++; ?>
                                         </td>
                                         <td style="color: <?= ($result2['status_email_kontrak'] == 1) ? 'blue' : 'black'; ?>">
                                             <?= $result2['no_scan'] ?>
@@ -141,8 +140,46 @@ foreach ($datablm as $data) {
                                 <tr>
                                     <!-- <th width="25">No</th> -->
                                     <?php if ($user['dept'] == "HRD") : ?>
-                                            <th width="25">*</th>
-                                    <?php else: ?>
+										<th width="5">
+											<select class="select2" data-placeholder="Dept" name="dept" id="deptSelect" required>
+												<?php $querydept = $this->db->get('dept')->result_array(); ?>
+												<option value="" disabled selected>--------------</option>
+												<?php foreach ($querydept as $dd) : ?>
+													<option value="<?= $dd['code']; ?>"><?= $dd['code']; ?></option>
+												<?php endforeach; ?>
+											</select>
+										</th>
+                                    <?php else: ?>		
+										<script>
+											// Menunggu DOM dimuat
+											document.addEventListener("DOMContentLoaded", function() {
+												// Ambil elemen select
+												var selectDept = document.getElementById('deptSelect');
+												// Tambahkan event listener untuk menanggapi perubahan
+												selectDept.addEventListener('change', function() {
+													// Ambil nilai departemen yang dipilih
+													var selectedDept = this.value;
+													// Ambil semua checkbox
+													var checkboxes = document.querySelectorAll('.checkbox');
+													// Loop melalui setiap checkbox
+													checkboxes.forEach(function(checkbox) {
+														// Ambil nilai departemen dari data-dept
+														var deptValue = checkbox.getAttribute('data-dept');
+														// Periksa apakah nilai departemen checkbox sama dengan nilai departemen yang dipilih
+														if (deptValue === selectedDept) {
+															// Jika sama, aktifkan checkbox
+															checkbox.disabled = false;
+															// Jika nilainya cocok, centang checkbox
+															checkbox.checked = true;
+														} else {
+															// Jika tidak cocok, nonaktifkan checkbox dan hilangkan centang
+															checkbox.disabled = true;
+															checkbox.checked = false;
+														}
+													});
+												});
+											});
+										</script>
                                         <th width="25">No</th>
                                     <?php endif; ?>
                                     <th width="125">No Scan</th>
@@ -173,7 +210,7 @@ foreach ($datablm as $data) {
                                         ORDER BY
                                             b.kontrak_akhir ASC")->result_array();
                                     } else {
-                                       $data = $this->db->query("SELECT b.no_scan,
+                                        $data = $this->db->query("SELECT b.no_scan,
                                             a.nama,
                                             a.dept,
                                             DATE_FORMAT(b.kontrak_akhir, '%d %M %Y') as kontrak_akhir,
@@ -196,7 +233,7 @@ foreach ($datablm as $data) {
                                     <tr class="gradeX">
                                         <td>
                                             <?php if ($dpt == "HRD" && $result['status_email_kontrak'] <> 1) : ?>
-                                                <input type="checkbox" class="checkbox" name="no_scan[]" 
+                                                <input type="checkbox" class="checkbox" name="no_scan[]" disabled
                                                     value="<?= $result['no_scan'] ?>/<?= $result['nama'] ?>/<?= $result['dept'] ?>/<?= $result['kontrak_akhir'] ?>/<?= $result['keterangan'] ?>">
                                             <?php elseif ($dpt == "HRD") : ?>
                                                 <input type="checkbox" class="checkbox" name="no_scan[]" checked disabled>
@@ -263,7 +300,7 @@ foreach ($datablm as $data) {
                         </thead>
                         <tbody>
                         <?php 
-                           $data = $this->db->query("SELECT b.no_scan,
+                            $data = $this->db->query("SELECT b.no_scan,
                                     a.nama,
                                     a.dept,
                                     DATE_FORMAT(b.kontrak_akhir, '%d %M %Y') as kontrak_akhir,
@@ -300,11 +337,8 @@ foreach ($datablm as $data) {
                                         <a href="<?= base_url('PKWT/index_pkwt/' . $result['no_scan']); ?>" style="color: blue;">
                                             <?= $result['nama'] ?>
                                         </a>
-                                   <?php endif; ?>
+                                    <?php endif; ?>
                                 </td>
-                                <!-- <td style="color: <?= ($result['status_email_kontrak'] == 1) ? 'blue' : 'black'; ?>">
-                                    <?= $result['nama'] ?>
-                                </td>  -->
                                 <td style="color: <?= ($result['status_email_kontrak'] == 1) ? 'blue' : 'black'; ?>">
                                     <?= $result['dept'] ?>
                                 </td> 

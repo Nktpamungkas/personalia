@@ -6,78 +6,79 @@ class Career_adm extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->library('encryption');
     }
 
     // DISCIPLINE
-        public function discipline()
-        {
-            $data['user'] = $this->db->get_where('user', array('name' =>
-            $this->session->userdata('name')))->row_array(); //Select * from user where name = '$name'
-            // echo 'selemat datang ' . $data['user']['name'];
-            $data['title'] = 'Career Administration | Discipline';
-            $this->load->view('template/header', $data);
-            $this->load->view('career_adm/discipline');
-            $this->load->view('template/footer');
-        }
+    public function discipline()
+    {
+        $data['user'] = $this->db->get_where('user', array('name' =>
+        $this->session->userdata('name')))->row_array(); //Select * from user where name = '$name'
+        // echo 'selemat datang ' . $data['user']['name'];
+        $data['title'] = 'Career Administration | Discipline';
+        $this->load->view('template/header', $data);
+        $this->load->view('career_adm/discipline');
+        $this->load->view('template/footer');
+    }
 
-        public function add_new_discipline()
-        {
-            $data['user'] = $this->db->get_where('user', array('name' =>
-            $this->session->userdata('name')))->row_array(); 
-            $data['title'] = 'Career Administration | Discipline';
-            $this->load->view('template/header', $data);
-            $this->load->view('career_adm/add_discipline');
-            $this->load->view('template/footer');
-        }
+    public function add_new_discipline()
+    {
+        $data['user'] = $this->db->get_where('user', array('name' =>
+        $this->session->userdata('name')))->row_array();
+        $data['title'] = 'Career Administration | Discipline';
+        $this->load->view('template/header', $data);
+        $this->load->view('career_adm/add_discipline');
+        $this->load->view('template/footer');
+    }
 
-        public function c_career_adm()
-        {
-            $data = array (
-                'tgl_sp'  => $this->input->post('tgl_sp', true),
-                'no_scan' => $this->input->post('no_scan', true),
-                'sp'      => $this->input->post('sp', true),
-                'alasan'  => $this->input->post('alasan', true)
-            );
-            $save = $this->db->insert('dicipline', $data);
+    public function c_career_adm()
+    {
+        $data = array(
+            'tgl_sp'  => $this->input->post('tgl_sp', true),
+            'no_scan' => $this->input->post('no_scan', true),
+            'sp'      => $this->input->post('sp', true),
+            'alasan'  => $this->input->post('alasan', true)
+        );
+        $save = $this->db->insert('dicipline', $data);
 
-            $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"  style="font-size: 14px"><b>Berhasil.</b></center>');
-            redirect('Career_adm/discipline');
-        }
+        $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"  style="font-size: 14px"><b>Berhasil.</b></center>');
+        redirect('Career_adm/discipline');
+    }
 
-        public function edit_new_discipline($id)
-        {
-            $data['user'] = $this->db->get_where('user', array('name' =>
-            $this->session->userdata('name')))->row_array(); 
-            $data['title'] = 'Career Administration | Discipline';
-            $data['dicipline'] = $this->db->query("SELECT * FROM dicipline WHERE id='$id'")->row();
-            $this->load->view('template/header', $data);
-            $this->load->view('career_adm/edit_discipline');
-            $this->load->view('template/footer');
-        }
+    public function edit_new_discipline($id)
+    {
+        $data['user'] = $this->db->get_where('user', array('name' =>
+        $this->session->userdata('name')))->row_array();
+        $data['title'] = 'Career Administration | Discipline';
+        $data['dicipline'] = $this->db->query("SELECT * FROM dicipline WHERE id='$id'")->row();
+        $this->load->view('template/header', $data);
+        $this->load->view('career_adm/edit_discipline');
+        $this->load->view('template/footer');
+    }
 
-        public function u_career_adm()
-        {
-            $data = array (
-                'tgl_sp'  => $this->input->post('tgl_sp', true),
-                'no_scan' => $this->input->post('no_scan', true),
-                'sp'      => $this->input->post('sp', true),
-                'alasan'  => $this->input->post('alasan', true)
-            );
-            $this->db->where('id', $this->input->post('id', true));
-            $this->db->update('dicipline', $data);
+    public function u_career_adm()
+    {
+        $data = array(
+            'tgl_sp'  => $this->input->post('tgl_sp', true),
+            'no_scan' => $this->input->post('no_scan', true),
+            'sp'      => $this->input->post('sp', true),
+            'alasan'  => $this->input->post('alasan', true)
+        );
+        $this->db->where('id', $this->input->post('id', true));
+        $this->db->update('dicipline', $data);
 
-            $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"  style="font-size: 14px"><b>Berhasil.</b></center>');
-            redirect('Career_adm/discipline');
-        }
+        $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"  style="font-size: 14px"><b>Berhasil.</b></center>');
+        redirect('Career_adm/discipline');
+    }
 
-        public function delete_new_discipline($id)
-        {
-            $this->db->where('id', $id);
-            $this->db->delete('dicipline');
+    public function delete_new_discipline($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('dicipline');
 
-            $this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert"  style="font-size: 14px"><b>Surat Peringatan berhasil di hapus.</b></center>');
-            redirect($this->agent->referrer());
-        }
+        $this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert"  style="font-size: 14px"><b>Surat Peringatan berhasil di hapus.</b></center>');
+        redirect($this->agent->referrer());
+    }
     // DISCIPLINE
 
     public function transision()
@@ -91,13 +92,15 @@ class Career_adm extends CI_Controller
         $this->load->view('template/footer');
     }
 
-    public function AddCareerTransition($no_scan = '')
+    public function AddCareerTransition($no_scan)
     {
+        $no_scan_decrypt = $this->encryption->decrypt($no_scan);
+
         $data['user'] = $this->db->get_where('user', array('name' =>
         $this->session->userdata('name')))->row_array(); //Select * from user where name = '$name'
         // echo 'selemat datang ' . $data['user']['name'];
         $data['title'] = 'Career Administration | Add Transision';
-        $data['no_scan'] = $no_scan;
+        $data['no_scan'] = $no_scan_decrypt;
         $this->load->view('template/header', $data);
         $this->load->view('career_adm/add_CareerTransition', $no_scan);
         $this->load->view('template/footer');
@@ -132,14 +135,13 @@ class Career_adm extends CI_Controller
 
         $save   = $this->db->insert('career_transition', $data);
 
-        if($save){
+        if ($save) {
             redirect('career_adm/transision');
             $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert" style="font-size: 14px"><b>Career Transition berhasil dibuat.</b></center>');
-        }else{
+        } else {
             $this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert">Input gagal. Silahkan coba kembali</center>');
-            redirect($this->agent->referrer()); 
+            redirect($this->agent->referrer());
         }
-
     }
 
     public function EditCareerTransition($no_scan)
@@ -183,12 +185,12 @@ class Career_adm extends CI_Controller
         $this->db->where('id', $this->input->post('id', true));
         $save = $this->db->update('career_transition', $data);
 
-        if($save){
+        if ($save) {
             redirect('career_adm/transision');
             $this->session->set_flashdata('message', '<center class="alert alert-success" role="alert" style="font-size: 14px"><b>Career Transition berhasil diubah.</b></center>');
-        }else{
+        } else {
             $this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert">Input gagal. Silahkan coba kembali</center>');
-            redirect($this->agent->referrer()); 
+            redirect($this->agent->referrer());
         }
     }
 
@@ -223,6 +225,4 @@ class Career_adm extends CI_Controller
         $data['tgl_selesai'] = $this->input->post('stop', true);
         $this->load->view('career_adm/export_excel_discipline', $data);
     }
-
-
 }
