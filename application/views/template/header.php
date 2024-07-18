@@ -1,9 +1,9 @@
 <?php
-        $sql= $this->db->query( "SELECT count(*) as jumlah
+$sql = $this->db->query("SELECT count(*) as jumlah
                                 FROM tbl_makar
                                 where status_karyawan like '%Kontrak%' and status_seragam ='Belum' and status_idcard ='Belum'and masa_kerja = 6 and status_aktif = 1")->row();
 $jumlahKaryawanBaru = $sql->jumlah;
-		$sql_karyawanbaru=$this->db->query( "SELECT
+$sql_karyawanbaru = $this->db->query("SELECT
 											count(*) as jumlah_karyawan_Verifikasi
 											FROM
 												tbl_makar
@@ -14,8 +14,8 @@ $jumlahKaryawanBaru = $sql->jumlah;
 												and status_email_kontrak is null
 											ORDER BY
 												tgl_masuk asc;")->row();
-		$jumlahVerifikasi = $sql_karyawanbaru->jumlah_karyawan_Verifikasi;
-								
+$jumlahVerifikasi = $sql_karyawanbaru->jumlah_karyawan_Verifikasi;
+
 ?>
 <?php
 if ($user['name']) : ?>
@@ -45,8 +45,12 @@ if ($user['name']) : ?>
 
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-        
+        <!-- Tambahkan ini di bagian <head> di template/header -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
     </head>
+
     <body>
         <section id="container">
             <!-- **********************************************************************************************************************************************************
@@ -54,53 +58,53 @@ if ($user['name']) : ?>
         *********************************************************************************************************************************************************** -->
             <!--header start-->
             <header class="header black-bg">
-      <div class="sidebar-toggle-box">
-        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
-      </div>
-      <!--logo start-->
-      <a href="index.html" class="logo"><b>HR<span>IS</span></b></a>
-      <!--logo end-->
-      <div class="nav notify-row" id="top_menu">
-      <?php if($user['dept'] == "HRD") : ?>
-		<ul class="nav top-menu">
-    <!-- notification dropdown start-->
-    <li id="header_notification_bar" class="dropdown">
-        <a data-toggle="dropdown" class="dropdown-toggle" aria-expanded="true">
-            <i class="fa fa-bell-o"></i>
-            <!-- buat hitungan jumlah notif karyawan baru seragam + karyawan baru verifikasi -->
-            <span class="badge bg-important"><?= $jumlahKaryawanBaru + $jumlahVerifikasi; ?></span>
-        </a>
-        <ul class="dropdown-menu extended notification">
-            <div class="notify-arrow notify-arrow-yellow"></div>
-            <li>
-                <p class="yellow">Ada <?= $jumlahKaryawanBaru; ?> Karyawan Baru Masa Kerja 6 Bulan</p>
-                <a href="<?= base_url('home/statusseragam'); ?>">
-                    <span class="label label-warning"><i class="far fa-id-badge"></i></span>
-                    <span class="small italic">Klik untuk Kirim Email</span>
-                </a>
-            </li>
-			<li>
-                <p class="green">Ada <?= $jumlahVerifikasi; ?> karyawan baru yang harus di evaluasi</p>
-                <a href="<?= base_url('home/karyawanbaru'); ?>">
-                    <span class="label label-success"><i class="far fa-id-badge"></i></span>
-                    <span class="small italic">Klik untuk untuk Email Evauasi</span>
-                </a>
-            </li>
-        </ul>            
-    </li>
-    <!-- notification dropdown end -->
-</ul>
+                <div class="sidebar-toggle-box">
+                    <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+                </div>
+                <!--logo start-->
+                <a href="index.html" class="logo"><b>HR<span>IS</span></b></a>
+                <!--logo end-->
+                <div class="nav notify-row" id="top_menu">
+                    <?php if ($user['dept'] == "HRD") : ?>
+                        <ul class="nav top-menu">
+                            <!-- notification dropdown start-->
+                            <li id="header_notification_bar" class="dropdown">
+                                <a data-toggle="dropdown" class="dropdown-toggle" aria-expanded="true">
+                                    <i class="fa fa-bell-o"></i>
+                                    <!-- buat hitungan jumlah notif karyawan baru seragam + karyawan baru verifikasi -->
+                                    <span class="badge bg-important"><?= $jumlahKaryawanBaru + $jumlahVerifikasi; ?></span>
+                                </a>
+                                <ul class="dropdown-menu extended notification">
+                                    <div class="notify-arrow notify-arrow-yellow"></div>
+                                    <li>
+                                        <p class="yellow">Ada <?= $jumlahKaryawanBaru; ?> Karyawan Baru Masa Kerja 6 Bulan</p>
+                                        <a href="<?= base_url('home/statusseragam'); ?>">
+                                            <span class="label label-warning"><i class="far fa-id-badge"></i></span>
+                                            <span class="small italic">Klik untuk Kirim Email</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <p class="green">Ada <?= $jumlahVerifikasi; ?> karyawan baru yang harus di evaluasi</p>
+                                        <a href="<?= base_url('home/karyawanbaru'); ?>">
+                                            <span class="label label-success"><i class="far fa-id-badge"></i></span>
+                                            <span class="small italic">Klik untuk untuk Email Evauasi</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- notification dropdown end -->
+                        </ul>
 
-        <?php endif; ?>
-        <!--  notification end -->
-       
-      </div>
-      <div class="top-menu">
-            <ul class="nav pull-right top-menu">
-                <li><a class="logout" id="logout" href="<?= base_url('auth/logout/') . $user['name']; ?>">Logout</a></li>
-            </ul>
-        </div>
-    </header>
+                    <?php endif; ?>
+                    <!--  notification end -->
+
+                </div>
+                <div class="top-menu">
+                    <ul class="nav pull-right top-menu">
+                        <li><a class="logout" id="logout" href="<?= base_url('auth/logout/') . $user['name']; ?>">Logout</a></li>
+                    </ul>
+                </div>
+            </header>
             <!-- **********************************************************************************************************************************************************
         MAIN SIDEBAR MENU
         *********************************************************************************************************************************************************** -->
@@ -117,7 +121,7 @@ if ($user['name']) : ?>
                         ?>
                         <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6) : ?>
                             <li class="sub-menu">
-                                <a <?php if ($title == "Dashboard" || $title == "Dashboard Karyawan Baru" || $title == "Karyawan Habis Kontrak" || $title == "Status Seragam Dan ID card Karyawan Dept"|| $title == "Status Seragam Dan ID card Karyawan ALL"|| $title == "Data Karyawan Kedisiplinan" || $title == "Data Karyawan Keluar" || $title == "Data Karyawan Ulang Tahun" || $title == "Data Karyawan Masa Percobaan") {
+                                <a <?php if ($title == "Dashboard" || $title == "Dashboard Karyawan Baru" || $title == "Karyawan Habis Kontrak" || $title == "Status Seragam Dan ID card Karyawan Dept" || $title == "Status Seragam Dan ID card Karyawan ALL" || $title == "Data Karyawan Kedisiplinan" || $title == "Data Karyawan Keluar" || $title == "Data Karyawan Ulang Tahun" || $title == "Data Karyawan Masa Percobaan") {
                                         echo 'class="active"';
                                     } ?> href="javascript:;">
                                     <i class="fa fa-dashboard"></i>
@@ -132,16 +136,16 @@ if ($user['name']) : ?>
                                         } ?>><a href="<?= base_url('home/karyawanbaru'); ?>">Karyawan Baru</a></li>
                                     <!-- <?php if ($role_id == 1 || $role_id == 2 || $role_id == 5) : ?>
                                         <li <?php if ($title == "Dashboard Karyawan Baru 2") {
-                                        echo 'class="active"';
-                                         } ?>><a href="<?= base_url('home/karyawanbaru2'); ?>">Karyawan Baru (test kirim email)</a></li>    
+                                                    echo 'class="active"';
+                                                } ?>><a href="<?= base_url('home/karyawanbaru2'); ?>">Karyawan Baru (test kirim email)</a></li>    
                                     <?php endif; ?>  -->
                                     <li <?php if ($title == "Karyawan Habis Kontrak") {
                                             echo 'class="active"';
                                         } ?>><a href="<?= base_url('home/habiskontrak'); ?>">Habis Kontrak</a></li>
                                     <!-- <?php if ($role_id == 1 || $role_id == 2 || $role_id == 5) : ?>
                                         <li <?php if ($title == "Karyawan Habis Kontrak 2") {
-                                            echo 'class="active"';
-                                        } ?>><a href="<?= base_url('home/habiskontrak2'); ?>">Habis Kontrak (test kirim email)</a></li>    
+                                                    echo 'class="active"';
+                                                } ?>><a href="<?= base_url('home/habiskontrak2'); ?>">Habis Kontrak (test kirim email)</a></li>    
                                     <?php endif; ?>  -->
                                     <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6) : ?>
                                         <li <?php if ($title == "Status Seragam Dan ID card Karyawan Dept") {
@@ -153,7 +157,7 @@ if ($user['name']) : ?>
                                                 echo 'class="active"';
                                             } ?>><a href="<?= base_url('home\statusseragam'); ?>">Seragam Dan ID Card ALL</a></li>
                                     <?php endif; ?>
-                                   <li <?php if ($title == "Data Karyawan Kedisiplinan") {
+                                    <li <?php if ($title == "Data Karyawan Kedisiplinan") {
                                             echo 'class="active"';
                                         } ?>><a href="<?= base_url('home/kedisiplinan'); ?>">Surat Peringatan</a></li>
                                     <li <?php if ($title == "Data Karyawan Keluar") {
@@ -163,8 +167,8 @@ if ($user['name']) : ?>
                                             echo 'class="active"';
                                         } ?>><a href="<?= base_url('home/ulangtahun'); ?>">Karyawan Ulang Tahun</a></li>
                                     <!-- <li <?php if ($title == "Data Karyawan Masa Percobaan") {
-                                            echo 'class="active"';
-                                        } ?>><a href="<?= base_url('home/karyawantraining'); ?>">Karyawan Training</a></li> -->
+                                                    echo 'class="active"';
+                                                } ?>><a href="<?= base_url('home/karyawantraining'); ?>">Karyawan Training</a></li> -->
 
                                 </ul>
                             </li>
@@ -206,11 +210,11 @@ if ($user['name']) : ?>
                                                 echo 'class="active"';
                                             } ?>><a href="<?= base_url('career_adm/discipline'); ?>">Surat Peringatan</a></li>
                                     <?php endif; ?>
-                                    
+
                                     <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7) : ?>
                                         <li <?php if ($title == "Employee | Data Seragam ") {
                                                 echo 'class="active"';
-                                            } ?>><a href="<?= base_url('data_karyawan/seragam'); ?>">Data Seragam</a></li>
+                                            } ?>><a href="<?= base_url('Data_karyawan/seragam'); ?>">Data Seragam</a></li>
                                     <?php endif; ?>
                                 </ul>
                             </li>
@@ -269,7 +273,7 @@ if ($user['name']) : ?>
                             </ul>
                         </li>
                         <li class="sub-menu">
-                            <a <?php if ($title == "Time Attendance | Izin Cuti" || $title == "Time Attendance | Lembur" || $title == "Time Attendance | Laporan Absen" || $title == "Time Attendance | Generate Cuti"||$title == "Time Attendance | Lembur Test") {
+                            <a <?php if ($title == "Time Attendance | Izin Cuti" || $title == "Time Attendance | Lembur" || $title == "Time Attendance | Laporan Absen" || $title == "Time Attendance | Generate Cuti" || $title == "Time Attendance | Lembur Test") {
                                     echo 'class="active"';
                                 } ?> href="javascript:;">
                                 <i class="fa fa-clock-o"></i>
@@ -284,8 +288,8 @@ if ($user['name']) : ?>
 
                                 <!-- <?php if ($role_id == 1 || $role_id == 5) : ?>
                                     <li <?php if ($title == "Time Attendance | Lembur Test") {
-                                            echo 'class="active"';
-                                        } ?>><a href="<?= base_url('pkl2'); ?>">Lembur Test </a></li>
+                                                echo 'class="active"';
+                                            } ?>><a href="<?= base_url('pkl2'); ?>">Lembur Test </a></li>
                                 <?php endif; ?> -->
 
                                 <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7) : ?>
@@ -345,7 +349,13 @@ if ($user['name']) : ?>
                                 <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5) : ?>
                                     <li <?php if ($title == "Evaluasi Training") {
                                             echo 'class="active"';
-                                        } ?>><a href="#">5. Evaluasi Training</a></li>
+                                        } ?>><a href="<?= base_url('Training_report'); ?>">5. Evaluasi Training</a></li>
+                                <?php endif; ?>
+
+                                <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5) : ?>
+                                    <li <?php if ($title == "Upload Data Training") {
+                                            echo 'class="active"';
+                                        } ?>><a href="<?= base_url('UploadDataTraining'); ?>">6. Upload Data Training</a></li>
                                 <?php endif; ?>
 
                                 <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6) : ?>
@@ -377,7 +387,7 @@ if ($user['name']) : ?>
                                 </a>
                             <?php endif; ?>
                             <ul class="sub">
-                                <?php if ($role_id == 1 || $role_id == 2 ) : ?>
+                                <?php if ($role_id == 1 || $role_id == 2) : ?>
                                     <li <?php if ($title == "KPI Karyawan | Setting | Setting BSC") {
                                             echo 'class="active"';
                                         } ?>><a href="<?= base_url('Kpi_karyawan/setting_bsc'); ?>">Setting BSC </a>
@@ -394,7 +404,7 @@ if ($user['name']) : ?>
                                             echo 'class="active"';
                                         } ?>><a href="<?= base_url('Kpi_karyawan/feedback'); ?>">Feedback Dept</a>
                                     </li>
-                                <?php elseif($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6) : ?>
+                                <?php elseif ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6) : ?>
                                     <li <?php if ($title == "KPI Karyawan | Setting | Laporan KPI") {
                                             echo 'class="active"';
                                         } ?>><a href="<?= base_url('Kpi_karyawan/laporan_kpi'); ?>">Laporan KPI</a>

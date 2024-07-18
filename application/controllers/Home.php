@@ -5,7 +5,6 @@ class Home extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-		$this->load->database();
     }
 
     public function index()
@@ -43,7 +42,7 @@ class Home extends CI_Controller
                                 }
     public function data_status_idcseragam_all_dept()
     { 
-        $data = $this->db->query("SELECT a.no_scan,
+        $data = $this->db->query("SELECT distinct a.no_scan,
                                         a.nama,
                                         a.dept,
                                         a.jabatan,
@@ -68,7 +67,7 @@ class Home extends CI_Controller
                                         a.tgl_masuk BETWEEN a.tgl_masuk
                                         AND  DATE_ADD( NOW(), INTERVAL '6' MONTH ) 
                                         and a.masa_kerja = 6
-                                        AND  a.status_karyawan IN ('Kontrak2','Kontrak1')
+                                        AND  a.status_karyawan IN ('Kontrak2','Kontrak1','Kontrak','Kontrak')
                                         AND NOT a.status_idcard ='Sudah'
                                         AND NOT a.status_seragam ='Sudah'
                                         ORDER BY

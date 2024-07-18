@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-12 main-chart">
                 <div class="border-head">
-                <h3>HUMAN RESOURCES INFORMATION SYSTEM</h3>
+                <h3>HUMAN RESOURCES INFORMATION SYSTEM </h3>
                 </div>
                 <!-- SERVER STATUS PANELS -->
                 <div class="col-lg-25">

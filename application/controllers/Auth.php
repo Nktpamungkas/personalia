@@ -12,127 +12,127 @@ class Auth extends CI_Controller
 
     public function index()
     {      
-    	//upadate Status Resigned
-        $sql= "UPDATE tbl_makar set status_aktif = 0 WHERE tgl_resign between tgl_resign AND NOW() AND status_karyawan = 'Resigned'"; 
-        $this->db->query($sql);
+    // 	//upadate Status Resigned
+    //     $sql= "UPDATE tbl_makar set status_aktif = 0 WHERE tgl_resign between tgl_resign AND NOW() AND status_karyawan = 'Resigned'"; 
+    //     $this->db->query($sql);
 
-      //Generate Cuti tahunan
-        $sql_sheet  = "SELECT *,
-                        DATE_FORMAT( tgl_tetap, '%d %M' ) AS awal,
-                        YEAR(CURDATE()) as thn_awal,
-                        DATE_FORMAT( ( tgl_tetap + INTERVAL '12' MONTH - INTERVAL '1' DAY), '%d %M' ) AS akhir, 
-                        YEAR(CURDATE()+interval '1'year) as thn_akhir,
-                        YEAR(CURDATE()-interval '1'year) as thn_awal_periode_gen,
-                        YEAR(CURDATE()) as thn_akhir_periode_gen
-                    FROM
-                        tbl_makar 
-                    WHERE
-                        status_karyawan = 'Tetap' 
-                        AND gaji IS NULL 
-                        AND status_aktif = 1 
-                        AND DATE_FORMAT( tgl_tetap, '%d %M' ) = DATE_FORMAT(CURDATE(),'%d %M') 
-                        and not year(tgl_tetap) = year(CURDATE())
-                        and not tgl_generate_cuti = CURDATE()
-                    ORDER BY
-                        ( tgl_tetap + INTERVAL '12' MONTH - INTERVAL '1' DAY ) DESC";           
-        // $sheet_gen  = $this->db->query($sql_sheet." LIMIT 1 ")->row(); 
-        $sheet      = $this->db->query($sql_sheet)->result_array(); 
-            foreach ($sheet AS $value){
-            if ($value['sisa_cuti'] <= 0) {
-            $saldosisacuti = 12 + $value['sisa_cuti'];
-            } else {
-            $saldosisacuti = 12;
-            }
+    //   //Generate Cuti tahunan
+    //     $sql_sheet  = "SELECT *,
+    //                     DATE_FORMAT( tgl_tetap, '%d %M' ) AS awal,
+    //                     YEAR(CURDATE()) as thn_awal,
+    //                     DATE_FORMAT( ( tgl_tetap + INTERVAL '12' MONTH - INTERVAL '1' DAY), '%d %M' ) AS akhir, 
+    //                     YEAR(CURDATE()+interval '1'year) as thn_akhir,
+    //                     YEAR(CURDATE()-interval '1'year) as thn_awal_periode_gen,
+    //                     YEAR(CURDATE()) as thn_akhir_periode_gen
+    //                 FROM
+    //                     tbl_makar 
+    //                 WHERE
+    //                     status_karyawan = 'Tetap' 
+    //                     AND gaji IS NULL 
+    //                     AND status_aktif = 1 
+    //                     AND DATE_FORMAT( tgl_tetap, '%d %M' ) = DATE_FORMAT(CURDATE(),'%d %M') 
+    //                     and not year(tgl_tetap) = year(CURDATE())
+    //                     and not tgl_generate_cuti = CURDATE()
+    //                 ORDER BY
+    //                     ( tgl_tetap + INTERVAL '12' MONTH - INTERVAL '1' DAY ) DESC";           
+    //     // $sheet_gen  = $this->db->query($sql_sheet." LIMIT 1 ")->row(); 
+    //     $sheet      = $this->db->query($sql_sheet)->result_array(); 
+    //         foreach ($sheet AS $value){
+    //         if ($value['sisa_cuti'] <= 0) {
+    //         $saldosisacuti = 12 + $value['sisa_cuti'];
+    //         } else {
+    //         $saldosisacuti = 12;
+    //         }
 
-        $data = array (
-                'no_scan'   => $value['no_scan'],
-                'sisa_cuti' => $saldosisacuti,
-                'sisa_cuti_th_sebelumnya' => $value['sisa_cuti'],
-                'tgl_generate_cuti'=> DATE('Y-m-d')
-        );
-        $this->db->where('no_scan', $value['no_scan']);
-        $this->db->update('tbl_makar', $data);
+    //     $data = array (
+    //             'no_scan'   => $value['no_scan'],
+    //             'sisa_cuti' => $saldosisacuti,
+    //             'sisa_cuti_th_sebelumnya' => $value['sisa_cuti'],
+    //             'tgl_generate_cuti'=> DATE('Y-m-d')
+    //     );
+    //     $this->db->where('no_scan', $value['no_scan']);
+    //     $this->db->update('tbl_makar', $data);
 
-        if($value['sisa_cuti']){
-            $alasan = "Sisa cuti ".$value['sisa_cuti']." telah dibayarkan (Periode".$value['thn_awal_periode_gen']." - ".$value['thn_akhir_periode_gen']." ).";
-        } else {
-            $alasan = "Tidak ada sisa cuti yang dibayarkan. Sisa cuti habis.";
-        }
+    //     if($value['sisa_cuti']){
+    //         $alasan = "Sisa cuti ".$value['sisa_cuti']." telah dibayarkan (Periode".$value['thn_awal_periode_gen']." - ".$value['thn_akhir_periode_gen']." ).";
+    //     } else {
+    //         $alasan = "Tidak ada sisa cuti yang dibayarkan. Sisa cuti habis.";
+    //     }
 
-        // input histori izin cuti 
-        $data_histori = array (
-                        'kode_cuti'             => "GEN-".date('Ym'), //HISTORI IMPORT CUTI
-                        'nip'                   => $value['no_scan'], 
-                        'dept'                  => $value['dept'],
-                        'saldo_cuti'            => $saldosisacuti,
-                        'days_or_month'         => "Hari",
-                        'ket'                   => "th.".date('Y'),
-                        'alasan'                => $alasan
-        );
-        $this->db->insert('permohonan_izin_cuti', $data_histori);
+    //     // input histori izin cuti 
+    //     $data_histori = array (
+    //                     'kode_cuti'             => "GEN-".date('Ym'), //HISTORI IMPORT CUTI
+    //                     'nip'                   => $value['no_scan'], 
+    //                     'dept'                  => $value['dept'],
+    //                     'saldo_cuti'            => $saldosisacuti,
+    //                     'days_or_month'         => "Hari",
+    //                     'ket'                   => "th.".date('Y'),
+    //                     'alasan'                => $alasan
+    //     );
+    //     $this->db->insert('permohonan_izin_cuti', $data_histori);
 
-        }
+    //     }
    
-        //Update Data Career transition(Mitasi, Promosi, Demosi)
-        $sql_transition = "SELECT 
-                            no_scan,
-                            proses,
-                            tgl_efektif,
-                            dept_baru,
-                            bagian_baru,
-                            golongan_baru,
-                            jabatan_baru,
-                            kode_jabatan_baru,
-                            atasan1,
-                            atasan2
-                        FROM 
-                            career_transition
-                        WHERE 
-                            tgl_efektif = CURDATE() ";
+    //     //Update Data Career transition(Mitasi, Promosi, Demosi)
+    //     $sql_transition = "SELECT 
+    //                         no_scan,
+    //                         proses,
+    //                         tgl_efektif,
+    //                         dept_baru,
+    //                         bagian_baru,
+    //                         golongan_baru,
+    //                         jabatan_baru,
+    //                         kode_jabatan_baru,
+    //                         atasan1,
+    //                         atasan2
+    //                     FROM 
+    //                         career_transition
+    //                     WHERE 
+    //                         tgl_efektif = CURDATE() ";
 
-        $sheet_tran = $this->db->query($sql_transition)->result_array();
+    //     $sheet_tran = $this->db->query($sql_transition)->result_array();
 
-        foreach ($sheet_tran as $value) {
-            if ($value['proses'] == 'mutasi'){
+    //     foreach ($sheet_tran as $value) {
+    //         if ($value['proses'] == 'mutasi'){
 
-                $data = array(
-                    'dept'         => $value['dept_baru'],
-                    'bagian'       => $value['bagian_baru'],
-                    );
-            // Tambahkan kondisi if untuk memeriksa apakah atasan1 dan atasan2 tidak null
-            } else if ($value['atasan1'] !== null && $value['atasan2'] !== null) {
-                //update jika atasan1 dan atasan2 tidak null
-                $data = array(
-                    'dept'         => $value['dept_baru'],
-                    'bagian'       => $value['bagian_baru'],
-                    'golongan'     => $value['golongan_baru'],
-                    'jabatan'      => $value['jabatan_baru'],
-                    'kode_jabatan' => $value['kode_jabatan_baru'],
-                    'atasan1'      => $value['atasan1'], 
-                    'atasan2'      => $value['atasan2'], 
-                );
-            } else {
-                //update jika atasan1 dan atasan2 null
-                $data = array(
-                    'dept'         => $value['dept_baru'],
-                    'bagian'       => $value['bagian_baru'],
-                    'golongan'     => $value['golongan_baru'],
-                    'jabatan'      => $value['jabatan_baru'],
-                    'kode_jabatan' => $value['kode_jabatan_baru'],
-                );
-            }
+    //             $data = array(
+    //                 'dept'         => $value['dept_baru'],
+    //                 'bagian'       => $value['bagian_baru'],
+    //                 );
+    //         // Tambahkan kondisi if untuk memeriksa apakah atasan1 dan atasan2 tidak null
+    //         } else if ($value['atasan1'] !== null && $value['atasan2'] !== null) {
+    //             //update jika atasan1 dan atasan2 tidak null
+    //             $data = array(
+    //                 'dept'         => $value['dept_baru'],
+    //                 'bagian'       => $value['bagian_baru'],
+    //                 'golongan'     => $value['golongan_baru'],
+    //                 'jabatan'      => $value['jabatan_baru'],
+    //                 'kode_jabatan' => $value['kode_jabatan_baru'],
+    //                 'atasan1'      => $value['atasan1'], 
+    //                 'atasan2'      => $value['atasan2'], 
+    //             );
+    //         } else {
+    //             //update jika atasan1 dan atasan2 null
+    //             $data = array(
+    //                 'dept'         => $value['dept_baru'],
+    //                 'bagian'       => $value['bagian_baru'],
+    //                 'golongan'     => $value['golongan_baru'],
+    //                 'jabatan'      => $value['jabatan_baru'],
+    //                 'kode_jabatan' => $value['kode_jabatan_baru'],
+    //             );
+    //         }
 
-            $this->db->where('no_scan', $value['no_scan']); 
-            $this->db->update('tbl_makar', $data);
-        }
+    //         $this->db->where('no_scan', $value['no_scan']); 
+    //         $this->db->update('tbl_makar', $data);
+    //     }
 
 
-        //Update Masa Kerja Karyawan baru
-        $masakerja = "UPDATE tbl_makar set masa_kerja = 6 where tgl_seragam between tgl_seragam  AND  now() and status_seragam ='BELUM' and status_idcard ='BELUM' AND NOT status_karyawan = 'Resigned' ";
-        $this->db->query($masakerja);
+    //     //Update Masa Kerja Karyawan baru
+    //     $masakerja = "UPDATE tbl_makar set masa_kerja = 6 where tgl_seragam between tgl_seragam  AND  now() and status_seragam ='BELUM' and status_idcard ='BELUM' AND NOT status_karyawan = 'Resigned' ";
+    //     $this->db->query($masakerja);
 
-        $tglseragam = "UPDATE tbl_makar set tgl_seragam = (DATE_ADD(tgl_masuk, INTERVAL 6 month )) where status_seragam = 'BELUM' and status_idcard ='BELUM' AND NOT status_karyawan = 'Resigned'";
-        $this->db->query($tglseragam);
+    //     $tglseragam = "UPDATE tbl_makar set tgl_seragam = (DATE_ADD(tgl_masuk, INTERVAL 6 month )) where status_seragam = 'BELUM' and status_idcard ='BELUM' AND NOT status_karyawan = 'Resigned'";
+    //     $this->db->query($tglseragam);
   
         $this->form_validation->set_rules('name', 'Name', 'trim|required');
         $this->form_validation->set_rules('password', 'Password', 'trim|required');

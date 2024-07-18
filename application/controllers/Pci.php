@@ -8,7 +8,6 @@ class pci extends CI_Controller
     {
         parent::__construct();
         $this->load->library('form_validation');
-		$this->load->library('encryption');		
     }
 
     public function index()
@@ -120,24 +119,15 @@ class pci extends CI_Controller
         redirect($this->agent->referrer());
     }
 
-    public function print_izin_cuti($encrypt_kd_cuti)
+    public function print_izin_cuti($id)
     {
-
-		if (strlen($encrypt_kd_cuti) !== 16 || strpos($encrypt_kd_cuti, '==') === false) {
-			// $this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert" style="font-size: 14px"><b>Error 404. !!.</b></center>');
-			redirect('pci/');
-			return;
-		}
-
-		$decrypt_kd_Cuti= urldecode($encrypt_kd_cuti);
-		$kodeCuti_ = $this->encrypt->decode($decrypt_kd_Cuti);
         $data['user'] = $this->db->get_where('user', array('name' =>
         $this->session->userdata('name')))->row_array(); 
 
         $data = array (
             'status'  => 'Printed'
         );
-        $this->db->where('id', $kodeCuti_);
+        $this->db->where('id', $id);
         $this->db->update('permohonan_izin_cuti', $data);
 
         $data['title'] = 'Time Attendance | Print Izin Cuti';
@@ -171,8 +161,8 @@ class pci extends CI_Controller
                                                 LEFT JOIN (SELECT * FROM tbl_makar) b ON a.nip = b.no_scan
                                                 LEFT JOIN (SELECT * FROM tbl_makar) c ON a.pengganti_kerja = c.no_scan
                                                 LEFT JOIN cuti d ON d.kode_cuti = a.ket
-                                            WHERE 
-                                                a.id = '$kodeCuti_'")->row();
+                                         WHERE 
+                                                a.id = '$id'")->row();
         $this->load->view('pci/print', $data);
     }
 

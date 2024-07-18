@@ -235,25 +235,13 @@ function functionGaji() {
                                     }
                                 ?>
                                 <?php foreach($data AS $result) : ?>
-									<?php 
-									$kd_pkwt  =  $result['no_scan'];
-									
-									// Encrypt kode Cuti
-									$encrypt_kd_pkwt = $this->encrypt->encode($kd_pkwt);
-									$encrypt_kd_pkwt_url = urlencode($encrypt_kd_pkwt);
-	
-									$decrypt_kd_pkwt = urldecode($encrypt_kd_pkwt);
-									$kdpkwt_ = $this->encrypt->decode($decrypt_kd_pkwt);
-									
-									?>
-
                                     <tr class="gradeX">
                                         <td>
                                             <li class="dropdown" style="list-style-type:none;">
                                                 <a href="" class="fa fa-align-justify" data-toggle="dropdown"></a>
                                                 <ul class="dropdown-menu">
                                                     <li>
-                                                        <a href="<?= base_url(); ?>PKWT/index_pkwt/<?= $encrypt_kd_pkwt; ?>" style="color: black; font-size:13px;">Perpanjang kontrak</a>
+                                                        <a href="<?= base_url(); ?>PKWT/index_pkwt/<?= $result['no_scan']; ?>" style="color: black; font-size:13px;">Perpanjang kontrak</a>
                                                     </li>
                                                     <li>
                                                         <a href="#" data-toggle="modal" data-target="#modalHapusKontrak<?= $result['id'] ?>" style="color: black; font-size:13px;"><i class="fa fa-trash"></i> Hapus</a>

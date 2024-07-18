@@ -186,7 +186,7 @@ class PKWT extends CI_Controller
                 'kontrak_akhir'     => $convertDate,
                 'keterangan'        => $this->input->post('status_karyawan', true),
                 'durasi'            => $this->input->post('durasi', true),
-                'uk'                => 'UK' . $this->input->post('uk', true),
+                'uk'                => 'UK' .sprintf("%02s",$this->input->post('uk', true)),
                 'gaji'              => $this->input->post('upah', true),
                 'libur'             => $this->input->post('libur', true)
             );

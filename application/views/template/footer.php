@@ -269,7 +269,7 @@
         });
     });
 
-	$(document).ready(function() {
+    $(document).ready(function() {
         var oTable = $('#listPKL').dataTable({
             "aoColumnDefs": [{
                 "bSortable": true,
@@ -289,7 +289,7 @@
     //         }]
     //     });
     // });
-    
+
     $(document).ready(function() {
         var oTable = $('#PKWT3').dataTable({
             "aoColumnDefs": [{
@@ -361,7 +361,7 @@
             ]
         });
     });
-    
+
     $(document).ready(function() {
         var oTable = $('#table-bsc').dataTable({
             "aoColumnDefs": [{

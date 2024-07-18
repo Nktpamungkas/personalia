@@ -35,7 +35,7 @@
     function _sk() {
         var statuskaryawan = document.getElementById('sk').value;
         // console.log(statuskaryawan);
-        if (statuskaryawan == "Kontrak1" || statuskaryawan == "Kontrak2" || statuskaryawan == "Resigned") {
+        if (statuskaryawan == "Kontrak1" || statuskaryawan == "Kontrak2" || statuskaryawan == "Kontrak" tambahDataKeluarga|| statuskaryawan == "Resigned") {
             $('#tgltetap').attr('readonly', true);
             $('#kontrak_awal').removeAttr("readonly");
             $('#kontrak_akhir').removeAttr("readonly");
@@ -53,6 +53,7 @@
             if (selectedValueA === "Wanita") {
                 inputB.val("N");
             } else {
+                // Sesuaikan dengan kebutuhan Anda, misalnya, kosongkan nilainya
                 inputB.val("L");
             }
 
@@ -83,6 +84,25 @@
 
 //     // Memanggil fungsi hitungTanggalEvaluasi saat nilai input tanggal masuk berubah
 //     inputTanggalMasuk.addEventListener('input', hitungTanggalEvaluasi);
+document.getElementById('tgl_lahir').addEventListener('change', function() {
+            var tgl_lahir = new Date(this.value);
+            var today = new Date();
+            var age = today.getFullYear() - tgl_lahir.getFullYear();
+            var monthDiff = today.getMonth() - tgl_lahir.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < tgl_lahir.getDate())) {
+                age--;
+            }
+
+            var ageMessage = document.getElementById('ageMessage');
+            var saveBtn = document.getElementById('saveBtn');
+            if (age < 17) {
+                ageMessage.textContent = 'Umur dibawah 17 tahun';
+                saveBtn.disabled = true;
+            } else {
+                ageMessage.textContent = '';
+                saveBtn.disabled = false;
+            }
+        });
 </script>
 <style type="text/css">
     .form-style-4{
@@ -134,6 +154,7 @@
         resize:none;
         height:20px;
     }
+
     .form-style-4 textarea:focus, 
     .form-style-4 input[type=text]:focus,
     .form-style-4 input[type=email]:focus,
@@ -171,7 +192,7 @@
                                         <th>
                                             <label>
                                                 <span>Nomor KTP <span  style="color: red">(*)</span></span><br>
-                                                <input type="number" value="<?= set_value('no_ktp'); ?>" name="no_ktp" placeholder="Nomor KTP" required autofocus>
+                                                <input type="text" value="<?= set_value('no_ktp'); ?>" name="no_ktp" placeholder="Nomor KTP" required autofocus>
                                             </label>
                                         </th>
                                         <th>
@@ -365,14 +386,14 @@
                                         <th>
                                             <label>
                                                 <span>Nomor Handphone <span style="color: red">(*)</span></span><br>
-                                                <input value="<?= set_value('no_hp'); ?>" name="no_hp" type="number" placeholder="Nomor Handphone" required>
+                                                <input value="<?= set_value('no_hp'); ?>" name="no_hp" type="text" placeholder="Nomor Handphone" required>
                                             </label>
                                         </th>
                                     </tr>
-                                        <th>
+                                       <th>
                                             <label>
                                                 <span>Nomor Kartu Keluarga </span><br>
-                                                <input value="<?= set_value('kartu_keluarga'); ?>" name="kartu_keluarga" type="number" placeholder="Nomor Kartu Keluarga">
+                                                <input value="<?= set_value('kartu_keluarga'); ?>" name="kartu_keluarga" type="text" placeholder="Nomor Kartu Keluarga">
                                             </label>
                                         </th>
                                         <th>
@@ -466,7 +487,7 @@
                                 <tr>
                                     <td>
                                         <label>
-                                        	<input type='text' name='nama_perusahaan[]' class='form-control input-sm' placeholder="Nama Perusahaan">
+                                           <input type='text' name='nama_perusahaan[]' class='form-control input-sm' placeholder="Nama Perusahaan">
                                         </label>
                                     </td>
                                     <td>
@@ -568,7 +589,7 @@
                                         <!-- <input type="date" value="<?= set_value('tgl_masuk'); ?>" name="tgl_masuk" placeholder="Tanggal Masuk Karyawan" required> -->
                                         <input type="date" id="tgl_masuk" name="tgl_masuk" placeholder="Tanggal Masuk Karyawan" value="<?= set_value('tgl_masuk'); ?>" required>
                                     </label>
-                                </th>
+                                 </th>
                             </tr>
                             <tr>
                                 <th>
@@ -594,9 +615,13 @@
                                 <th>
                                     <label>
                                         <span>Atasan 1 </span><br>
+                                        <!-- <input value="<?= set_value('atasan1'); ?>" name="atasan1" type="text" placeholder="Atasan 1"> -->
+                                        <!-- <input type="hidden" name="dept" value="<?= $user['dept']; ?>"> -->
                                     <select class="select2" data-placeholder="Atasan 1" name="atasan1" id="atasan1" required>
                                         <option value="" disabled selected></option>
                                         <?php
+                                            // $dept = $user['dept'];
+                                            // $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE dept = '$dept' AND NOT status_aktif = 0 AND NOT status_karyawan = 'Resigned' AND NOT status_karyawan = 'perubahan_status' ORDER BY nama")->result_array();
                                             $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE status_aktif = 1 AND NOT status_karyawan = 'perubahan_status' and GOLONGAN not in ('OPERATOR', 'STAFF' , 'DRIVER','SECURITY','ADMIN','Specialist') ORDER BY nama")->result_array();
                                         ?>
                                         <?php foreach ($queryShift as $dk) : ?>
@@ -610,9 +635,13 @@
                                 <th>
                                 <label>
                                         <span>Atasan 2 </span><br>
+                                        <!-- <input value="<?= set_value('atasan1'); ?>" name="atasan1" type="text" placeholder="Atasan 1"> -->
+                                        <!-- <input type="hidden" name="dept" value="<?= $user['dept']; ?>"> -->
                                     <select class="select2" data-placeholder="Atasan 2" name="atasan2" id="atasan2" required>
                                         <option value="" disabled selected></option>
                                         <?php
+                                            // $dept = $user['dept'];
+                                            // $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE dept = '$dept' AND NOT status_aktif = 0 AND NOT status_karyawan = 'Resigned' AND NOT status_karyawan = 'perubahan_status' ORDER BY nama")->result_array();
                                             $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE status_aktif = 1 AND NOT status_karyawan = 'perubahan_status' and GOLONGAN not in ('OPERATOR', 'STAFF' , 'DRIVER','SECURITY','ADMIN','Specialist') ORDER BY nama")->result_array();
                                         ?>
                                         <?php foreach ($queryShift as $dk) : ?>
@@ -655,14 +684,14 @@
                                 </th>
                             </tr>
                             <tr>
-                                <th>
+                               <th>
                                     <label>
                                         <span>Alamat NPWP</span>
                                         <input name="alamat_npwp" type="text" value="<?= set_value('alamat_npwp'); ?>" placeholder="Alamat NPWP">
                                     </label>
-                                </th>
-                                <th colspan = 1>
-                                    <label>
+                               </th>
+                               <th colspan = 1>
+                                   <label>
                                         <span>Kode Jabatan</span>
                                         <select class="select2" data-placeholder="Kode Jabatan" name="kode_jabatan" width = "80%">
                                             <?php $queryAdditional = $this->db->get('additional_info')->result_array(); ?>
@@ -672,8 +701,8 @@
                                             <?php endforeach; ?>
                                         </select>
                                     </label>
-                                </th>
-                                <th>
+                               </th>
+                               <th>
                                     <label>
                                         <span>Tgl Evaluasi Karyawan Baru </span><br>
                                         <input type="date" id="tgl_evaluasi" name="tgl_evaluasi" placeholder="Tanggal Evaluasi Karyawan" readonly>
@@ -684,7 +713,7 @@
                             <tr>
                                 <th><br><br>
                                     <label>
-                                        <button class="btn btn-primary btn-sm" type="submit" name="submit">Save</button>
+                                        <button id = "saveBtn" class="btn btn-primary btn-sm" type="submit" name="submit">Save</button>
                                         <a href="<?= base_url('data_karyawan'); ?>" class="btn btn-default btn-sm">Back</a>
                                     </label>
                                 </th>

@@ -10,7 +10,6 @@
                     <a href="<?= base_url('pci/add_Request'); ?>" class="btn btn-info"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Add Form Izin Cuti</a>
 					<a href="#" data-toggle="modal" data-target="#modalExportdept" class="btn btn-success">Export to Excel</a>
                 <?php endif ?>
-				<a href="#" data-toggle="modal" data-target="#modalExportdept" class="btn btn-success">Export to Excel</a>
             </p>
         </div>
 		<div class="modal fade" id="modalExportdept" tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
@@ -96,17 +95,6 @@
                                                                 a.tgl_surat_pemohon DESC")->result_array(); 
                             ?>
                             <?php foreach($data AS $result): ?>
-								<?php 
-                                $kd_cuti  =  $result['kode_cuti'].'-'.$result['id'];
-                                
-								// Encrypt kode Cuti
-								$encrypt_kd_cuti = $this->encrypt->encode($kd_cuti);
-								$encrypt_kd_cuti_url = urlencode($encrypt_kd_cuti);
-
-								$decrypt_kd_cuti = urldecode($encrypt_kd_cuti);
-								$kodeCuti_ = $this->encrypt->decode($decrypt_kd_cuti);
-								
-                            ?>
                             <tr>
                                 <td>
                                     <li class="dropdown" style="list-style-type:none;">
@@ -117,22 +105,18 @@
                                             <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Cetak tidak aktif">Cetak</a></li>
                                             <li class="divider"></li>
                                             <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Hapus tidak aktif">Hapus</a></li>
-											<!-- <input value="<?= $encrypt_kd_cuti; ?>" name="encrypt_kodecuti" type="text">
-											<input value="<?= $kodeCuti_; ?>" name="dencrypt_kodecuti" type="text"> -->
-										</ul>
+                                        </ul>
                                         <?php elseif($result['status'] == "Printed") : ?>
                                         <ul class="dropdown-menu">
                                             <!-- <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Ubah tidak aktif">Ubah</a></li> -->
-                                            <li><a href="<?= base_url(); ?>pci/print_izin_cuti/<?= $encrypt_kd_cuti; ?>" style="color: black; font-size:13px;" title="Cetak">Cetak</a></li>
+                                            <li><a href="<?= base_url(); ?>pci/print_izin_cuti/<?= $result['id']; ?>" style="color: black; font-size:13px;" title="Cetak">Cetak</a></li>
                                             <li class="divider"></li>
                                             <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Hapus tidak aktif">Hapus</a></li>
-											<input value="<?= $encrypt_kd_cuti; ?>" name="encrypt_kodecuti" type="text">
-											<input value="<?= $kodeCuti_; ?>" name="dencrypt_kodecuti" type="text">
-										</ul>
+                                        </ul>
                                         <?php else : ?>
                                         <ul class="dropdown-menu">
-                                            <!-- <li><a href="<?= base_url(); ?>pci/edit_Request/<?=  $encrypt_kd_cuti; ?>" style="color: black; font-size:13px;">Ubah</a></li> -->
-                                            <li><a href="<?= base_url(); ?>pci/print_izin_cuti/<?= $encrypt_kd_cuti; ?>" style="color: black; font-size:13px;">Cetak</a></li>
+                                            <!-- <li><a href="<?= base_url(); ?>pci/edit_Request/<?= $result['id']; ?>" style="color: black; font-size:13px;">Ubah</a></li> -->
+                                            <li><a href="<?= base_url(); ?>pci/print_izin_cuti/<?= $result['id']; ?>" style="color: black; font-size:13px;">Cetak</a></li>
                                             <li class="divider"></li>
                                             <li><a href="#" style="color: black; font-size:13px;" data-target="#modal-delete<?= $result['id']; ?>" data-toggle="modal">Hapus</a></li>
                                         </ul>
@@ -245,4 +229,3 @@
         </div>
     </section>
 </section>
-

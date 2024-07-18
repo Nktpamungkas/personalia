@@ -2,13 +2,14 @@
     <section class="wrapper">
         <h4><i class="fa fa-angle-right"></i> Time Attendance <i class="fa fa-angle-right"></i> Form Surat Perintah Lembur </h4>
         <div class="col-md-6">
-            <p>
-                <?php if($user['dept'] != 'HRD') : ?>  
+            <p> 
+                <?php if($user['dept'] == 'HRD' || $user['name'] =='asep') : ?>  
                     <a href="<?= base_url('pkl/add_Request'); ?>" class="btn btn-info"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Masukan nama karyawan lembur</a>
+					<a href="<?= base_url('pkl/index_all'); ?>" class="btn btn-warning"><i class=" fa fa-list-alt"></i>&nbsp;&nbsp;Tampilkan Semua Daftar Lembur</a>
+                    <!-- <a href="<?= base_url('pkl/add_Request'); ?>" class="btn btn-info"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Add Form Lembur</a> -->
                     <!-- <i href="#" class="btn btn-warning"><i class=" fa fa-frown-o"></i>&nbsp;&nbsp;<i>Under Maintenance</i></a> -->
                 <?php else : ?>
-                    <a href="<?= base_url('pkl/index_all'); ?>" class="btn btn-warning"><i class=" fa fa-list-alt"></i>&nbsp;&nbsp;Tampilkan Semua Daftar Lembur</a>
-                    <a href="<?= base_url('pkl/add_Request'); ?>" class="btn btn-info"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Add Form Lembur</a>
+                    <a href="<?= base_url('pkl/add_Request'); ?>" class="btn btn-info"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Masukan nama karyawan lembur</a>
                     <!-- <a href="#" class="btn btn-warning"><i class=" fa fa-frown-o"></i>&nbsp;&nbsp;<i>Under Maintenance</i></a> -->
                 <?php endif ?>               
             </p>
@@ -68,14 +69,6 @@
                             <?php 
                                 $kd_lembur  = $result['kode_lembur'];
                                 $pkl  = $this->db->query("SELECT *, DATE_FORMAT( tanggal_permohonan, '%d %b %Y' ) AS tgl_format, SUBSTRING( keterangan, 1, 60 ) AS tujuan_lembur FROM daftar_lembur WHERE kode_lembur = '$kd_lembur'")->row();
-
-
-								// Encrypt kode lembur
-								$encrypt_kd_lembur = $this->encrypt->encode($kd_lembur);
-								$encrypt_kd_lembur_url = urlencode($encrypt_kd_lembur);
-
-								$decrypt_kd_lembur = urldecode($encrypt_kd_lembur);
-								$kodelembur_ = $this->encrypt->decode($decrypt_kd_lembur);
                             ?>
                             <tr>
                                 <td>
@@ -102,14 +95,12 @@
                                                 <li class="divider"></li>
                                                 <!-- <li class="divider"></li> -->
                                                 <li><a href="<?= base_url(); ?>pkl/add_overtime_list/<?= $result['kode_lembur']; ?>" style="font-size:13px;"><b>Buat surat perintah lembur</b></a></li>
-                                                <li><a href="<?= base_url(); ?>pkl/print_daftar_lembur/<?= $encrypt_kd_lembur; ?>" style="font-size:13px;"><b>Print surat perintah lembur</b></a></li>
+                                                <li><a href="<?= base_url(); ?>pkl/print_daftar_lembur/<?= $result['kode_lembur']; ?>" style="font-size:13px;"><b>Print surat perintah lembur</b></a></li>
                                                 <li class="divider"><hr></li>
                                                 <!-- <li><a href="<?= base_url(); ?>pkl/hapus_permohonan_lembur/<?= $result['kode_lembur']; ?>" style="font-size:13px;">Hapus Permohonan Lembur</a></li> -->
                                                 <li><a href="<?= base_url(); ?>pkl/hapus_daftar_lembur/<?= $result['kode_lembur']; ?>" style="font-size:13px;">Hapus surat perintah lembur</a></li>
                                                 <input value="<?= $user['dept'] ?>" name="dept" type="hidden">
-                                                <!-- <input value="<?= $user['name'] ?>" name="name" type="hidden">
-												<input value="<?= $encrypt_kd_lembur; ?>" name="encrypt_kodelembur" type="text">
-												<input value="<?= $kd_lembur_; ?>" name="dencrypt_kodelembur" type="text"> -->
+                                                <input value="<?= $user['name'] ?>" name="name" type="hidden">
                                             </ul>
                                         <?php endif; ?>
                                     </li>

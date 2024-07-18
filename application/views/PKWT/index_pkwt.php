@@ -1,4 +1,4 @@
-    <script type="text/javascript">
+<script type="text/javascript">
         function functionGaji() {
             var checkBox = document.getElementById('gaji');
             if (checkBox.checked == true) {
@@ -171,7 +171,7 @@
                                     <label class="checkbox-inline">UK</label>
                                     <div class="col-lg-1">
                                         <label class="text-inline">
-                                            <input class="form-control" type="number" value="<?php echo $count; ?>" name="uk" placeholder="" required oninput="validity.valid||(value=''); if(value<1)value=1;">
+                                            <input class="form-control" type="number" value="" name="uk" placeholder="" required oninput="validity.valid||(value=''); if(value<1)value=1;">
                                         </label>
                                     </div>
                                 </div>

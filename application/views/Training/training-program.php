@@ -45,7 +45,6 @@
                         <thead>
                             <tr>
                                 <th>Kode Training</th>
-								<th>Id training</th>	
                                 <th>Topik Training</th>
                                 <th>Dept</th>
                                 <th>Tanggal Training</th>
@@ -71,9 +70,6 @@
                             <tr>
                                 <td>
                                     TRN<?php echo sprintf("%04d", $result['kode_training']); ?>
-                                </td>
-								<td>
-									<?= $result['kode_training']; ?>
                                 </td>
                                 <td>
                                     <?= $result['nama_training']; ?>

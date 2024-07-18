@@ -1,8 +1,6 @@
     <div id="login-page">
         <div class="container">
             <div class="form-login">
-			<link href="../sweetalert/sweetalert2.css" rel="stylesheet" type="text/css">
-			<script type="text/javascript" src="../sweetalert/sweetalert2.min.js"></script>
                 <h2 class="form-login-heading">sign in now</h2>
                 <?= $this->session->flashdata('message'); ?>
                 <div class="login-wrap">
@@ -48,24 +46,9 @@
                             </span>
                         </label>
                         <button type="submit" class="btn btn-theme btn-block"><i class="fa fa-lock"></i> SIGN IN</button><br>
-                        <!-- <center>Your IP Address : <?php $ipaddress = $_SERVER['REMOTE_ADDR']; echo gethostbyaddr($ipaddress); ?></center> -->
+                        <center>Your IP Address : <?php $ipaddress = $_SERVER['REMOTE_ADDR']; echo gethostbyaddr($ipaddress); ?></center>
                     </form>
-					<div class="download-link">
-						<br>
-						<label>Panduan Pnggunaan :</label><a href="<?= base_url('auth/download'); ?>" download>Klik disini</a>
-					</div>
                 </div>
             </div>
         </div>
     </div> 
-	<script>
-			swal({
-				title: 'Kartu kerja untuk operasi ".$_GET['operation']." sudah di proses.',   
-				text: 'Klik Ok untuk input data kembali',
-				type: 'warning',
-			}).then((result) => {
-				if (result.value) {
-					window.location.href = 'http://online.indotaichen.com/finishing2-new/masuk/?typekk=NOW'; 
-				}
-			});
-	</script>
