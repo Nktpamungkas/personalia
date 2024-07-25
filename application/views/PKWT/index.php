@@ -355,7 +355,7 @@ function functionGaji() {
                             </form>
                         </div>
                         <p>
-                            <label><b>*Note: Menampilkan data karyawan yang diperpanjang per 1 bulan dari hari ini sampai dengan 1 tahun berikutnya.</b></label>
+                            <label><b>*Note: Menampilkan data karyawan yang diperpanjang per 1 bulan kebelakang dari hari ini sampai dengan 1 tahun berikutnya.</b></label>
                         </p>
                         <div class="modal fade" id="modalMemo" tabindex="-1" role="dialog" aria-labelledby="modalMemo" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
@@ -506,27 +506,26 @@ function functionGaji() {
                                     $dpt = $dept['dept'];
                                     if ($dpt == "HRD") {
                                         $data = $this->db->query("SELECT b.id,
-                                                                        b.no_scan,
-                                                                        a.nama,
-                                                                        a.dept,
-                                                                        DATE_FORMAT(b.kontrak_akhir, '%d %b %Y') as kontrak_akhir,
-                                                                        DATE_FORMAT(b.kontrak_awal, '%d %b %Y') as kontrak_awal,
-                                                                        b.keterangan,
-                                                                        b.verifikasi,
-                                                                        b.durasi,
-                                                                        b.gaji,
-                                                                        a.status_karyawan
-                                                                    FROM
-                                                                        tbl_makar a
-                                                                        INNER JOIN ( SELECT * FROM tbl_kontrak b) b ON b.no_scan = a.no_scan 
-                                                                    WHERE
-                                                                        b.kontrak_akhir BETWEEN DATE_ADD( NOW( ), INTERVAL 1 MONTH ) 
-                                                                        AND DATE_ADD( NOW( ), INTERVAL '13' MONTH ) 
-                                                                        -- AND b.`status` = ' ' 
-                                                                        AND NOT a.status_karyawan='perubahan_status'
-                                                                        AND NOT a.status_karyawan='Resigned'
-                                                                    ORDER BY
-                                                                        b.kontrak_akhir")->result_array();
+																		b.no_scan,
+																		a.nama,
+																		a.dept,
+																		DATE_FORMAT(b.kontrak_akhir, '%d %b %Y') as kontrak_akhir,
+																		DATE_FORMAT(b.kontrak_awal, '%d %b %Y') as kontrak_awal,
+																		b.keterangan,
+																		b.verifikasi,
+																		b.durasi,
+																		b.gaji,
+																		a.status_karyawan
+																	FROM
+																		tbl_makar a
+																		INNER JOIN ( SELECT * FROM tbl_kontrak b) b ON b.no_scan = a.no_scan 
+																	WHERE
+																		b.kontrak_akhir BETWEEN DATE_ADD( NOW( ), INTERVAL -1 MONTH ) 
+																		AND DATE_ADD( NOW( ), INTERVAL '13' MONTH ) 
+																		-- AND b.`status_karyawan` = ' ' 
+																		AND  a.status_karyawan like '%Kontrak%'
+																	ORDER BY
+																		b.kontrak_akhir")->result_array();
                                     }else{
                                         $data = $this->db->query("SELECT b.id,
                                                                         b.no_scan,
@@ -543,12 +542,11 @@ function functionGaji() {
                                                                         tbl_makar a
                                                                         INNER JOIN ( SELECT * FROM tbl_kontrak b) b ON b.no_scan = a.no_scan 
                                                                     WHERE
-                                                                        b.kontrak_akhir BETWEEN DATE_ADD( NOW( ), INTERVAL 1 MONTH ) 
+                                                                        b.kontrak_akhir BETWEEN DATE_ADD( NOW( ), INTERVAL -1 MONTH ) 
                                                                         AND DATE_ADD( NOW( ), INTERVAL '13' MONTH ) 
                                                                         -- AND b.`status` = ' '
                                                                         AND a.dept= '$dpt'
-                                                                        AND NOT a.status_karyawan='perubahan_status'
-                                                                        AND NOT a.status_karyawan='Resigned'
+                                                                        AND  a.status_karyawan like '%Kontrak%'
                                                                     ORDER BY
                                                                         b.kontrak_akhir")->result_array();
                                     }
