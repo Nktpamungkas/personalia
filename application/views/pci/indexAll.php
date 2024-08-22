@@ -102,7 +102,7 @@
                                                             LEFT JOIN ( SELECT * FROM tbl_makar ) b ON a.nip = b.no_scan 
                                                         WHERE
                                                             NOT `status` = '$_Belum_ver' AND a.kode_cuti LIKE '%FIC%'
-                                                            AND tgl_surat_pemohon BETWEEN DATE_ADD( NOW( ), INTERVAL -36  day ) AND DATE_ADD( NOW( ), INTERVAL '14' MONTH )
+                                                            AND tgl_surat_pemohon BETWEEN DATE_ADD( NOW( ), INTERVAL -1 month ) AND DATE_ADD( NOW( ), INTERVAL '14' MONTH )
                                                         ORDER BY
                                                             a.tgl_mulai DESC")->result_array(); 
                             ?>

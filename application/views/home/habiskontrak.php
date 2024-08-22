@@ -297,7 +297,7 @@ foreach ($datablm as $data) {
                                 </td>
                                 <td>
                                     <?php if ($dpt == "HRD" && $result['status_email_kontrak'] == 1): ?>
-                                        <a href="<?= base_url('PKWT/index_pkwt/' . $result['no_scan']); ?>" style="color: blue;">
+                                        <a href="" style="color: blue;">
                                             <?= $result['nama'] ?>
                                         </a>
                                    <?php endif; ?>

@@ -4,13 +4,16 @@
         <div class="col-md-6">
             <p class="inline">
                 <!-- <a href="<?= base_url('training_report/addTraining'); ?>" class="btn btn-info btn-sm"><i class=" fa fa-plus"></i>&nbsp;&nbsp;Add New Training</a> -->
-                <a href="#" data-toggle="modal" data-target="#modalExport" class="btn btn-default btn-sm">Export to Excel</a>
-            <div class="modal fade" id="modalExport" tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
+                <a href="#" data-toggle="modal" data-target="#modalExport" class="btn btn-default btn-sm">Export to
+                    Excel</a>
+            <div class="modal fade" id="modalExport" tabindex="-1" role="dialog" aria-labelledby="modalResign"
+                aria-hidden="true">
                 <form action="<?= base_url('Training_report/export_excel') ?>" method="POST">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
                                 <h4 class="modal-title"><i class="fa fa-calendar"></i> Range Tanggal Export </h4>
                             </div>
                             <div class="modal-body">
@@ -47,7 +50,8 @@
             <?= $this->session->flashdata('message'); ?>
             <div class="content-panel">
                 <div class="adv-table">
-                    <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="table-training">
+                    <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered"
+                        id="table-training">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -61,7 +65,7 @@
                         <tbody>
                             <?php
 							set_time_limit(300);
-                            $data = $this->db->query("SELECT a.id, a.kode_training,
+							$data = $this->db->query("SELECT a.id, a.kode_training,
 																upper(b.nama_training) as nama_training,
 																DATE_FORMAT( a.tgl_training, '%d %b %Y' ) AS Ftgl_training,
 																a.tgl_training, 
@@ -79,45 +83,52 @@
 															GROUP BY
 																a.tgl_training,
 																a.kode_training")->result_array();
-                            $no = 1;
-                            ?>
-                            <?php foreach ($data as $dt) : ?>
-                                <tr>
-                                    <td><?= $no++; ?></td>
-                                    <td>
-                                        TRN<?php echo sprintf("%04d", $dt['kode_training']); ?>
-                                    </td>
-                                    <td><?= $dt['nama_training']; ?></td>
-                                    <td><?= $dt['Ftgl_training']; ?></td>
-                                    <td><?= $dt['nama']; ?></td>
-                                    <td>
-                                        <a href="#" data-toggle="modal" data-target="#modalView<?= $dt['kode_training']; ?><?= $dt['tgl_training']; ?>"><i class="fa fa-eye"></i> View</a> |
-                                        <div class="modal fade" id="modalView<?= $dt['kode_training']; ?><?= $dt['tgl_training']; ?>" tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                        <h4 class="modal-title"><i class="fa fa-folder-open-o"></i> Materi : <?= '(' . $dt['kode_training'] . ') ' . $dt['nama_training']; ?> - <?= $dt['Ftgl_training']; ?></h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <table class="display table table-bordered">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>No</th>
-                                                                    <th>No Scan</th>
-                                                                    <th>Nama</th>
-                                                                    <th>Jabatan</th>
-                                                                    <th>Dept</th>
-                                                                    <th>Tanggal Training</th>
-                                                                    <!-- <th width="250">Option</th> -->
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
+							$no = 1;
+							?>
+                            <?php foreach ($data as $dt): ?>
+                            <tr>
+                                <td><?= $no++; ?></td>
+                                <td>
+                                    TRN<?php echo sprintf("%04d", $dt['kode_training']); ?>
+                                </td>
+                                <td><?= $dt['nama_training']; ?></td>
+                                <td><?= $dt['Ftgl_training']; ?></td>
+                                <td><?= $dt['nama']; ?></td>
+                                <td>
+                                    <a href="#" data-toggle="modal"
+                                        data-target="#modalView<?= $dt['kode_training']; ?><?= $dt['tgl_training']; ?>"><i
+                                            class="fa fa-eye"></i> View</a> |
+                                    <div class="modal fade"
+                                        id="modalView<?= $dt['kode_training']; ?><?= $dt['tgl_training']; ?>"
+                                        tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title"><i class="fa fa-folder-open-o"></i> Materi :
+                                                        <?= '(' . $dt['kode_training'] . ') ' . $dt['nama_training']; ?>
+                                                        - <?= $dt['Ftgl_training']; ?></h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table class="display table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No</th>
+                                                                <th>No Scan</th>
+                                                                <th>Nama</th>
+                                                                <th>Jabatan</th>
+                                                                <th>Dept</th>
+                                                                <th>Tanggal Training</th>
+                                                                <!-- <th width="250">Option</th> -->
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
 																set_time_limit(300);
-                                                                $kode = $dt['kode_training'];
-                                                                $tgltraining = $dt['tgl_training'];
-                                                                $query = $this->db->query("SELECT distinct
+																$kode = $dt['kode_training'];
+																$tgltraining = $dt['tgl_training'];
+																$query = $this->db->query("SELECT distinct
                                                                                                 a.no_scan,
                                                                                                 b.nama,
                                                                                                 b.dept,
@@ -133,55 +144,62 @@
                                                                                                 AND a.tgl_training = '$tgltraining' 
                                                                                             order by 
                                                                                                 b.dept asc")->result_array();
-                                                                $noUrut = 1;
-                                                                ?>
-                                                                <?php foreach ($query as $dtt) : ?>
-                                                                    <tr>
-                                                                        <td><?= $noUrut++; ?></td>
-                                                                        <td><?= $dtt['no_scan']; ?></td>
-                                                                        <td><?= $dtt['nama']; ?></td>
-                                                                        <td><?= $dtt['jabatan']; ?></td>
-                                                                        <td><?= $dtt['dept']; ?></td>
-                                                                        <td><?= $dtt['Ftgl_training']; ?></td>
-                                                                        <!-- <td></td> -->
-                                                                    </tr>
-                                                                <?php endforeach; ?>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                    </div>
+																$noUrut = 1;
+																?>
+                                                            <?php foreach ($query as $dtt): ?>
+                                                            <tr>
+                                                                <td><?= $noUrut++; ?></td>
+                                                                <td><?= $dtt['no_scan']; ?></td>
+                                                                <td><?= $dtt['nama']; ?></td>
+                                                                <td><?= $dtt['jabatan']; ?></td>
+                                                                <td><?= $dtt['dept']; ?></td>
+                                                                <td><?= $dtt['Ftgl_training']; ?></td>
+                                                                <!-- <td></td> -->
+                                                            </tr>
+                                                            <?php endforeach; ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default"
+                                                        data-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <a href="<?= base_url(); ?>training_report/tampil/<?= $dt['id']; ?>"><i class="fa fa-pencil"></i> Edit</a> |
-                                        <div class="modal fade" id="modalView<?= $dt['kode_training']; ?><?= $dt['tgl_training']; ?>" tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                        <h4 class="modal-title"><i class="fa fa-folder-open-o"></i> Materi : <?= '(' . $dt['kode_training'] . ') ' . $dt['nama_training']; ?> - <?= $dt['Ftgl_training']; ?></h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <table class="display table table-bordered">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>No</th>
-                                                                    <th>No Scan</th>
-                                                                    <th>Nama</th>
-                                                                    <th>Jabatan</th>
-                                                                    <th>Dept</th>
-                                                                    <th>Tanggal Training</th>
-                                                                    <!-- <th width="250">Option</th> -->
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
+                                    </div>
+                                    <a href="<?= base_url(); ?>training_report/tampil/<?= $dt['id']; ?>"><i
+                                            class="fa fa-pencil"></i> Edit</a> |
+                                    <div class="modal fade"
+                                        id="modalView<?= $dt['kode_training']; ?><?= $dt['tgl_training']; ?>"
+                                        tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title"><i class="fa fa-folder-open-o"></i> Materi :
+                                                        <?= '(' . $dt['kode_training'] . ') ' . $dt['nama_training']; ?>
+                                                        - <?= $dt['Ftgl_training']; ?></h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table class="display table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No</th>
+                                                                <th>No Scan</th>
+                                                                <th>Nama</th>
+                                                                <th>Jabatan</th>
+                                                                <th>Dept</th>
+                                                                <th>Tanggal Training</th>
+                                                                <!-- <th width="250">Option</th> -->
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
 																set_time_limit(300);
-                                                                $kode = $dt['kode_training'];
-                                                                $tgltraining = $dt['tgl_training'];
-                                                                $query = $this->db->query("SELECT distinct
+																$kode = $dt['kode_training'];
+																$tgltraining = $dt['tgl_training'];
+																$query = $this->db->query("SELECT distinct
                                                                                                 a.no_scan,
                                                                                                 b.nama,
                                                                                                 b.dept,
@@ -197,54 +215,64 @@
                                                                                                 AND a.tgl_training = '$tgltraining' 
                                                                                             order by 
                                                                                                 b.dept asc")->result_array();
-                                                                $noUrut = 1;
-                                                                ?>
-                                                                <?php foreach ($query as $dtt) : ?>
-                                                                    <tr>
-                                                                        <td><?= $noUrut++; ?></td>
-                                                                        <td><?= $dtt['no_scan']; ?></td>
-                                                                        <td><?= $dtt['nama']; ?></td>
-                                                                        <td><?= $dtt['jabatan']; ?></td>
-                                                                        <td><?= $dtt['dept']; ?></td>
-                                                                        <td><?= $dtt['Ftgl_training']; ?></td>
-                                                                        <!-- <td></td> -->
-                                                                    </tr>
-                                                                <?php endforeach; ?>
-                                                            </tbody>
-                                                        </table>
+																$noUrut = 1;
+																?>
+                                                            <?php foreach ($query as $dtt): ?>
+                                                            <tr>
+                                                                <td><?= $noUrut++; ?></td>
+                                                                <td><?= $dtt['no_scan']; ?></td>
+                                                                <td><?= $dtt['nama']; ?></td>
+                                                                <td><?= $dtt['jabatan']; ?></td>
+                                                                <td><?= $dtt['dept']; ?></td>
+                                                                <td><?= $dtt['Ftgl_training']; ?></td>
+                                                                <!-- <td></td> -->
+                                                            </tr>
+                                                            <?php endforeach; ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default"
+                                                        data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="#" data-toggle="modal" data-target="#hapus<?= $dt['kode_training']; ?>"><i
+                                            class="fa fa-trash"></i> Delete</a>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="hapus<?= $dt['kode_training']; ?>" tabindex="-1"
+                                        role="dialog" aria-labelledby="modalDelete" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form action="<?= base_url('Training_report/hapus_training'); ?>"
+                                                    method="post">
+                                                    <input type="hidden" name="kode_training"
+                                                        value="<?= $dt['kode_training']; ?>">
+                                                    <input type="hidden" name="tgl_training"
+                                                        value="<?= $dt['tgl_training']; ?>">
+                                                    <input type="hidden" name="trainer" value="<?= $dt['trainer']; ?>">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-hidden="true">&times;</button>
+                                                        <h4 class="modal-title" id="myModalLabel">Anda Yakin Menghapus
+                                                            Training ini <?= $dt['id']; ?> ?</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <b>Training yang sudah dihapus tidak dapat dikembalikan lagi !
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Close</button>
+                                                        <button type="submit" name="submit"
+                                                            class="btn btn-danger">Hapus</button>
                                                     </div>
-                                                </div>
+                                                </form>
                                             </div>
                                         </div>
-                                        <a href="#" data-toggle="modal" data-target="#hapus<?= $dt['kode_training']; ?>"><i class="fa fa-trash"></i> Delete</a>
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="hapus<?= $dt['kode_training']; ?>" tabindex="-1" role="dialog" aria-labelledby="modalDelete" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <form action="<?= base_url('Training_report/hapus_training'); ?>" method="post">
-                                                        <input type="hidden" name="kode_training" value="<?= $dt['kode_training']; ?>">
-                                                        <input type="hidden" name="tgl_training" value="<?= $dt['tgl_training']; ?>">
-                                                        <input type="hidden" name="trainer" value="<?= $dt['trainer']; ?>">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                            <h4 class="modal-title" id="myModalLabel">Anda Yakin Menghapus Training ini <?= $dt['id']; ?> ?</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <b>Training yang sudah dihapus tidak dapat dikembalikan lagi !
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                            <button type="submit" name="submit" class="btn btn-danger">Hapus</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    </div>
+                                </td>
+                            </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>

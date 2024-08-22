@@ -97,48 +97,6 @@
                             <?php foreach($data AS $result): ?>
                             <tr>
                                 <td>
-                                    <li class="dropdown" style="list-style-type:none;">
-                                        <a href="#" class="fa fa-align-justify" data-toggle="dropdown"></a>
-                                        <?php if($result['status'] == "Verifikasi") : ?>
-                                        <ul class="dropdown-menu">
-                                            <!-- <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Ubah tidak aktif">Ubah</a></li> -->
-                                            <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Cetak tidak aktif">Cetak</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Hapus tidak aktif">Hapus</a></li>
-                                        </ul>
-                                        <?php elseif($result['status'] == "Printed") : ?>
-                                        <ul class="dropdown-menu">
-                                            <!-- <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Ubah tidak aktif">Ubah</a></li> -->
-                                            <li><a href="<?= base_url(); ?>pci/print_izin_cuti/<?= $result['id']; ?>" style="color: black; font-size:13px;" title="Cetak">Cetak</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#" style="color: grey; text-decoration: line-through; font-size:13px;" title="Hapus tidak aktif">Hapus</a></li>
-                                        </ul>
-                                        <?php else : ?>
-                                        <ul class="dropdown-menu">
-                                            <!-- <li><a href="<?= base_url(); ?>pci/edit_Request/<?= $result['id']; ?>" style="color: black; font-size:13px;">Ubah</a></li> -->
-                                            <li><a href="<?= base_url(); ?>pci/print_izin_cuti/<?= $result['id']; ?>" style="color: black; font-size:13px;">Cetak</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#" style="color: black; font-size:13px;" data-target="#modal-delete<?= $result['id']; ?>" data-toggle="modal">Hapus</a></li>
-                                        </ul>
-                                        <div class="modal fade" id="modal-delete<?= $result['id']; ?>">
-                                            <div class="modal-dialog ">
-                                                <div class="modal-content">
-                                                    <form class="form-horizontal" action="<?= base_url(); ?>pci/delete/<?= $result['id']; ?>" method="post">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title" id="myModalLabel">Apakah anda yakin ingin mengahapus data ini?</h4>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-danger" name="submit">Delete</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <?php endif; ?>
-                                    </li>
                                 </td>
                                 <td><a href="#" style="text-decoration: underline;"><?= $result['kode_cuti'].'-'.sprintf("%07s", $result['id']); ?></a></td>
                                 <td><?= $result['tgl_surat_pemohon']; ?></td>
