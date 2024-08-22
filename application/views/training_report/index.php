@@ -60,22 +60,25 @@
                         </thead>
                         <tbody>
                             <?php
+							set_time_limit(300);
                             $data = $this->db->query("SELECT a.id, a.kode_training,
-                                                                b.nama_training,
-                                                                DATE_FORMAT( a.tgl_training, '%d %b %Y' ) AS Ftgl_training,
-                                                                a.tgl_training,                                                                                       
-                                                                a.trainer,
-                                                                c.nama
-                                                            FROM
-                                                                tbl_training a
-                                                                LEFT JOIN ( SELECT b.id, b.nama_training FROM training b ) b ON b.id = a.kode_training
-                                                                LEFT JOIN ( SELECT c.no_scan,c.nama FROM tbl_makar c ) c ON c.no_scan = a.trainer
-                                                            WHERE
-                                                                a.tgl_training BETWEEN '2020-01-01' 
-                                                                AND now() 
-                                                            GROUP BY
-                                                                a.tgl_training,
-                                                                a.kode_training")->result_array();
+																upper(b.nama_training) as nama_training,
+																DATE_FORMAT( a.tgl_training, '%d %b %Y' ) AS Ftgl_training,
+																a.tgl_training, 
+															    a.trainer,
+																CASE 
+																	WHEN a.trainer is null THEN upper(a.external_trainer)
+																	ELSE c.nama
+																END AS nama
+															FROM
+																tbl_training a
+																LEFT JOIN ( SELECT b.id, b.nama_training FROM training b ) b ON b.id = a.kode_training
+																LEFT JOIN ( SELECT c.no_scan,c.nama FROM tbl_makar c ) c ON c.no_scan = a.trainer
+															WHERE
+																a.tgl_training BETWEEN DATE_SUB(NOW(), INTERVAL 12 MONTH) AND NOW()
+															GROUP BY
+																a.tgl_training,
+																a.kode_training")->result_array();
                             $no = 1;
                             ?>
                             <?php foreach ($data as $dt) : ?>
@@ -111,6 +114,7 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php
+																set_time_limit(300);
                                                                 $kode = $dt['kode_training'];
                                                                 $tgltraining = $dt['tgl_training'];
                                                                 $query = $this->db->query("SELECT distinct
@@ -174,6 +178,7 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php
+																set_time_limit(300);
                                                                 $kode = $dt['kode_training'];
                                                                 $tgltraining = $dt['tgl_training'];
                                                                 $query = $this->db->query("SELECT distinct
