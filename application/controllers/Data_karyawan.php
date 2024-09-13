@@ -43,7 +43,7 @@ class Data_Karyawan extends CI_Controller
                                         end AS tgl_tetap,
                                         upper(status_karyawan) as  status_karyawan
                                     FROM tbl_makar
-                                    WHERE NOT status_karyawan = 'Resigned' AND NOT status_karyawan = 'perubahan_status'  
+                                    WHERE NOT status_karyawan = 'Resigned' AND NOT status_karyawan = 'perubahan_status'   AND NOT status_karyawan = 'Pensiun'
                                     ORDER BY nama ASC ")->result_array();
 		echo json_encode($data);
 	}
@@ -158,6 +158,107 @@ class Data_Karyawan extends CI_Controller
 		);
 	}
 
+	public function verifikasi()
+	{
+		$id = $this->input->post('no_scan', true);
+
+		$data = array(
+			'status_verifikasi' => 'VERIFIED'
+		);
+		$this->db->where('no_scan', $id);
+		$this->db->update('tbl_makar_temp', $data);
+
+		//insert TEMP data into main tbl_makar
+		$row_karyawan_verified = $this->db->query("SELECT * FROM tbl_makar_temp WHERE no_scan = '$id' AND status_verifikasi='VERIFIED'")->row();
+		$this->form_validation->set_rules('no_scan', 'Nomor Scan', 'required|trim|is_unique[tbl_makar.no_scan]', array(
+			'is_unique' => 'This nomor scan has already used!'
+		));
+		$this->form_validation->set_rules('no_ktp', 'Nomor KTP', 'required|trim|is_unique[tbl_makar.no_ktp]', array(
+			'is_unique' => 'This nomor KTP has already used!'
+		));
+
+		if ($this->form_validation->run() == false) {
+			// $this->addNewEmployee();
+
+			$this->db->query("INSERT INTO tbl_makar (no_ktp,nik_krishand,no_scan,npwp,nama,tempat_lahir,tgl_lahir,alamat_ktp,alamat_domisili,alamat_npwp,kecamatan_domisili,kabupaten_domisili,kode_pos,status_rumah,agama,jenis_kelamin,status_kel,nama_sekolah,pendidikan,jurusan,ipk,gol_darah,email_pribadi,no_hp,pengalaman_kerja,keterampilan_khusus,tgl_masuk,status_karyawan,tgl_tetap,golongan,jabatan,dept,bagian,atasan1,atasan2,no_bpjs_tk,no_bpjs_kes,status_aktif,tgl_resign,kode_jabatan,nama_jabatan,pot_cuti,sisa_cuti,tgl_surat_resign,gaji,ukuran_baju_polo,ukuran_baju_shirt,disabled_ub,kartu_keluarga,ttd,masa_berlaku_ktp,RT,RW,status_seragam,tgl_seragam)
+                          SELECT no_ktp,nik_krishand,no_scan,npwp,nama,tempat_lahir,tgl_lahir,alamat_ktp,alamat_domisili,alamat_npwp,kecamatan_domisili,kabupaten_domisili,kode_pos,status_rumah,agama,jenis_kelamin,status_kel,nama_sekolah,pendidikan,jurusan,ipk,gol_darah,email_pribadi,no_hp,pengalaman_kerja,keterampilan_khusus,tgl_masuk,status_karyawan,tgl_tetap,golongan,jabatan,dept,bagian,atasan1,atasan2,no_bpjs_tk,no_bpjs_kes,status_aktif,tgl_resign,kode_jabatan,nama_jabatan,pot_cuti,sisa_cuti,tgl_surat_resign,gaji,ukuran_baju_polo,ukuran_baju_shirt,disabled_ub,kartu_keluarga,ttd,masa_berlaku_ktp,RT,RW,status_seragam,tgl_seragam 
+                          FROM tbl_makar_temp WHERE no_scan = '$row_karyawan_verified->no_scan'");
+
+			//insert TEMP data into main data_keluarga
+			$this->db->query("INSERT INTO data_keluarga (no_scan,nama,hubungan,tempat,tgl_lahir,pekerjaan)
+                          SELECT no_scan,nama,hubungan,tempat,tgl_lahir,pekerjaan 
+                          FROM data_keluarga_temp WHERE no_scan = '$row_karyawan_verified->no_scan'");
+
+			//insert TEMP data into main data_pengalaman_kerja
+			$this->db->query("INSERT INTO data_pengalaman_kerja (no_scan,nama_perusahaan,bagian,jabatan,masa_kerja)
+                          SELECT no_scan,nama_perusahaan,bagian,jabatan,masa_kerja 
+                          FROM data_pengalaman_kerja_temp WHERE no_scan = '$row_karyawan_verified->no_scan'");
+		}
+		// KIRIM EMAIL KARYAWAN BARU
+		$noscan = $this->input->post('no_scan', true);
+		$query = $this->db->query("SELECT * FROM tbl_makar WHERE no_scan = '$noscan'")->row();
+
+		$this->load->library('phpmailer_lib');
+		$mail = $this->phpmailer_lib->load();
+		// Konfigurasi SMTP
+		$mail->isSMTP();
+		$mail->Host = 'mail.indotaichen.com';
+		$mail->SMTPAuth = true;
+		$mail->Username = 'dept.it@indotaichen.com';
+		$mail->Password = 'Xr7PzUWoyPA';
+		$mail->SMTPSecure = 'TLS';
+		$mail->Port = 587;
+
+		$mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
+		$mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
+
+		// Menambahkan penerima
+		$mail->addAddress('stefanus.pranjana@indotaichen.com');
+		$mail->addAddress('Iso.hrd@indotaichen.com');
+		$mail->addAddress('Hrd@indotaichen.com');
+		$mail->addAddress('prs.absensi@indotaichen.com');
+		$mail->addAddress('prs01@indotaichen.com');
+		// $mail->addAddress('meyliana@indotaichen.com');
+		$mail->addAddress('bintoro.dy@indotaichen.com');
+		$mail->addAddress('asep.pauji@indotaichen.com');
+
+		$mail->Subject = 'Informasi Karyawan baru';
+		// Mengatur format email ke HTML
+		$mail->isHTML(true);
+		$mailContent = "<html>
+                            <head>
+                            </head>
+                            <body>
+                                Data karyawan baru, sebagai berikut : <br>
+                                Nomor Absen : $query->no_scan <br>
+                                Nama karyawan : $query->nama <br>
+                                Departemen : $query->dept <br>
+                                Tanggal Masuk : $query->tgl_masuk <br>
+                                Tanggal Terakhir Training : $query->tgl_evaluasi <br>
+                                Jabatan : $query->jabatan
+                            </body>
+                        </html>";
+		$mail->Body = $mailContent;
+
+		// Script log new employee 1
+		$ipaddress = $_SERVER['REMOTE_ADDR']; //ip server
+		$log = array(
+			'username' => $this->input->post('username', true),
+			'no_scan' => $this->input->post('no_scan', true),
+			'tgl' => time(),
+			'keterangan' => gethostbyaddr($ipaddress)
+		);
+		$this->db->insert('log_new_employee_1', $log);
+
+		if (!$mail->send()) {
+			echo 'Pesan tidak dapat dikirim.';
+			echo 'Mailer Error: ' .
+				$this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"><b>Your Employee has been Verified and Email not successfully sent.</b>' . $mail->ErrorInfo . '</center>');
+		} else {
+			$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Your Employee has been Verified and Email successfully sent.</b></center>');
+		}
+		redirect('users');
+	}
 	// START ADD NEW EMPLOYEE
 	public function addNewEmployee()
 	{
