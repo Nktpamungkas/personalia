@@ -270,6 +270,14 @@ function searchsisacuti_disabled() {
         success: function(data) {
             document.getElementById('pemohon_nama').value = data[0].nama;
             document.getElementById('pemohon_jabatan').value = data[0].jabatan;
+            document.getElementById('pemohon_role_id').value = data[0].role_id;
+            document.getElementById('disetujui_nama_1').value = data[0].nama_atasan;
+            document.getElementById('disetujui_jabatan_1').value = data[0].jabatan_atasan;
+            document.getElementById('no_scan_atasan').value = data[0].no_scan_atasan;
+            document.getElementById('disetujui_nama_2').value = data[0].nama_atasan2;
+            document.getElementById('disetujui_jabatan_2').value = data[0].jabatan2;
+            document.getElementById('no_scan_atasan2').value = data[0].no_scan2;
+            //
             document.getElementById("tgl_mulai").setAttribute("min", "");
             document.getElementById("tgl_mulai").setAttribute("max", "");
             document.getElementById("tgl_selesai").setAttribute("min", "");
@@ -278,6 +286,28 @@ function searchsisacuti_disabled() {
         }
     });
 }
+
+function search_atasan() {
+    var _no_scan = document.getElementById('no_scan').value;
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    $.ajax({
+        type: 'POST',
+        url: '<?= base_url() . "pci/search_noscan" ?>/' + _no_scan + '/' + yyyy,
+        dataType: 'json',
+        success: function(data) {
+            document.getElementById('pemohon_role_id').value = data[0].role_id;
+            document.getElementById('disetujui_nama_1').value = data[0].nama_atasan;
+            document.getElementById('disetujui_jabatan_1').value = data[0].jabatan_atasan;
+            document.getElementById('no_scan_atasan').value = data[0].no_scan_atasan;
+            document.getElementById('disetujui_nama_2').value = data[0].nama_atasan2;
+            document.getElementById('disetujui_jabatan_2').value = data[0].jabatan2;
+            document.getElementById('no_scan_atasan2').value = data[0].no_scan2;
+
+        }
+    });
+}
+
 
 function keterangan() {
     var _ket = document.getElementById('ket').value;
@@ -311,6 +341,29 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = data[0].lama_cuti;
                 document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "A06") { //pernikahan anak karyawan
                 $('#lama_izin').attr('readonly', true);
@@ -319,6 +372,29 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = data[0].lama_cuti;
                 document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "A07") { //khitanan anak karyawan
                 $('#lama_izin').attr('readonly', true);
@@ -327,6 +403,29 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = data[0].lama_cuti;
                 document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "A08") { //istri melahirkan / keguguran
                 $('#lama_izin').attr('readonly', true);
@@ -335,6 +434,29 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = data[0].lama_cuti;
                 document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "A09") { //cuti baptis
                 $('#lama_izin').attr('readonly', true);
@@ -343,6 +465,29 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = data[0].lama_cuti;
                 document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "A10") { //keluarga inti meninggal
                 $('#lama_izin').attr('readonly', true);
@@ -351,6 +496,29 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = data[0].lama_cuti;
                 document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "A11") { //saudara meninggal
                 $('#lama_izin').attr('readonly', true);
@@ -359,6 +527,29 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = data[0].lama_cuti;
                 document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "A12") { //keluarga serumah meninggal
                 $('#lama_izin').attr('readonly', true);
@@ -367,6 +558,29 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = data[0].lama_cuti;
                 document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "A02") { //cuti melahurkan
                 $('#lama_izin').attr('readonly', true);
@@ -375,6 +589,29 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = data[0].lama_cuti;
                 document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "A01") { //cuti tahunan
                 $('#lama_izin').removeAttr("readonly");
@@ -382,7 +619,31 @@ function keterangan() {
                 $('#tgl_mulai').removeAttr("readonly");
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = null;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti();
+                search_atasan();
             } else if (_ket == "A13") { //izin dispensasi
                 $('#lama_izin').removeAttr("readonly");
                 $('#days_or_month').removeAttr("readonly");
@@ -390,6 +651,29 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = null;
                 document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "A14") { //sakit dengan surat dokter
                 $('#lama_izin').removeAttr("readonly");
@@ -398,6 +682,29 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = null;
                 document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "B03") { //mangkir
                 $('#lama_izin').removeAttr("readonly");
@@ -405,6 +712,29 @@ function keterangan() {
                 $('#tgl_mulai').removeAttr("readonly");
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = null;
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "B01") { //izin pribadi
                 $('#lama_izin').removeAttr("readonly");
@@ -413,14 +743,60 @@ function keterangan() {
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = null;
                 document.getElementById("Button").disabled = false
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
-            } else if (_ket == "B02") { //izin tanpansurat dokterr
+            } else if (_ket == "B02") { //izin tanpan surat dokterr
                 $('#lama_izin').removeAttr("readonly");
                 $('#days_or_month').removeAttr("readonly");
                 $('#tgl_mulai').removeAttr("readonly");
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = null;
                 document.getElementById("Button").disabled = false
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
             } else if (_ket == "A15") { //perjalanan dinas
                 $('#lama_izin').removeAttr("readonly");
@@ -428,7 +804,24 @@ function keterangan() {
                 $('#tgl_mulai').removeAttr("readonly");
                 $('#tgl_selesai').removeAttr("readonly");
                 document.getElementById('lama_izin').value = null;
-                document.getElementById("Button").disabled = false
+                document.getElementById("Button").disabled = false;
+                document.getElementById('disetujui_nama_1').disabled = true;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = true;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = true;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = true;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = true;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = true;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = true;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'none';
+                document.getElementById('disetujui_label').style.display = 'none';
+                document.getElementById('alasan').placeholder = 'Alasan Dinaas Minimal 30 karakter.';
                 searchsisacuti_disabled();
             }
         }
@@ -571,12 +964,30 @@ $(document).ready(function() {
                                         <?php
 										$dept = $user['dept'];
 										// $queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE dept = '$dept' AND NOT status_aktif = 0 AND NOT status_karyawan = 'Resigned' AND NOT status_karyawan = 'perubahan_status' ORDER BY nama")->result_array();
-										$queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE dept = '$dept' AND status_aktif = 1 AND NOT status_karyawan = 'perubahan_status' ORDER BY nama")->result_array();
+										$queryShift = $this->db->query("SELECT 
+																		tm.no_scan,
+																		tm.nama,
+																		tm.dept,
+																		tm.jabatan,
+																		tm.role_id,
+																		tm.sisa_cuti,
+																		tm.status_aktif,
+																		tm.atasan1 AS nama_atasan,
+																		tm2.jabatan AS jabatan_atasan
+																	FROM tbl_makar tm                  
+																	LEFT JOIN tbl_makar tm2 ON tm.atasan1 = tm2.nama 
+																	WHERE tm.dept = '$dept' 
+																		AND tm.status_aktif = 1 
+																		AND tm2.status_aktif = 1 
+																		AND NOT tm.status_karyawan = 'perubahan_status' 
+																	ORDER BY tm.nama")->result_array();
 										?>
                                         <?php foreach ($queryShift as $dk): ?>
-                                        <option value="<?= $dk['no_scan'] ?>" <?php if ($dk['no_scan'] == set_value('no_scan')) {
-												  echo "SELECTED";
-											  } ?>>
+                                        <option value="<?= $dk['no_scan'] ?>" data-role-id="<?= $dk['role_id'] ?>"
+                                            data-atasan1="<?= $dk['nama_atasan'] ?>"
+                                            data-jabatan_atasan1="<?= $dk['jabatan_atasan'] ?>" <?php if ($dk['no_scan'] == set_value('no_scan')) {
+													  echo "SELECTED";
+												  } ?>>
                                             <?= $dk['no_scan'] . ' - ' . $dk['nama']; ?>
                                         </option>
                                         <?php endforeach ?>
@@ -601,9 +1012,10 @@ $(document).ready(function() {
 										$queryShift = $this->db->query("SELECT * FROM tbl_makar WHERE dept = '$dept' AND NOT status_aktif = 0 AND NOT status_karyawan = 'Resigned' AND NOT status_karyawan = 'perubahan_status' ORDER BY nama")->result_array();
 										?>
                                         <?php foreach ($queryShift as $dk): ?>
-                                        <option value="<?= $dk['no_scan'] ?>" <?php if ($dk['no_scan'] == set_value('pengganti_kerja')) {
-												  echo "SELECTED";
-											  } ?>>
+                                        <option value="<?= $dk['no_scan'] ?>" role_id="<?= $dk['role_id'] ?>" <?php if
+												($dk['no_scan'] == set_value('pengganti_kerja')) {
+													echo "SELECTED";
+												} ?>>
                                             <?= $dk['no_scan'] . ' - ' . $dk['nama']; ?>
                                         </option>
                                         <?php endforeach ?>
@@ -615,7 +1027,6 @@ $(document).ready(function() {
                                 <div class="col-lg-2">
                                     <input type="date" name="tgl_mulai" data-date="" data-date-format="DD MMMM YYYY"
                                         class="form-control input-sm" id="tgl_mulai" required>
-                                    <!-- <input type="date" name="tgl_mulai" class="form-control input-sm" required> -->
                                 </div>
                                 <label class="control-label col-lg-2">Lama Izin/Cuti</label>
                                 <div class="col-lg-1">
@@ -636,7 +1047,6 @@ $(document).ready(function() {
                                 <div class="col-lg-2">
                                     <input type="date" name="tgl_selesai" class="form-control input-sm" id="tgl_selesai"
                                         required>
-                                    <!-- <input type="date" name="tgl_selesai" class="form-control input-sm" required> -->
                                 </div>
                             </div>
                             <div class="form-group">
@@ -652,27 +1062,48 @@ $(document).ready(function() {
                                 <label class="control-label col-lg-2">
                                     <center>Pemohon : </center>
                                 </label>
-                                <label class="control-label col-lg-4">
-                                    <center>Disetujui Oleh :</center>
+                                <label id="disetujui_label" class="control-label col-lg-4">
+                                    <center></center>
                                 </label>
-                                <label class="control-label col-lg-2">
-                                    <center>Mengetahui</center>
+                                <label id="mengetahui_label" class="control-label col-lg-2">
+                                    <center></center>
                                 </label>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-lg-2">Nama</label>
                                 <label class="control-label col-lg-2"><input class="form-control input-sm col-lg-2"
                                         value="<?= set_value('pemohon_nama'); ?>" name="pemohon_nama" id="pemohon_nama"
-                                        type="text" required></label>
+                                        type="text" required>
+                                    <input class="form-control input-sm col-lg-2"
+                                        value="<?= set_value('pemohon_role_id'); ?>" name="pemohon_role_id"
+                                        id="pemohon_role_id" type="hidden">
+                                    <input class="form-control input-sm col-lg-2" value="<?= set_value('atasan1'); ?>"
+                                        name="atasan1" id="atasan1" type="hidden">
+                                    <input class="form-control input-sm col-lg-2"
+                                        value="<?= set_value('jabatan_atasan'); ?>" name="jabatan_atasan"
+                                        id="jabatan_atasan" type="hidden">
+                                    <input class="form-control input-sm col-lg-2"
+                                        value="<?= set_value('no_scan_atasan'); ?>" name="no_scan_atasan"
+                                        id="no_scan_atasan" type="hidden">
+                                    <input class="form-control input-sm col-lg-2" value="<?= set_value('atasan2'); ?>"
+                                        name="atasan2" id="atasan2" type="hidden">
+                                    <input class="form-control input-sm col-lg-2"
+                                        value="<?= set_value('jabatan_atasan2'); ?>" name="jabatan_atasan2"
+                                        id="jabatan_atasan2" type="hidden">
+                                    <input class="form-control input-sm col-lg-2"
+                                        value="<?= set_value('no_scan_atasan2'); ?>" name="no_scan_atasan2"
+                                        id="no_scan_atasan2" type="hidden">
+                                </label>
+
                                 <label class="control-label col-lg-2"><input class="form-control input-sm col-lg-2"
                                         value="<?= set_value('disetujui_nama_1'); ?>" name="disetujui_nama_1"
-                                        id="disetujui_nama_1" type="text" required></label>
+                                        id="disetujui_nama_1" type="hidden" required></label>
                                 <label class="control-label col-lg-2"><input class="form-control input-sm col-lg-2"
                                         value="<?= set_value('disetujui_nama_2'); ?>" name="disetujui_nama_2"
-                                        id="disetujui_nama_2" type="text" required></label>
+                                        id="disetujui_nama_2" type="hidden" required></label>
                                 <label class="control-label col-lg-2"><input class="form-control input-sm col-lg-2"
                                         value="<?= set_value('mengetahui_nama'); ?>" name="mengetahui_nama"
-                                        id="mengetahui_nama" type="text" required></label>
+                                        id="mengetahui_nama" type="hidden" required></label>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-lg-2">Jabatan</label>
@@ -681,13 +1112,13 @@ $(document).ready(function() {
                                         id="pemohon_jabatan" type="text" required></label>
                                 <label class="control-label col-lg-2"><input class="form-control input-sm col-lg-2"
                                         value="<?= set_value('disetujui_jabatan_1'); ?>" name="disetujui_jabatan_1"
-                                        id="disetujui_jabatan_1" type="text" required></label>
+                                        id="disetujui_jabatan_1" type="hidden"></label>
                                 <label class="control-label col-lg-2"><input class="form-control input-sm col-lg-2"
                                         value="<?= set_value('disetujui_jabatan_2'); ?>" name="disetujui_jabatan_2"
-                                        id="disetujui_jabatan_2" type="text" required></label>
+                                        id="disetujui_jabatan_2" type="hidden"></label>
                                 <label class="control-label col-lg-2"><input class="form-control input-sm col-lg-2"
                                         value="<?= set_value('mengetahui_jabatan'); ?>" name="mengetahui_jabatan"
-                                        id="mengetahui_jabatan" type="text"></label>
+                                        id="mengetahui_jabatan" type="hidden"></label>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-lg-2">Tanggal</label>
@@ -696,7 +1127,7 @@ $(document).ready(function() {
                                         type="date" required></label>
                                 <label class="control-label col-lg-6"><input class="form-control input-sm col-lg-2"
                                         value="<?= set_value('tgl_diset_mengetehui'); ?>" name="tgl_diset_mengetehui"
-                                        id="tgl_diset_mengetehui" type="date"></label>
+                                        id="tgl_diset_mengetehui" type="hidden"></label>
                             </div>
                             <div class="form-group">
                                 <div class="col-lg-offset-2 col-lg-10">
@@ -710,5 +1141,5 @@ $(document).ready(function() {
                 </div>
             </div>
         </div>
-    </sect ion>
+</section>
 </section>

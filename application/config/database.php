@@ -74,11 +74,56 @@ $active_group = 'default';
 $active_group2 = 'second_db';
 $query_builder = true;
 
+// $db['default'] = array(
+// 	'dsn' => '',
+// 	'hostname' => 'localhost',
+// 	'username' => 'dit',
+// 	'password' => '4dm1n',
+// 	'database' => 'hrd2',
+// 	'dbdriver' => 'mysqli',
+// 	'dbprefix' => '',
+// 	'pconnect' => false,
+// 	'db_debug' => (ENVIRONMENT !== 'production'),
+// 	'cache_on' => false,
+// 	'cachedir' => '',
+// 	'char_set' => 'utf8',
+// 	'dbcollat' => 'utf8_general_ci',
+// 	'swap_pre' => '',
+// 	'encrypt' => false,
+// 	'compress' => false,
+// 	'stricton' => false,
+// 	'failover' => array(),
+// 	'save_queries' => true
+// );
+
+// // Konfigurasi database kedua
+// $db['second_db'] = array(
+// 	'dsn' => '',
+// 	'hostname' => 'localhost',
+// 	'username' => 'dit',
+// 	'password' => '4dm1n',
+// 	'database' => 'dbpayroll_nilo',
+// 	'dbdriver' => 'mysqli',
+// 	'dbprefix' => '',
+// 	'pconnect' => false,
+// 	'db_debug' => (ENVIRONMENT !== 'production'),
+// 	'cache_on' => false,
+// 	'cachedir' => '',
+// 	'char_set' => 'utf8',
+// 	'dbcollat' => 'utf8_general_ci',
+// 	'swap_pre' => '',
+// 	'encrypt' => false,
+// 	'compress' => false,
+// 	'stricton' => false,
+// 	'failover' => array(),
+// 	'save_queries' => true
+// );
+
 $db['default'] = array(
-	'dsn'	=> '',
+	'dsn' => '',
 	'hostname' => 'localhost',
-	'username' => 'dit',
-	'password' => '4dm1n',
+	'username' => 'root',
+	'password' => '',
 	'database' => 'hrd',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
@@ -98,70 +143,23 @@ $db['default'] = array(
 
 // Konfigurasi database kedua
 $db['second_db'] = array(
-    'dsn'      => '',
-    'hostname' => 'localhost',
-    'username' => 'dit',
-    'password' => '4dm1n',
-    'database' => 'dbpayroll',
-    'dbdriver' => 'mysqli',
-    'dbprefix' => '',
-    'pconnect' => false,
-    'db_debug' => (ENVIRONMENT !== 'production'),
-    'cache_on' => false,
-    'cachedir' => '',
-    'char_set' => 'utf8',
-    'dbcollat' => 'utf8_general_ci',
-    'swap_pre' => '',
-    'encrypt'  => false,
-    'compress' => false,
-    'stricton' => false,
-    'failover' => array(),
-    'save_queries' => true
+	'dsn' => '',
+	'hostname' => 'localhost',
+	'username' => 'root',
+	'password' => '',
+	'database' => 'dbpayroll_nilo',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => false,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => false,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => false,
+	'compress' => false,
+	'stricton' => false,
+	'failover' => array(),
+	'save_queries' => true
 );
-
-// $db['default'] = array(
-// 	'dsn'	=> '',
-// 	'hostname' => 'localhost',
-// 	'username' => 'root',
-// 	'password' => '',
-// 	'database' => 'hrd',
-// 	'dbdriver' => 'mysqli',
-// 	'dbprefix' => '',
-// 	'pconnect' => false,
-// 	'db_debug' => (ENVIRONMENT !== 'production'),
-// 	'cache_on' => false,
-// 	'cachedir' => '',
-// 	'char_set' => 'utf8',
-// 	'dbcollat' => 'utf8_general_ci',
-// 	'swap_pre' => '',
-// 	'encrypt' => false,
-// 	'compress' => false,
-// 	'stricton' => false,
-// 	'failover' => array(),
-// 	'save_queries' => true
-// );
-
-// // Konfigurasi database kedua
-// $db['second_db'] = array(
-// 	'dsn'	=> '',
-// 	'hostname' => 'localhost',
-// 	'username' => 'root',
-// 	'password' => '',
-// 	'database' => 'dbpayroll_nilo',
-// 	'dbdriver' => 'mysqli',
-// 	'dbprefix' => '',
-// 	'pconnect' => false,
-// 	'db_debug' => (ENVIRONMENT !== 'production'),
-// 	'cache_on' => false,
-// 	'cachedir' => '',
-// 	'char_set' => 'utf8',
-// 	'dbcollat' => 'utf8_general_ci',
-// 	'swap_pre' => '',
-// 	'encrypt' => false,
-// 	'compress' => false,
-// 	'stricton' => false,
-// 	'failover' => array(),
-// 	'save_queries' => true
-// );
-
-

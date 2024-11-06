@@ -335,7 +335,8 @@ class Data_Karyawan extends CI_Controller
 				'tgl_seragam' => $tgl_seragam,
 				'status_seragam' => $this->input->post('status_seragam', true),
 				'status_idcard' => $this->input->post('status_seragam', true),
-				'tgl_evaluasi' => $this->input->post('tgl_evaluasi', true)
+				'tgl_evaluasi' => $this->input->post('tgl_evaluasi', true),
+				'id_suku' => $this->input->post('suku', true)
 			);
 			$this->db->insert('tbl_makar', $data);
 
@@ -544,7 +545,8 @@ class Data_Karyawan extends CI_Controller
 			'keterampilan_khusus' => $this->input->post('keterampilan_khusus', true),
 			'tgl_resign' => $this->input->post('tgl_resign', true),
 			'status_seragam' => $this->input->post('status_seragam', true),
-			'tgl_evaluasi' => $this->input->post('tgl_evaluasi', true)
+			'tgl_evaluasi' => $this->input->post('tgl_evaluasi', true),
+			'id_suku' => $this->input->post('suku', true)
 
 		);
 		$this->db->where('no_scan', $this->input->post('no_scan', true));
@@ -657,7 +659,9 @@ class Data_Karyawan extends CI_Controller
 					'status_seragam' => $this->input->post('status_seragam', true),
 					'ukuran_baju_polo' => $this->input->post('ukuran_baju_polo', true),
 					'ukuran_baju_shirt' => $this->input->post('ukuran_baju_shirt', true),
-					'tgl_evaluasi' => $this->input->post('tgl_evaluasi', true)
+					'tgl_evaluasi' => $this->input->post('tgl_evaluasi', true),
+					'id_suku' => $this->input->post('suku', true)
+
 
 				);
 				$this->db->insert('tbl_makar', $data);
@@ -716,7 +720,8 @@ class Data_Karyawan extends CI_Controller
 				'status_seragam' => $this->input->post('status_seragam', true),
 				'ukuran_baju_polo' => $this->input->post('ukuran_baju_polo', true),
 				'ukuran_baju_shirt' => $this->input->post('ukuran_baju_shirt', true),
-				'tgl_evaluasi' => $this->input->post('tgl_evaluasi', true)
+				'tgl_evaluasi' => $this->input->post('tgl_evaluasi', true),
+				'id_suku' => $this->input->post('suku', true)
 
 			);
 			$this->db->where('id', $id);
@@ -799,6 +804,7 @@ class Data_Karyawan extends CI_Controller
 		$mail->addAddress('prs01@indotaichen.com');
 		$mail->addAddress('meyliana@indotaichen.com');
 		$mail->addAddress('bintoro.dy@indotaichen.com');
+		$mail->addAddress('yohanes.william@indotaichen.com');
 		$mail->addAddress('asep.pauji@indotaichen.com');
 		$mail->addAddress($dept_mail1);
 		$mail->Subject = 'Informasi Karyawan Resign';
@@ -1244,7 +1250,8 @@ class Data_Karyawan extends CI_Controller
 					'kartu_keluarga' => $this->input->post('kartu_keluarga', true),
 					'masa_berlaku_ktp' => $this->input->post('masa_berlaku_ktp', true),
 					// 'tgl_seragam'           => $this->input->post('tgl_seragam', true),
-					'status_seragam' => $this->input->post('status_seragam', true)
+					'status_seragam' => $this->input->post('status_seragam', true),
+					'id_suku' => $this->input->post('suku', true)
 
 				);
 				$this->db->insert('tbl_makar', $data);
@@ -1298,7 +1305,8 @@ class Data_Karyawan extends CI_Controller
 				'kartu_keluarga' => $this->input->post('kartu_keluarga', true),
 				'masa_berlaku_ktp' => $this->input->post('masa_berlaku_ktp', true),
 				// 'tgl_seragam'           => $this->input->post('tgl_seragam', true),
-				'status_seragam' => $this->input->post('status_seragam', true)
+				'status_seragam' => $this->input->post('status_seragam', true),
+				'id_suku' => $this->input->post('suku', true)
 
 			);
 			$this->db->where('id', $id);
