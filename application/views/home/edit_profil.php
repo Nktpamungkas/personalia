@@ -109,7 +109,7 @@
                             </div>
                             <button type="submit" class="btn btn-theme btn-block"><i class="fa fa-lock"></i>
                                 Save</button>
-                            <a href="<?= base_url('menu') ?>" class="btn btn-default btn-block">Back</a>
+                            <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Back</button>
                         </div>
                     </div>
                 </div>

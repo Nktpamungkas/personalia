@@ -943,7 +943,7 @@ class Home extends CI_Controller
 			'name' =>
 				$this->session->userdata('name')
 		))->row_array();
-		$data['title'] = 'Edit Paswoerd';
+		$data['title'] = 'Edit Password';
 		$this->load->view('template/header', $data);
 		$this->load->view('home/edit_profil');
 		$this->load->view('template/footer');
@@ -951,42 +951,37 @@ class Home extends CI_Controller
 
 	public function edit_Password($no_scan)
 	{
-		// Validasi form
-		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-		$this->form_validation->set_rules('password1', 'Password', 'min_length[6]');
-		$this->form_validation->set_rules('password2', 'Confirm Password', 'matches[password1]');
+		$email = $this->input->post('email', true);
+		$password1 = $this->input->post('password1');
+		//array
+		$data = array(
+			'email' => $email,
+			'password' => password_hash($password1, PASSWORD_DEFAULT)
+		);
+		$this->db->where('no_scan', $no_scan);
+		$this->db->update('user', $data);
 
-		if ($this->form_validation->run() === FALSE) {
-			// Jika validasi gagal, tampilkan form edit profil lagi
-			$this->session->set_flashdata('error', 'Gagal memvalidasi data.');
+		$this->session->set_flashdata('success', 'Email dan password berhasil diperbarui.');
+		redirect('home/editprofile');
+	}
+	public function cekpassword($no_scan)
+	{
+		$name = $this->input->post('name');
+		$password = $this->input->post('password');
+
+		$user = $this->db->get_where('user', array('name' => $name, 'ket' => 'HRIS'))->row_array();
+		if (password_verify($password, $user['password'])) {
+			$data = array(
+				'name' => $user['name'],
+				'role_id' => $user['role_id'],
+				'dept' => $user['dept'],
+				'no_scan' => $user['no_scan']
+			);
+			$this->session->set_userdata($data);
 			redirect('home/editprofile');
+			// }
 		} else {
-			// Ambil data yang dikirim melalui POST
-			$email = $this->input->post('email', true);
-			$password1 = $this->input->post('password1');
-			$password2 = $this->input->post('password2');
-
-			// Cek apakah password kosong, jika tidak maka kita hash password
-			if (!empty($password1)) {
-				$password1 = password_hash($password1, PASSWORD_DEFAULT);
-			} else {
-				// Jika password kosong, biarkan password lama
-				$user = $this->db->get_where('user', ['no_scan' => $no_scan])->row();
-				$password1 = $user->password;  // Tetap menggunakan password lama jika tidak ada perubahan
-			}
-
-			// Data yang akan diupdate
-			$data = [
-				'email' => $email,
-				'password' => $password1
-			];
-
-			// Update data berdasarkan no_scan
-			$this->db->where('no_scan', $no_scan);
-			$this->db->update('user', $data);
-
-			// Memberikan pesan sukses
-			$this->session->set_flashdata('success', 'Email dan password berhasil diperbarui.');
+			$this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert">Wrong password!</center>');
 			redirect('home/editprofile');
 		}
 	}

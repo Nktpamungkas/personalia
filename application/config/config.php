@@ -27,7 +27,7 @@ date_default_timezone_set('Asia/Jakarta');
 | Jika ingin bisa buka di hp gunakan ip address jangan menggunakan nama alias
 */
 // $config['base_url'] = 'http://localhost/personalia/';
-$config['base_url'] = 'https://online.indotaichen.com/personalia/';
+$config['base_url'] = 'https://online.indotaichen.com/personalia_bk-06-11-24/';
 // $config['base_url'] = 'http://10.0.5.22/personalia/';
 
 /*

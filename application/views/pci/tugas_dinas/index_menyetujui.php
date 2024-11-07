@@ -83,11 +83,11 @@
                                 <td><?= $data['alasan']; ?></td>
                                 <td>
                                     <button type="button" class="edit-request-btn btn btn-info btn-xs"
-                                        data-toggle="modal" data-target="#modalResign"><i
+                                        data-toggle="modal" data-target="#modalResign<?= $data['id']; ?>"><i
                                             class="fa fa-sign-out"></i>Approve Pengajuan Dinas</button>
                                 </td>
                                 <!-- Modal Resign-->
-                                <div class="modal fade" id="modalResign" tabindex="-1" role="dialog"
+                                <div class="modal fade" id="modalResign<?= $data['id']; ?>" tabindex="-1" role="dialog"
                                     aria-labelledby="modalResign" aria-hidden="true">
                                     <form role="form"
                                         action="<?= base_url('pci/approval_tugas_dinas1/') . $user['name']; ?>"
@@ -97,7 +97,8 @@
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-hidden="true">×</button>
-                                                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                                                    <h4 class="modal-title" id="myModalLabel">Approve Pengajuan Dinas
+                                                    </h4>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-group">
@@ -210,7 +211,7 @@
                                 <script type="text/javascript"
                                     src="<?= base_url(); ?>lib/advanced-datatable/js/DT_bootstrap.js"></script>
                                 <script type="text/javascript" language="javascript" src="
-																											<?= base_url(); ?>lib/advanced-datatable/js/jquery.dataTables.js">
+																													<?= base_url(); ?>lib/advanced-datatable/js/jquery.dataTables.js">
                                 </script>
                             </tr>
                             <?php endforeach; ?>
@@ -219,6 +220,6 @@
                 </div>
             </div>
             </ div>
+            </ sect ion>
             </ 
-sect ion>
-            </ secti on>
+secti on>

@@ -80,12 +80,15 @@
 																DATE_FORMAT( a.tgl_selesai, '%d %M %Y' ) AS tgl_selesai,
 																a.alasan,
 																a.status,
-																a.status_approval 
+																case 
+																	when a.status_approval_1 ='Approved' then 'In-Progress Approve Atasan 2'
+																	else a.status_approval 
+																end as status_approval 
 															FROM
 																permohonan_izin_cuti a
 																LEFT JOIN ( SELECT * FROM tbl_makar ) b ON a.nip = b.no_scan 
 															WHERE
-																not a.status_approval ='' AND a.kode_cuti LIKE '%FIC%' and a.ket in ('A15') and b.dept = '$dept'
+																 a.status_approval_1 ='Approved' AND a.kode_cuti LIKE '%FIC%' and a.ket in ('A15') and b.dept = '$dept'
 																AND tgl_surat_pemohon BETWEEN DATE_ADD( NOW( ), INTERVAL -1 month ) AND DATE_ADD( NOW( ), INTERVAL '14' MONTH )
 															ORDER BY
 																a.tgl_mulai DESC")->result_array();
