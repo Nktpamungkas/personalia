@@ -47,7 +47,7 @@
 							function tampil_data_employee() {
 								$.ajax({
 									type: 'ajax',
-									url: '<?= base_url() ?>pci/data_approve_cuti',
+									url: '<?= base_url() ?>pci/data_approve_cuti_menyetujui',
 									async: false,
 									dataType: 'json',
 									success: function (data) {
@@ -67,11 +67,11 @@
 												'<td>' + data[i].tgl_selesai + '</td>' +
 												'<td>' + data[i].alasan + '</td>' +
 												`<td>
-																					<button type="button" class="edit-request-btn btn btn-info btn-xs" data-toggle="modal" data-target="#modalResign` +
-												data[i].id + `"><i class="fa fa-sign-out"></i>Approve Pengajuan Cuti</button>
+												<button type="button" class="edit-request-btn btn btn-info btn-xs" data-toggle="modal" data-target="#modalResign` +
+												data[i].id + `"><i class="fa fa-sign-out"></i>Approve Pengajuan Dinas</button>
 													<!-- Modal Resign-->
 													<div class="modal fade" id="modalResign` + data[i].id + `" tabindex="-1" role="dialog" aria-labelledby="modalResign" aria-hidden="true">
-														<form role="form" action="<?= base_url('pci/approve_cuti/') . $user['name']; ?>" method="POST">
+														<form role="form" action="<?= base_url('pci/approval_cuti2/') . $user['name']; ?>" method="POST">
 															<div class="modal-dialog">
 																<div class="modal-content">
 																	<div class="modal-header">
@@ -121,17 +121,17 @@
 																				<label class="control-label col-lg-12">Approval</label>
 																			</div>
 																			<div class="col-lg-7">
-																				<input type="radio" name="ket_approval" id="ket_approval" value="Approved"> Approved <br/>
-																				<input type="radio" name="ket_approval" id="ket_approval" value="Rejected"> Rejected
-																				<input class="form-control input-sm" value="<?= $user['name']; ?> / <?= $user['no_scan']; ?> / <?= date('Y-m-d h:i:s'); ?>" name="getalldata" type="hidden">
-																				<input class="form-control input-sm" value="ANGGORO BAYU MUKTI" name="user_approval" type="text">
-																				<input class="form-control input-sm" value="MANAGER CPL" name="jabatan" type="text">
+																				<input type="radio" name="ket_approval_2" id="ket_approval_2" value="Approved"> Approved <br/>
+																				<input type="radio" name="ket_approval_2" id="ket_approval_2" value="Rejected"> Rejected
+																				<input class="form-control input-sm" value="` + data[i].nama_atasan + ` / <?= $user['no_scan']; ?> / <?= date('Y-m-d h:i:s'); ?>" name="getalldata" type="hidden">
+																				<input class="form-control input-sm" value="` + data[i].nama_atasan + `" name="user_approval2" type="text">
+																				<input class="form-control input-sm" value="` + data[i].jabatan_atasan1 + `" name="jabatan" type="text">
 																				<input class="form-control input-sm" value="<?= date('Y-m-d h:i:s'); ?>" name="tgl_approval" type="hidden">
 																	</div>
 																</div>
 																<div class="modal-footer">
 																	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-																	<button type="submit" class="btn btn-primary">Approve</button>
+																	<button type="submit" class="btn btn-primary">Submit</button>
 																</div>
 															</div>
 														</form>

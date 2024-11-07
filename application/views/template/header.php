@@ -118,13 +118,13 @@ if ($user['name']): ?>
 									src="<?= base_url('img/profile/') . $user['image']; ?>" class="img-circle"
 									width="80"></a></p>
 						<h5 class="centered">Welcome, <?= $user['name']; ?></h5>
-						<h5 class="centered"><?= $user['no_scan']; ?></h5>
+						<!-- <h5 class="centered"><?= $user['no_scan']; ?></h5> -->
 
 						<?php
 						$role_id = $this->session->userdata('role_id');
 						$special_user = $this->session->userdata('special_user');
 						?>
-						<?php if ($role_id == 8 || $role_id == 4 || $role_id == 2 || $role_id == 3 || $role_id == 9): ?>
+						<?php if ($role_id == 8 || $role_id == 4 || $role_id == 2 || $role_id == 3 || $role_id == 9 || $role_id == 12 || $role_id == 13): ?>
 							<li class="sub-menu">
 								<a <?php if ($title == "Pengajuan" || $title == "Pengajuan1" || $title == "Pengajuan2" || $title == "Historis") {
 									echo 'class="active"';
@@ -133,32 +133,10 @@ if ($user['name']): ?>
 									<span>APPROVAL TUGAS DINAS</span>
 								</a>
 								<ul class="sub">
-									<?php if ($role_id == 8): ?>
-										<li <?php if ($title == "Pengajuan2")
-											echo 'class="active"'; ?>>
-											<a href="<?= base_url('pci/tugas_dinas'); ?>">Pengajuan Tugas Dinas</a>
-										</li>
-									<?php endif; ?>
-
-									<?php if ($role_id == 3): ?>
-										<li <?php if ($title == "Pengajuan")
-											echo 'class="active"'; ?>>
-											<a href="<?= base_url('pci/tugas_dinas_mengetahui_'); ?>">Pengajuan Tugas Dinas</a>
-										</li>
-									<?php endif; ?>
-									<?php if ($role_id == 4 || $role_id == 9): ?>
-										<li <?php if ($title == "Pengajuan")
-											echo 'class="active"'; ?>>
-											<a href="<?= base_url('pci/tugas_dinas_mengetahui'); ?>">Pengajuan Tugas Dinas</a>
-										</li>
-									<?php endif; ?>
-
-									<?php if ($role_id == 2): ?>
-										<li <?php if ($title == "Pengajuan1")
-											echo 'class="active"'; ?>>
-											<a href="<?= base_url('pci/tugas_dinas_menyetujui'); ?>">Pengajuan Tugas Dinas</a>
-										</li>
-									<?php endif; ?>
+									<li <?php if ($title == "Pengajuan1")
+										echo 'class="active"'; ?>>
+										<a href="<?= base_url('pci/tugas_dinas_menyetujui'); ?>">Pengajuan Tugas Dinas</a>
+									</li>
 
 									<li <?php if ($title == "Historis")
 										echo 'class="active"'; ?>>
@@ -168,7 +146,7 @@ if ($user['name']): ?>
 							</li>
 
 							<li class="sub-menu">
-								<?php if ($role_id == 8 || $special_user == 2 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 9): ?>
+								<?php if ($role_id == 8 || $special_user == 2 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 9 || $role_id == 12 || $role_id == 13): ?>
 									<a <?php if ($title == "Pengajuan_cuti" || $title == "Pengajuan_cuti1" || $title == "Pengajuan_cuti2" || $title == "Historis_cuti") {
 										echo 'class="active"';
 									} ?> href="javascript:;">
@@ -176,32 +154,10 @@ if ($user['name']): ?>
 										<span>APPROVAL CUTI</span>
 									</a>
 									<ul class="sub">
-										<?php if ($special_user == 2): ?>
-											<li <?php if ($title == "Pengajuan_cuti2")
-												echo 'class="active"'; ?>>
-												<a href="<?= base_url('pci/approve_cuti'); ?>">Pengajuan Cuti</a>
-											</li>
-										<?php endif; ?>
-
-										<?php if ($role_id == 3): ?>
-											<li <?php if ($title == "Pengajuan_cuti")
-												echo 'class="active"'; ?>>
-												<a href="<?= base_url('pci/approve_cuti_mengetahuiASM'); ?>">Pengajuan Cuti</a>
-											</li>
-										<?php endif; ?>
-										<?php if ($role_id == 4 || $role_id == 9): ?>
-											<li <?php if ($title == "Pengajuan_cuti")
-												echo 'class="active"'; ?>>
-												<a href="<?= base_url('pci/approve_cuti_mengetahuiSPV'); ?>">Pengajuan Cuti</a>
-											</li>
-										<?php endif; ?>
-
-										<?php if ($role_id == 2): ?>
-											<li <?php if ($title == "Pengajuan_cuti1")
-												echo 'class="active"'; ?>>
-												<a href="<?= base_url('pci/approve_cuti_menyetujui'); ?>">Pengajuan Cuti</a>
-											</li>
-										<?php endif; ?>
+										<li <?php if ($title == "Pengajuan_cuti1")
+											echo 'class="active"'; ?>>
+											<a href="<?= base_url('pci/approve_cuti_menyetujui'); ?>">Pengajuan Cuti</a>
+										</li>
 
 										<li <?php if ($title == "Historis")
 											echo 'class="active"'; ?>>

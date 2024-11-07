@@ -10,7 +10,6 @@ class pci extends CI_Controller
 		$this->load->library('form_validation');
 		$this->load->library('session');
 
-
 	}
 
 	public function index()
@@ -338,10 +337,10 @@ class pci extends CI_Controller
 				'role_id' => $this->input->post('pemohon_role_id', true),
 				'no_scan_atasan_1' => $this->input->post('no_scan_atasan', true),
 				'no_scan_atasan_2' => $this->input->post('no_scan_atasan2', true),
-				'disetujui_nama_1' => $this->input->post('disetujui_nama_1', true),
-				'disetujui_jabatan_1' => $this->input->post('disetujui_jabatan_1', true),
-				'disetujui_nama_2' => $this->input->post('disetujui_nama_2', true),
-				'disetujui_jabatan_2' => $this->input->post('disetujui_jabatan_2', true),
+				'disetujui_nama_1' => $this->input->post('atasan1', true),
+				'disetujui_jabatan_1' => $this->input->post('jabatan_atasan', true),
+				'disetujui_nama_2' => $this->input->post('atasan2', true),
+				'disetujui_jabatan_2' => $this->input->post('jabatan_atasan2', true),
 				// 'mengetahui_nama' => $this->input->post('mengetahui_nama', true),
 				// 'mengetahui_jabatan' => $this->input->post('mengetahui_jabatan', true),
 				'tgl_surat_pemohon' => $this->input->post('tgl_surat_pemohon', true),
@@ -398,63 +397,63 @@ class pci extends CI_Controller
 			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); // Encode data as JSON
 
 			// KIRIM EMAIL KARYAWAN DINAS
-			$query = $this->db->query("SELECT CONCAT(a.kode_cuti, '-', LPAD(a.id, 7, '0')) AS fkode_cuti,
-                         DATE_FORMAT(a.tgl_surat_pemohon, '%d %M %Y') AS tgl_surat_pemohon,
-                         b.no_scan,
-                         b.nama,
-                         b.dept,
-						 b.jabatan,
-                         c.nama as atasan1,
-                         c.jabatan as jabatan_atasan,
-                         DATE_FORMAT(a.tgl_mulai, '%d %M %Y') AS tgl_mulai,
-                         a.lama_izin,
-                         DATE_FORMAT(a.tgl_selesai, '%d %M %Y') AS tgl_selesai,
-                         a.role_id,
-                         a.alasan 
-                  FROM permohonan_izin_cuti a
-                  LEFT JOIN (SELECT * FROM tbl_makar) b ON a.nip = b.no_scan 
-				   LEFT JOIN (SELECT * FROM tbl_makar) c ON b.atasan1 = c.nama
-				   where
-				  b.no_scan = '$no_scan'				  
-                    AND a.ket IN ('A15') 
-					and b.status_aktif = 1 and c.status_aktif =1
-                  ORDER BY a.tgl_mulai DESC
-                ")->row();
+			// $query = $this->db->query("SELECT CONCAT(a.kode_cuti, '-', LPAD(a.id, 7, '0')) AS fkode_cuti,
+			//              DATE_FORMAT(a.tgl_surat_pemohon, '%d %M %Y') AS tgl_surat_pemohon,
+			//              b.no_scan,
+			//              b.nama,
+			//              b.dept,
+			// 			 b.jabatan,
+			//              c.nama as atasan1,
+			//              c.jabatan as jabatan_atasan,
+			//              DATE_FORMAT(a.tgl_mulai, '%d %M %Y') AS tgl_mulai,
+			//              a.lama_izin,
+			//              DATE_FORMAT(a.tgl_selesai, '%d %M %Y') AS tgl_selesai,
+			//              a.role_id,
+			//              a.alasan 
+			//       FROM permohonan_izin_cuti a
+			//       LEFT JOIN (SELECT * FROM tbl_makar) b ON a.nip = b.no_scan 
+			// 	   LEFT JOIN (SELECT * FROM tbl_makar) c ON b.atasan1 = c.nama
+			// 	   where
+			// 	  b.no_scan = '$no_scan'				  
+			//         AND a.ket IN ('A15') 
+			// 		and b.status_aktif = 1 and c.status_aktif =1
+			//       ORDER BY a.tgl_mulai DESC
+			//     ")->row();
 
-			// URL of the API you want to send data to
-			$url2 = "https://hrisapproval.ilhamhdytllh.xyz/api/send-email"; // Replace with your actual URL
+			// // URL of the API you want to send data to
+			// $url2 = "https://hrisapproval.ilhamhdytllh.xyz/api/send-email"; // Replace with your actual URL
 
-			// Data to be sent in the POST request
-			$data = [
-				"no_scan" => " $query->no_scan",
-				"name" => "$query->nama",
-				"department" => "$query->dept ",
-				"position" => "$query->jabatan",
-				"tgl_pengajuan" => "$query->tgl_surat_pemohon",
-				"tgl_mulai" => "$query->tgl_mulai",
-				"tgl_selesai" => "$query->tgl_selesai",
-				"lama_izin" => $query->lama_izin,
-				"keterangan" => "$query->alasan"
-			];
+			// // Data to be sent in the POST request
+			// $data = [
+			// 	"no_scan" => " $query->no_scan",
+			// 	"name" => "$query->nama",
+			// 	"department" => "$query->dept ",
+			// 	"position" => "$query->jabatan",
+			// 	"tgl_pengajuan" => "$query->tgl_surat_pemohon",
+			// 	"tgl_mulai" => "$query->tgl_mulai",
+			// 	"tgl_selesai" => "$query->tgl_selesai",
+			// 	"lama_izin" => $query->lama_izin,
+			// 	"keterangan" => "$query->alasan"
+			// ];
 
-			// Initialize cURL
-			$ch1 = curl_init($url2);
+			// // Initialize cURL
+			// $ch1 = curl_init($url2);
 
-			// Set cURL options
-			curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true); // Return response instead of outputting
-			curl_setopt($ch1, CURLOPT_POST, true); // Use POST method
-			curl_setopt($ch1, CURLOPT_HTTPHEADER, [
-				'Content-Type: application/json', // Set content type to JSON
-			]);
-			curl_setopt($ch1, CURLOPT_POSTFIELDS, json_encode($data)); // Encode data as JSON
+			// // Set cURL options
+			// curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true); // Return response instead of outputting
+			// curl_setopt($ch1, CURLOPT_POST, true); // Use POST method
+			// curl_setopt($ch1, CURLOPT_HTTPHEADER, [
+			// 	'Content-Type: application/json', // Set content type to JSON
+			// ]);
+			// curl_setopt($ch1, CURLOPT_POSTFIELDS, json_encode($data)); // Encode data as JSON
 
 			if ($save) {
 				// Execute cURL request
 				curl_exec($ch);
-				curl_exec($ch1);
+				// curl_exec($ch1);
 				// Close cURL session
 				curl_close($ch);
-				curl_close($ch1);
+				// curl_close($ch1);
 				$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Success.</b></center>');
 				redirect('pci');
 			} else {
@@ -643,19 +642,7 @@ class pci extends CI_Controller
 		$this->load->view('template/footer');
 	}
 	// END LAPORAN ABSEN
-	// public function tampil_username($id)
-	// {
-	// 	$user_data = array(
-	// 		'id' => $id->id,
-	// 		'name' => $id->name,
-	// 		'username' => $id->username, // Pastikan ini sesuai dengan data yang ada
-	// 		'role_id' => $id->role_id, // Ambil dari objek $id
-	// 		'dept' => $id->dept, // Ambil dari objek $id
-	// 		'logged_in' => true
-	// 	);
 
-	// 	return $user_data; // Kembalikan data pengguna
-	// }
 	public function tampil_username()
 	{
 		$user_data = array(
@@ -665,54 +652,6 @@ class pci extends CI_Controller
 			'dept' => $depts,
 			'logged_in' => true
 		);
-	}
-	public function tugas_dinas()
-	{
-		$data['user'] = $this->db->get_where('user', array(
-			'name' =>
-				$this->session->userdata('name')
-		))->row_array();
-
-		$data['title'] = 'Time Attendance | Pengajuan Dinas';
-		$this->load->view('template/header', $data);
-		$this->load->view('pci/tugas_dinas/index');
-		$this->load->view('template/footer');
-	}
-	public function approve_cuti()
-	{
-		$data['user'] = $this->db->get_where('user', array(
-			'name' =>
-				$this->session->userdata('name')
-		))->row_array();
-
-		$data['title'] = 'Time Attendance | Pengajuan Cuti';
-		$this->load->view('template/header', $data);
-		$this->load->view('pci/approve_cuti/index');
-		$this->load->view('template/footer');
-	}
-	public function approve_cuti_mengetahuiSPV()
-	{
-		$data['user'] = $this->db->get_where('user', array(
-			'name' =>
-				$this->session->userdata('name')
-		))->row_array();
-
-		$data['title'] = 'Time Attendance | Pengajuan Cuti';
-		$this->load->view('template/header', $data);
-		$this->load->view('pci/approve_cuti/index_mengetahuiSPV');
-		$this->load->view('template/footer');
-	}
-	public function approve_cuti_mengetahuiASM()
-	{
-		$data['user'] = $this->db->get_where('user', array(
-			'name' =>
-				$this->session->userdata('name')
-		))->row_array();
-
-		$data['title'] = 'Time Attendance | Pengajuan Cuti';
-		$this->load->view('template/header', $data);
-		$this->load->view('pci/approve_cuti/index_mengetahuiASM');
-		$this->load->view('template/footer');
 	}
 
 	public function approve_cuti_menyetujui()
@@ -728,30 +667,6 @@ class pci extends CI_Controller
 		$this->load->view('template/footer');
 	}
 
-	public function tugas_dinas_mengetahui()
-	{
-		$data['user'] = $this->db->get_where('user', array(
-			'name' =>
-				$this->session->userdata('name')
-		))->row_array();
-
-		$data['title'] = 'Time Attendance | Pengajuan Dinas';
-		$this->load->view('template/header', $data);
-		$this->load->view('pci/tugas_dinas/index_mengetahuiSPV');
-		$this->load->view('template/footer');
-	}
-	public function tugas_dinas_mengetahui_()
-	{
-		$data['user'] = $this->db->get_where('user', array(
-			'name' =>
-				$this->session->userdata('name')
-		))->row_array();
-
-		$data['title'] = 'Time Attendance | Pengajuan Dinas';
-		$this->load->view('template/header', $data);
-		$this->load->view('pci/tugas_dinas/index_mengetahuiAsM');
-		$this->load->view('template/footer');
-	}
 	public function tugas_dinas_menyetujui()
 	{
 		$data['user'] = $this->db->get_where('user', array(
@@ -789,77 +704,11 @@ class pci extends CI_Controller
 		$this->load->view('pci/approve_cuti/index_historis');
 		$this->load->view('template/footer');
 	}
-	public function data_approve_cuti_mengetahuiASM()
-	{
-		$depts = $this->session->userdata('dept');
-		$no_scan_ = $this->session->userdata('no_scan');
-		$query = "SELECT a.id, a.kode_cuti,
-                         CONCAT(a.kode_cuti, '-', LPAD(a.id, 7, '0')) AS fkode_cuti,
-                         DATE_FORMAT(a.tgl_surat_pemohon, '%d %M %Y') AS tgl_surat_pemohon,
-                         a.nip,
-                         b.nama,
-                         b.dept,
-                         c.nama as atasan1,
-                         c.jabatan,
-                         DATE_FORMAT(a.tgl_mulai, '%d %M %Y') AS tgl_mulai,
-                         a.lama_izin,
-                         DATE_FORMAT(a.tgl_selesai, '%d %M %Y') AS tgl_selesai,
-                         a.role_id,
-                         a.alasan,
-                         a.status,
-                         a.no_scan_atasan_1
-                  FROM permohonan_izin_cuti a
-                  LEFT JOIN (SELECT * FROM tbl_makar) b ON a.nip = b.no_scan 
-                  LEFT JOIN (SELECT * FROM tbl_makar) c ON b.atasan1 = c.nama 
-                  WHERE a.dept = '$depts' and  a.status_approval_1 IS NULL 
-                    AND a.ket NOT IN ('A15') 
-                     AND a.no_scan_atasan1 = '$no_scan_'
-					and b.status_aktif = 1 and c.status_aktif =1
-                    AND tgl_surat_pemohon BETWEEN DATE_ADD(NOW(), INTERVAL -1 MONTH) AND DATE_ADD(NOW(), INTERVAL 14 MONTH)
-                  ORDER BY a.tgl_mulai DESC";
-
-		$data = $this->db->query($query)->result_array();
-		echo json_encode($data);
-	}
-	public function data_approve_cuti_mengetahuiSPV()
-	{
-		$depts = $this->session->userdata('dept');
-		$no_scan_ = $this->session->userdata('no_scan');
-		$query = "SELECT a.id, a.kode_cuti,
-                         CONCAT(a.kode_cuti, '-', LPAD(a.id, 7, '0')) AS fkode_cuti,
-                         DATE_FORMAT(a.tgl_surat_pemohon, '%d %M %Y') AS tgl_surat_pemohon,
-                         a.nip,
-                         b.nama,
-                         b.dept,
-                         c.nama as atasan1,
-                         c.jabatan,
-                         DATE_FORMAT(a.tgl_mulai, '%d %M %Y') AS tgl_mulai,
-                         a.lama_izin,
-                         DATE_FORMAT(a.tgl_selesai, '%d %M %Y') AS tgl_selesai,
-                         a.role_id,
-                         a.alasan,
-                         a.status,
-                         a.status_approval,
-						a.no_scan_atasan_1
-                  FROM permohonan_izin_cuti a
-                  LEFT JOIN (SELECT * FROM tbl_makar) b ON a.nip = b.no_scan 
-				   LEFT JOIN (SELECT * FROM tbl_makar) c ON b.atasan1 = c.nama 
-                  WHERE a.dept = '$depts' and  a.status_approval_1 IS NULL 
-                    AND a.ket NOT IN ('A15') 
-                    AND a.no_scan_atasan_1 = '$no_scan_'
-					and b.status_aktif = 1 and c.status_aktif =1
-                    AND tgl_surat_pemohon BETWEEN DATE_ADD(NOW(), INTERVAL -1 MONTH) AND DATE_ADD(NOW(), INTERVAL 14 MONTH)
-                  ORDER BY a.tgl_mulai DESC";
-
-		$data = $this->db->query($query)->result_array();
-		echo json_encode($data);
-	}
-
 	public function data_approve_cuti_menyetujui()
 	{
 		$depts = $this->session->userdata('dept');
 		$no_scan_ = $this->session->userdata('no_scan');
-		$data = $this->db->query("SELECT
+		$data = $this->db->query("SELECT distinct
 										*,
 										   CONCAT(p.kode_cuti, '-', LPAD(p.id, 7, '0')) AS fkode_cuti
 									from
@@ -896,76 +745,7 @@ class pci extends CI_Controller
 											and tm3.status_aktif = 1) tm on
 										tm.no_scan = p.nip	
 									where
-									p.ket !== 'A15'
-									and ((tm.no_scan_atasan1 = '$no_scan_' and status_approval_1 is null) 
-									or(tm.no_scan_atasan2='$no_scan_' and status_approval_1 is not null and status_approval_2 is null))")->result_array();
-		echo json_encode($data);
-	}
-	public function data_approve_cuti()
-	{
-		$data = $this->db->query("SELECT a.id, a.kode_cuti,
-												CONCAT(a.kode_cuti, '-', LPAD(a.id, 7, '0')) AS fkode_cuti,
-												DATE_FORMAT( a.tgl_surat_pemohon, '%d %M %Y' ) AS tgl_surat_pemohon,
-												a.nip,
-												b.nama,
-												b.dept,
-												DATE_FORMAT( a.tgl_mulai, '%d %M %Y' ) AS tgl_mulai,
-												a.lama_izin,
-												DATE_FORMAT( a.tgl_selesai, '%d %M %Y' ) AS tgl_selesai,
-												a.alasan,
-												a.status,
-												a.status_approval 
-											FROM
-												permohonan_izin_cuti a
-												LEFT JOIN ( SELECT * FROM tbl_makar ) b ON a.nip = b.no_scan 
-											WHERE
-												(a.status_approval_1 = 'Approved'  or a.status_approval_1 = '-') and (a.status_approval_2 = 'Approved' or a.status_approval_2 = '-' ) and a.ket not in('A15')
-												AND tgl_surat_pemohon BETWEEN DATE_ADD( NOW( ), INTERVAL -1 month ) AND DATE_ADD( NOW( ), INTERVAL '14' MONTH )
-											ORDER BY
-												a.tgl_mulai DESC")->result_array();
-		echo json_encode($data);
-	}
-	public function data_tugas_dinas_mengetahui()
-	{
-		$no_scan_ = $this->session->userdata('no_scan');
-		$data = $this->db->query("SELECT
-										*,
-										   CONCAT(p.kode_cuti, '-', LPAD(p.id, 7, '0')) AS fkode_cuti
-									from
-										permohonan_izin_cuti p
-									left join (
-										select
-											tm.nama,
-											tm.no_scan,
-											tm.dept,
-											tm2.no_scan as no_scan_atasan1,
-											tm2.nama as nama_atasan,
-										tm2.jabatan as jabatan_atasan1,
-											tm3.nama as nama_atasan2,
-											tm3.jabatan as jabatan_atasan2,
-											tm3.no_scan as no_scan_atasan2,
-											u.fcm as fcm_atasan1,
-											u2.fcm as fcm_atasan2
-										from
-											tbl_makar tm
-										left join 
-									tbl_makar tm2 on
-											tm.atasan1 = tm2.nama
-										left join 
-									tbl_makar tm3 on
-											tm.atasan2 = tm3.nama
-										left join 
-									user u on
-											tm2.no_scan = u.no_scan
-										left join 
-									user u2 on
-											tm3.no_scan = u2.no_scan
-										where
-											tm2.status_aktif = 1
-											and tm3.status_aktif = 1) tm on
-										tm.no_scan = p.nip	
-									where
-									p.ket = 'A15'
+									not p.ket = 'A15'and not p.status ='Verifikasi'
 									and ((tm.no_scan_atasan1 = '$no_scan_' and status_approval_1 is null) 
 									or(tm.no_scan_atasan2='$no_scan_' and status_approval_1 is not null and status_approval_2 is null))")->result_array();
 		echo json_encode($data);
@@ -975,7 +755,7 @@ class pci extends CI_Controller
 	public function data_tugas_dinas_menyetujui()
 	{
 		$no_scan_ = $this->session->userdata('no_scan');
-		$data = $this->db->query("SELECT
+		$data = $this->db->query("SELECT distinct
 										*,
 										  CONCAT(p.kode_cuti, '-', LPAD(p.id, 7, '0')) AS fkode_cuti
 									from
@@ -1020,7 +800,7 @@ class pci extends CI_Controller
 	public function data_tugas_dinas()
 	{
 		$no_scan_ = $this->session->userdata('no_scan');
-		$data = $this->db->query("SELECT
+		$data = $this->db->query("SELECT distinct
 										*,
 										  CONCAT(p.kode_cuti, '-', LPAD(p.id, 7, '0')) AS fkode_cuti
 									from
@@ -1062,119 +842,89 @@ class pci extends CI_Controller
 									or(tm.no_scan_atasan2='$no_scan_' and status_approval_1 is not null and status_approval_2 is null))")->result_array();
 		echo json_encode($data);
 	}
-	public function approval_cuti($username)
-	{
-		$data = array(
-			'status_approval' => $this->input->post('ket_approval'),
-			'tgl_diset_mengetehui' => $this->input->post('tgl_approval'),
-			'mengetahui_nama' => $this->input->post('user_approval'),
-			'mengetahui_jabatan' => $this->input->post('jabatan', true),
-			'hash_approval' => $this->input->post('getalldata')
-		);
-		$this->db->where('id', $this->input->post('id', true));
-		$this->db->update('permohonan_izin_cuti', $data);
-
-		redirect('pci/approve_cuti/index');
-	}
-	public function approval_cuti1ASM($username)
-	{
-		$data = array(
-			'status_approval_1' => $this->input->post('ket_approval_1'),
-			'disetujui_nama_1' => $this->input->post('user_approval_1'),
-			'disetujui_jabatan_1' => $this->input->post('jabatan_1', true),
-			'tgl_approval_1' => $this->input->post('tgl_approval'),
-			'hash_approval1' => $this->input->post('getalldata')
-		);
-		$this->db->where('id', $this->input->post('id', true));
-		$this->db->update('permohonan_izin_cuti', $data);
-
-		redirect('pci/approve_cuti_mengetahuiASM');
-	}
-	public function approval_cuti1SPV($username)
-	{
-		$data = array(
-			'status_approval_1' => $this->input->post('ket_approval_1'),
-			'disetujui_nama_1' => $this->input->post('user_approval_1'),
-			'disetujui_jabatan_1' => $this->input->post('jabatan_1', true),
-			'tgl_approval_1' => $this->input->post('tgl_approval'),
-			'hash_approval1' => $this->input->post('getalldata')
-		);
-		$this->db->where('id', $this->input->post('id', true));
-		$this->db->update('permohonan_izin_cuti', $data);
-
-		redirect('pci/approve_cuti_mengetahuiSPV');
-	}
 	public function approval_cuti2($username)
 	{
-		$data = array(
-			'status_approval_2' => $this->input->post('ket_approval_2'),
-			'disetujui_nama_2' => $this->input->post('user_approval2'),
-			'disetujui_jabatan_2' => $this->input->post('jabatan', true),
-			'tgl_approval_2' => $this->input->post('tgl_approval'),
-			'hash_approval2' => $this->input->post('getalldata')
-		);
-		$this->db->where('id', $this->input->post('id', true));
-		$this->db->update('permohonan_izin_cuti', $data);
+		// Mendapatkan nilai dari input
+		$checked1 = $this->input->post('ket_approval_1', true);
+		$checked2 = $this->input->post('ket_approval_2', true);
+		$id = $this->input->post('id', true);
+		$tgl_approval1 = $this->input->post('tgl_approval1', true);
+		$tgl_approval2 = $this->input->post('tgl_approval2', true);
+		$getalldata1 = $this->input->post('getalldata1', true);
+		$getalldata2 = $this->input->post('getalldata2', true);
 
-		redirect('pci/approve_cuti_menyetujui');
-	}
-	public function approval_tugas_dinas($username)
-	{
-		$data = array(
-			'status_approval' => $this->input->post('ket_approval'),
-			'tgl_approval' => $this->input->post('tgl_approval'),
-			'APD' => $this->input->post('user_approval'),
-			'jabatan_apd' => $this->input->post('user_jabatan'),
-			'hash_approval' => $this->input->post('getalldata')
-		);
-		$this->db->where('id', $this->input->post('id', true));
-		$this->db->update('permohonan_izin_cuti', $data);
+		// Jika approval 1 diset
+		if (!empty($checked1)) {
+			$data = array(
+				'status_approval_1' => $checked1,
+				'disetujui_nama_1' => $this->input->post('user_approval1'),
+				'disetujui_jabatan_1' => $this->input->post('jabatan_atasan1', true),
+				'tgl_approval_1' => $tgl_approval1,
+				'hash_approval1' => $getalldata1
+			);
+			$this->db->where('id', $id);
+			$this->db->update('permohonan_izin_cuti', $data);
 
-		redirect('pci/tugas_dinas/index');
+			// Redirect setelah update
+			redirect('pci/approve_cuti_menyetujui');
+		}
+		// Jika approval 2 diset
+		elseif (!empty($checked2)) {
+			$data = array(
+				'status_approval_2' => $checked2,
+				'disetujui_nama_2' => $this->input->post('user_approval2'),
+				'disetujui_jabatan_2' => $this->input->post('jabatan_atasan2', true),
+				'tgl_approval_2' => $tgl_approval2, // Biasanya tanggal yang sama, pastikan ini benar
+				'hash_approval2' => $getalldata2
+			);
+			$this->db->where('id', $id);
+			$this->db->update('permohonan_izin_cuti', $data);
+
+			// Redirect setelah update
+			redirect('pci/approve_cuti_menyetujui');
+		}
 	}
 	public function approval_tugas_dinas1($username)
 	{
-		$data = array(
-			'status_approval_1' => $this->input->post('ket_approval_1'),
-			'disetujui_nama_1' => $this->input->post('user_approval_1'),
-			'disetujui_jabatan_1' => $this->input->post('jabatan_1', true),
-			'tgl_approval_1' => $this->input->post('tgl_approval'),
-			'hash_approval1' => $this->input->post('getalldata')
-		);
-		$this->db->where('id', $this->input->post('id', true));
-		$this->db->update('permohonan_izin_cuti', $data);
+		// Mendapatkan nilai dari input
+		$checked1 = $this->input->post('ket_approval_1', true);
+		$checked2 = $this->input->post('ket_approval_2', true);
+		$id = $this->input->post('id', true);
+		$tgl_approval1 = $this->input->post('tgl_approval1', true);
+		$tgl_approval2 = $this->input->post('tgl_approval2', true);
+		$getalldata1 = $this->input->post('getalldata1', true);
+		$getalldata2 = $this->input->post('getalldata2', true);
 
-		redirect('pci/tugas_dinas_mengetahui');
+		// Jika approval 1 diset
+		if (!empty($checked1)) {
+			$data = array(
+				'status_approval_1' => $checked1,
+				'disetujui_nama_1' => $this->input->post('user_approval1'),
+				'disetujui_jabatan_1' => $this->input->post('jabatan_atasan1', true),
+				'tgl_approval_1' => $tgl_approval1,
+				'hash_approval1' => $getalldata1
+			);
+			$this->db->where('id', $id);
+			$this->db->update('permohonan_izin_cuti', $data);
+
+			// Redirect setelah update
+			redirect('pci/tugas_dinas_menyetujui');
+		}
+		// Jika approval 2 diset
+		elseif (!empty($checked2)) {
+			$data = array(
+				'status_approval_2' => $checked2,
+				'disetujui_nama_2' => $this->input->post('user_approval2'),
+				'disetujui_jabatan_2' => $this->input->post('jabatan_atasan2', true),
+				'tgl_approval_2' => $tgl_approval2, // Biasanya tanggal yang sama, pastikan ini benar
+				'hash_approval2' => $getalldata2
+			);
+			$this->db->where('id', $this->input->post('id', true));
+			$this->db->update('permohonan_izin_cuti', $data);
+
+			redirect('pci/tugas_dinas_menyetujui');
+		}
 	}
-	public function approval_tugas_dinas1_($username)
-	{
-		$data = array(
-			'status_approval_1' => $this->input->post('ket_approval_1'),
-			'disetujui_nama_1' => $this->input->post('user_approval_1'),
-			'disetujui_jabatan_1' => $this->input->post('jabatan_1', true),
-			'tgl_approval_1' => $this->input->post('tgl_approval'),
-			'hash_approval1' => $this->input->post('getalldata')
-		);
-		$this->db->where('id', $this->input->post('id', true));
-		$this->db->update('permohonan_izin_cuti', $data);
-
-		redirect('pci/tugas_dinas_mengetahui');
-	}
-	public function approval_tugas_dinas2($username)
-	{
-		$data = array(
-			'status_approval_2' => $this->input->post('ket_approval_2', true),
-			'disetujui_nama_2' => $this->input->post('user_approval_2', true),
-			'disetujui_jabatan_2' => $this->input->post('jabatan_2', true),
-			'tgl_approval_2' => $this->input->post('tgl_approval'),
-			'hash_approval2' => $this->input->post('getalldata')
-		);
-		$this->db->where('id', $this->input->post('id', true));
-		$this->db->update('permohonan_izin_cuti', $data);
-
-		redirect('pci/tugas_dinas_menyetujui');
-	}
-
 	public function generate_cuti()
 	{
 		$data['user'] = $this->db->get_where('user', array(

@@ -147,6 +147,8 @@
 																	Selesai</label>
 															</div>
 															<div class="col-lg-7">
+																<input value="` + data[i].id + `" id="id" name="id"
+																	type="hidden">
 																<input class="form-control input-sm"
 																	value="<?= $data['tgl_selesai']; ?>" name="tgl_mulai"
 																	readonly>
@@ -166,10 +168,10 @@
 																		name="getalldata1" type="hidden">
 																	<input class="form-control input-sm"
 																		value="<?= $data['nama_atasan']; ?>"
-																		name="user_approval1" type="hidden">
+																		name="user_approval1" type="text">
 																	<input class="form-control input-sm"
 																		value="<?= $data['jabatan_atasan1']; ?>"
-																		name="jabatan_atasan1" type="hidden">
+																		name="jabatan_atasan1" type="text">
 																	<input class="form-control input-sm"
 																		value="<?= date('Y-m-d h:i:s'); ?>" name="tgl_approval1"
 																		type="hidden">
@@ -211,8 +213,8 @@
 									<script type="text/javascript"
 										src="<?= base_url(); ?>lib/advanced-datatable/js/DT_bootstrap.js"></script>
 									<script type="text/javascript" language="javascript" src="
-																							<?= base_url(); ?>lib/advanced-datatable/js/jquery.dataTables.js">
-																							</script>
+																						<?= base_url(); ?>lib/advanced-datatable/js/jquery.dataTables.js">
+																						</script>
 								</tr>
 							<?php endforeach; ?>
 						</tbody>
@@ -221,4 +223,4 @@
 			</div>
 			</ div>
 			</sect ion>
-			</secti on>
+	</section>

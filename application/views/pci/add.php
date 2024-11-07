@@ -270,13 +270,13 @@ function searchsisacuti_disabled() {
         success: function(data) {
             document.getElementById('pemohon_nama').value = data[0].nama;
             document.getElementById('pemohon_jabatan').value = data[0].jabatan;
-            document.getElementById('pemohon_role_id').value = data[0].role_id;
-            document.getElementById('disetujui_nama_1').value = data[0].nama_atasan;
-            document.getElementById('disetujui_jabatan_1').value = data[0].jabatan_atasan;
-            document.getElementById('no_scan_atasan').value = data[0].no_scan_atasan;
-            document.getElementById('disetujui_nama_2').value = data[0].nama_atasan2;
-            document.getElementById('disetujui_jabatan_2').value = data[0].jabatan2;
-            document.getElementById('no_scan_atasan2').value = data[0].no_scan2;
+            // document.getElementById('pemohon_role_id').value = data[0].role_id;
+            document.getElementById('atasan1').value = data[0].nama_atasan;
+            document.getElementById('jabatan_atasan').value = data[0].jabatan_atasan;
+            // document.getElementById('no_scan_atasan').value = data[0].no_scan_atasan;/
+            document.getElementById('atasan2').value = data[0].nama_atasan2;
+            document.getElementById('jabatan_atasan2').value = data[0].jabatan2;
+            // document.getElementById('no_scan_atasan2').value = data[0].no_scan2;
             //
             document.getElementById("tgl_mulai").setAttribute("min", "");
             document.getElementById("tgl_mulai").setAttribute("max", "");
@@ -365,6 +365,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A06") { //pernikahan anak karyawan
                 $('#lama_izin').attr('readonly', true);
                 $('#days_or_month').attr('readonly', true);
@@ -396,6 +397,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A07") { //khitanan anak karyawan
                 $('#lama_izin').attr('readonly', true);
                 $('#days_or_month').attr('readonly', true);
@@ -427,6 +429,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A08") { //istri melahirkan / keguguran
                 $('#lama_izin').attr('readonly', true);
                 $('#days_or_month').attr('readonly', true);
@@ -458,6 +461,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A09") { //cuti baptis
                 $('#lama_izin').attr('readonly', true);
                 $('#days_or_month').attr('readonly', true);
@@ -489,6 +493,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A10") { //keluarga inti meninggal
                 $('#lama_izin').attr('readonly', true);
                 $('#days_or_month').attr('readonly', true);
@@ -520,6 +525,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A11") { //saudara meninggal
                 $('#lama_izin').attr('readonly', true);
                 $('#days_or_month').attr('readonly', true);
@@ -551,6 +557,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A12") { //keluarga serumah meninggal
                 $('#lama_izin').attr('readonly', true);
                 $('#days_or_month').attr('readonly', true);
@@ -582,6 +589,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A02") { //cuti melahurkan
                 $('#lama_izin').attr('readonly', true);
                 $('#days_or_month').attr('readonly', true);
@@ -613,6 +621,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A01") { //cuti tahunan
                 $('#lama_izin').removeAttr("readonly");
                 $('#days_or_month').removeAttr("readonly");
@@ -675,6 +684,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A14") { //sakit dengan surat dokter
                 $('#lama_izin').removeAttr("readonly");
                 $('#days_or_month').removeAttr("readonly");
@@ -706,6 +716,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "B03") { //mangkir
                 $('#lama_izin').removeAttr("readonly");
                 $('#days_or_month').removeAttr("readonly");
@@ -736,6 +747,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "B01") { //izin pribadi
                 $('#lama_izin').removeAttr("readonly");
                 $('#days_or_month').removeAttr("readonly");
@@ -767,6 +779,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "B02") { //izin tanpan surat dokterr
                 $('#lama_izin').removeAttr("readonly");
                 $('#days_or_month').removeAttr("readonly");
@@ -798,6 +811,7 @@ function keterangan() {
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A15") { //perjalanan dinas
                 $('#lama_izin').removeAttr("readonly");
                 $('#days_or_month').removeAttr("readonly");
@@ -823,6 +837,7 @@ function keterangan() {
                 document.getElementById('disetujui_label').style.display = 'none';
                 document.getElementById('alasan').placeholder = 'Alasan Dinaas Minimal 30 karakter.';
                 searchsisacuti_disabled();
+                search_atasan();
             }
         }
     });
