@@ -1430,80 +1430,21 @@
 				<td class="column4 style16 s style16" colspan="3"><?= $dpci->disetujui_nama_1; ?></td>
 				<td class="column4 style16 s style16" colspan="3"><?= $dpci->disetujui_nama_2; ?></td>
 				<td class="column6 style17 s style17" colspan="2"><?= $dpci->mengetahui_nama; ?></td>
-
-				<?php if ($dpci->ket !== "A15"): ?>
-
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 3): ?>
-					<td class="column4 style16 s style16" colspan="2"><?= $dpci->mengetahui_nama; ?></td>
-				<?php elseif ($dpci->ket == "A15"): ?>
-					<td class="column4 style16 s style16" colspan="2"><?= htmlspecialchars($dpci->APD); ?></td>
-				<?php endif; ?>
 			</tr>
 			<tr class="row20">
 				<td class="column0 style9 s" colspan="2">Jabatan</td>
 				<td class="column1 style14 s style15" colspan="2"><?= $dpci->pemohon_jabatan; ?></td>
-				<?php if ($dpci->ket !== "A15"): ?>
-					<td class="column4 style16 s style16" colspan="3"><?= $dpci->disetujui_jabatan_1; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 3): ?>
-					<td class="column4 style16 s style16" colspan="3"><?= $dpci->disetujui_jabatan_1; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 2): ?>
-					<td class="column4 style16 s style16" colspan="3"><?php echo $dpci->disetujui_jabatan_1; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 4 || $dpci->role_id == 12): ?>
-					<td class="column4 style16 s style16" colspan="3"><?= $dpci->disetujui_jabatan_1; ?></td>
-				<?php endif; ?>
-				<?php if ($dpci->ket !== "A15"): ?>
-					<td class="column4 style16 s style16" colspan="3"><?= $dpci->disetujui_jabatan_2; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 4 || $dpci->role_id == 12): ?>
-					<td class="column4 style16 s style16" colspan="3"><?= $dpci->disetujui_jabatan_2; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 3): ?>
-					<td class="column4 style16 s style16" colspan="3"></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 2): ?>
-					<td class="column4 style16 s style16" colspan="3"> </td>
-
-				<?php endif; ?>
-
-				<?php if ($dpci->ket !== "A15"): ?>
-					<td class="column6 style17 s style17" colspan="2"><?= $dpci->mengetahui_jabatan; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 4 || $dpci->role_id == 12): ?>
-					<td class="column4 style16 s style16" colspan="2"><?= $dpci->mengetahui_jabatan; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 3): ?>
-					<td class="column4 style16 s style16" colspan="2"><?= $dpci->mengetahui_jabatan; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 2): ?>
-					<td class="column4 style16 s style16" colspan="2"><?= $dpci->mengetahui_jabatan; ?></td>
-				<?php endif; ?>
+				<td class="column4 style16 s style16" colspan="3"><?= $dpci->disetujui_jabatan_1; ?></td>
+				<td class="column4 style16 s style16" colspan="3"><?= $dpci->disetujui_jabatan_2; ?></td>
+				<td class="column6 style17 s style17" colspan="2"><?= $dpci->mengetahui_jabatan; ?></td>
 			</tr>
 			<tr class="row20">
 				<td class="column0 style9 s" colspan="2">Tanggal</td>
 				<td class="column1 style14 s style15" colspan="2"><?= $dpci->tgl_surat_pemohon; ?></td>
+				<td class="column4 style16 s style16" colspan="3"><?= $dpci->ftgl_approval_1; ?></td>
+				<td class="column4 style16 s style16" colspan="3"><?= $dpci->ftgl_approval_2; ?></td>
+				<td class="column6 style17 s style17" colspan="2"><?= $dpci->tgl_diset_mengetehui; ?></td>
 
-				<?php if ($dpci->ket !== "A15"): ?>
-					<td class="column4 style16 s style16" colspan="3"><?= $dpci->ftgl_approval_1; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 3): ?>
-					<td class="column4 style16 s style16" colspan="3"><?= $dpci->ftgl_approval_1; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 2): ?>
-					<td class="column4 style16 s style16" colspan="3"><?= $dpci->ftgl_approval_1; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 4 || $dpci->role_id == 12): ?>
-					<td class="column4 style16 s style16" colspan="3"><?= $dpci->ftgl_approval_1; ?></td>
-				<?php endif; ?>
-				<?php if ($dpci->ket !== "A15"): ?>
-					<td class="column4 style16 s style16" colspan="3"><?= $dpci->ftgl_approval_2; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 3): ?>
-					<td class="column4 style16 s style16" colspan="3"></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 2): ?>
-					<td class="column4 style16 s style16" colspan="3"></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 4 || $dpci->role_id == 12): ?>
-					<td class="column4 style16 s style16" colspan="3"><?= $dpci->ftgl_approval_2; ?></td>
-				<?php endif; ?>
-
-				<?php if ($dpci->ket !== "A15"): ?>
-					<td class="column6 style17 s style17" colspan="2"><?= $dpci->tgl_diset_mengetehui; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 3): ?>
-					<td class="column4 style16 s style16" colspan="2"><?= $dpci->tgl_diset_mengetehui; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 4 || $dpci->role_id == 12): ?>
-					<td class="column4 style16 s style16" colspan="2"><?= $dpci->tgl_diset_mengetehui; ?></td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == 2): ?>
-					<td class="column4 style16 s style16" colspan="2"><?= $dpci->tgl_diset_mengetehui; ?></td>
-				<?php endif; ?>
 			</tr>
 			<tr class="row20">
 				<td class="column0 style9 s" colspan="2">Tanda Tangan<br><br><br></td>
@@ -1596,37 +1537,60 @@
 					<td class="column4 style15 s style15" colspan="3">
 						<center><br><?= $dpci->status_approval_1 ?></center>
 					</td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == "4" && $dpci->status_approval_1 == ""): ?>
-					<td class="column4 style15 s style15" colspan="3">
-						<center><br>Not Yet Approved</center>
-						</u>
-					</td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id !== "4"): ?>
-					<td class="column4 style15 s style15" colspan="3">
-						<center><br>-</center>
-					</td>
 				<?php endif; ?>
-
 				<!-- ttd atasan 2 -->
 				<?php if ($dpci->status_approval_2 == "Approved"): ?>
 					<td class="column6 style17 s style17" colspan="3">
+						<center>
+							<?php
+							// Include library QRcode
+						
+							// Nama folder tempat menyimpan file qrcode
+							$tempdir1b = "temp/";
+
+							// Cek apakah folder temp sudah ada, jika tidak buat folder baru
+							if (!file_exists($tempdir1b)) {
+								mkdir($tempdir1b);
+							}
+
+							// Isi qrcode jika di scan
+							$codeContents1b = $dpci->hash_approval2;
+
+							// Nama file qrcode yang akan disimpan
+							$namaFile1b = $dpci->id . ".png";
+
+							// ECC Level
+							$level1b = QR_ECLEVEL_H;
+
+							// Ukuran pixel
+							$UkuranPixel1b = 1;
+
+							// Ukuran frame
+							$UkuranFrame1b = 1;
+
+							// Buat file QR code
+							QRcode::png($codeContents1b, $tempdir1b . $namaFile1b, $level1b, $UkuranPixel1b, $UkuranFrame1b);
+
+							// Tampilkan QR code
+						
+							?>
+							<img src="<?= base_url($tempdir1b . $namaFile1b); ?>">
+						</center>
 					</td>
 				<?php elseif ($dpci->status_approval_2 == "Rejected"): ?>
 					<td class="column4 style15 s style15" colspan="3">
 						<center><br><?= $dpci->status_approval_2 ?></center>
 					</td>
-				<?php elseif ($dpci->ket == "A15" && $dpci->role_id == "2" && $dpci->status_approval_1 == "Approved"): ?>
-					<td class="column6 style17 s style17" colspan="3">
-						<center>
-						</center>
-					</td>
-				<?php elseif ($dpci->status_approval_2 == ""): ?>
+				<?php elseif ($dpci->status_approval_2 == "" && $dpci->no_scan_atasan_2 !== 1): ?>
 					<td class="column4 style15 s style15" colspan="3">
 						<center><br>Not Yet Approved</center>
 						</u>
 					</td>
-				<?php else: ?>
-					<td class="column4 style15 s style15" colspan="3"></td>
+				<?php elseif ($dpci->status_approval_2 == "" && $dpci->no_scan_atasan_2 = 1): ?>
+					<td class="column4 style15 s style15" colspan="3">
+						<center><br></center>
+						</u>
+					</td>
 				<?php endif; ?>
 				<!-- ttd mengetahui -->
 				<?php if ($dpci->status_approval == "Approved"): ?>
@@ -1685,7 +1649,6 @@
 	</table>
 </body>
 
-
 </html>
 <script>
 	$(document).ready(function () {
@@ -1699,4 +1662,5 @@
 		// Menambahkan gambar ke elemen dengan id 'displaySignature'
 		$('#displaySignature').append(img);
 	});
+	S
 </script>

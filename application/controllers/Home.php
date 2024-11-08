@@ -951,37 +951,26 @@ class Home extends CI_Controller
 
 	public function edit_Password($no_scan)
 	{
-		$email = $this->input->post('email', true);
-		$password1 = $this->input->post('password1');
-		//array
-		$data = array(
-			'email' => $email,
-			'password' => password_hash($password1, PASSWORD_DEFAULT)
-		);
-		$this->db->where('no_scan', $no_scan);
-		$this->db->update('user', $data);
-
-		$this->session->set_flashdata('success', 'Email dan password berhasil diperbarui.');
-		redirect('home/editprofile');
-	}
-	public function cekpassword($no_scan)
-	{
 		$name = $this->input->post('name');
-		$password = $this->input->post('password');
+		$password = $this->input->post('old_password');
 
 		$user = $this->db->get_where('user', array('name' => $name, 'ket' => 'HRIS'))->row_array();
+
 		if (password_verify($password, $user['password'])) {
+			$email = $this->input->post('email', true);
+			$password1 = $this->input->post('password1');
+			//array
 			$data = array(
-				'name' => $user['name'],
-				'role_id' => $user['role_id'],
-				'dept' => $user['dept'],
-				'no_scan' => $user['no_scan']
+				'email' => $email,
+				'password' => password_hash($password1, PASSWORD_DEFAULT)
 			);
-			$this->session->set_userdata($data);
+			$this->db->where('no_scan', $no_scan);
+			$this->db->update('user', $data);
+
+			$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert">Email dan password berhasil diperbarui.</center>');
 			redirect('home/editprofile');
-			// }
 		} else {
-			$this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert">Wrong password!</center>');
+			$this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert">Old Password Incorrect!</center>');
 			redirect('home/editprofile');
 		}
 	}
