@@ -313,8 +313,9 @@ class pci extends CI_Controller
 				'disetujui_jabatan_2' => $this->input->post('disetujui_jabatan_2', true),
 				'mengetahui_nama' => $this->input->post('mengetahui_nama', true),
 				'mengetahui_jabatan' => $this->input->post('mengetahui_jabatan', true),
-				// 'tgl_diset_mengetehui' => $this->input->post('tgl_diset_mengetehui', true),
+				// 'tgl_diset_mengetehui' => $this->input->post('tgl_surat_pemohon', true),
 				'tgl_surat_pemohon' => $this->input->post('tgl_surat_pemohon', true),
+				'status' => 'Printed',
 				'hash_creation' => $this->input->post('pemohon_nama', true) . ' - ' .
 					$this->input->post('no_scan', true) . ' ' .
 					$this->input->post('tgl_surat_pemohon', true)
@@ -346,7 +347,8 @@ class pci extends CI_Controller
 				'mengetahui_nama' => $this->input->post('mengetahui_nama', true),
 				'mengetahui_jabatan' => $this->input->post('mengetahui_jabatan', true),
 				'tgl_surat_pemohon' => $this->input->post('tgl_surat_pemohon', true),
-				// 'tgl_diset_mengetehui' => $this->input->post('tgl_diset_mengetehui', true),
+				// 'tgl_diset_mengetehui' => $this->input->post('tgl_surat_pemohon', true),
+				'status' => 'Printed',
 				'hash_creation' => $this->input->post('pemohon_nama', true) . ' - ' .
 					$this->input->post('no_scan', true) . ' ' .
 					$this->input->post('tgl_surat_pemohon', true)
@@ -522,8 +524,77 @@ class pci extends CI_Controller
 			//tambahan create cuti kirim email ke atasan 1
 			//script di sini
 		} else {
+
+			// KIRIM EMAIL KARYAWAN BARU
+			$noscan = $this->input->post('no_scan', true);
+
+			// Ubah query SQL untuk menyertakan kolom dept_mail
+			$query = $this->db->query("SELECT distinct 
+										tm.no_scan,
+											tm.nama,
+											tm.dept,
+											tm.jabatan,
+											CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
+											DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
+											DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
+											pic.lama_izin,
+											pic.alasan,
+											pic.no_scan_atasan_1,
+											pic.no_scan_atasan_2,
+											u.email
+											FROM permohonan_izin_cuti pic
+											left join (select nama, no_scan, dept, jabatan from tbl_makar where status_aktif =1) tm on tm.no_scan = pic.nip 
+											LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_1
+											where pic.nip = '$noscan' and not pic.status = 'Verifikasi' and pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
+                ")->row();
+			$email_atasan1 = $query->email;
+			$kode_cuti = $query->kode_cuti;
+
+			$this->load->library('phpmailer_lib');
+			$mail = $this->phpmailer_lib->load();
+			// Konfigurasi SMTP
+			$mail->isSMTP();
+			$mail->Host = 'mail.indotaichen.com';
+			$mail->SMTPAuth = true;
+			$mail->Username = 'dept.it@indotaichen.com';
+			$mail->Password = 'Xr7PzUWoyPA';
+			$mail->SMTPSecure = 'TLS';
+			$mail->Port = 587;
+
+			$mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
+			$mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
+
+			// Menambahkan penerima
+			$mail->addAddress($email_atasan1);
+			// $mail->addAddress('asep.pauji@indotaichen.com');
+
+
+			$mail->Subject = 'Permohonan pengajuan cuti';
+			// Mengatur format email ke HTML
+			$mail->isHTML(true);
+			$mailContent = "<html>
+                                    <head>
+                                    </head>
+                                    <body>
+                                    <br>
+									Dengan hormat, <br>
+										Berikut Data karyawan yang mengajukan Permohonan Izin Cuti : $kode_cuti <br>
+										Nomor Absen : $query->no_scan <br>
+										Nama karyawan : $query->nama<br>
+										Departemen :  $query->dept  <br>
+										Jabatan : $query->jabatan <br>
+										Tanggal Permohonan :  $query->ftgl_mulai <br>
+										Tanggal Selesai :  $query->ftgl_selesai  <br>
+										Lama Izin :  $query->lama_izin <br>
+										Alasan :  $query->alasan <br>
+										Terimakasih
+                                        <br>
+                                    </body>
+                                </html>";
+			$mail->Body = $mailContent;
+
 			$save = $this->db->insert('permohonan_izin_cuti', $data);
-			if ($save) {
+			if ($save && $mail->send()) {
 				$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Success.</b></center>');
 				redirect('pci');
 			} else {
@@ -855,37 +926,210 @@ class pci extends CI_Controller
 		$getalldata1 = $this->input->post('getalldata1', true);
 		$getalldata2 = $this->input->post('getalldata2', true);
 
+		// Pastikan ID ada dan valid
+		if (empty($id)) {
+			// Jika ID tidak valid atau kosong, hentikan proses
+			return;
+		}
+
 		// Jika approval 1 diset
 		if (!empty($checked1)) {
-			$data = array(
-				'status_approval_1' => $checked1,
-				'disetujui_nama_1' => $this->input->post('user_approval1'),
-				'disetujui_jabatan_1' => $this->input->post('jabatan_atasan1', true),
-				'tgl_approval_1' => $tgl_approval1,
-				'hash_approval1' => $getalldata1
-			);
+			$data = new stdClass();
+			$data->status_approval_1 = $checked1;
+			$data->disetujui_nama_1 = $this->input->post('user_approval1');
+			$data->disetujui_jabatan_1 = $this->input->post('jabatan_atasan1', true);
+			$data->tgl_diset_mengetehui = $tgl_approval1;
+			$data->tgl_approval_1 = $tgl_approval1;
+			$data->hash_approval1 = $getalldata1;
+
+			// Update hanya berdasarkan ID yang diberikan
 			$this->db->where('id', $id);
 			$this->db->update('permohonan_izin_cuti', $data);
 
-			// Redirect setelah update
+			// Ambil data berdasarkan ID
+			$query = $this->db->query("SELECT DISTINCT
+                                tm.no_scan,
+                                tm.nama,
+                                tm.dept,
+                                tm.jabatan,
+                                CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
+                                DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
+                                DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
+                                pic.lama_izin,
+                                pic.alasan,
+                                pic.no_scan_atasan_1,
+                                pic.no_scan_atasan_2,
+                                pic.status_approval_1,
+                                pic.status_approval_2,
+                                u.email
+                                FROM permohonan_izin_cuti pic
+                                LEFT JOIN (SELECT nama, no_scan, dept, jabatan FROM tbl_makar WHERE status_aktif = 1) tm 
+                                    ON tm.no_scan = pic.nip 
+                                LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_2
+                                WHERE pic.id = '$id' AND NOT pic.status = 'Verifikasi' 
+                                AND pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
+    ")->row();
+
+			if (!$query) {
+				// Data tidak ditemukan
+				return;
+			}
+
+			$email_atasan2 = $query->email;
+			$kode_cuti = $query->kode_cuti;
+			$no_scan_atasan2 = $query->no_scan_atasan_2;
+
+			$this->load->library('phpmailer_lib');
+			$mail = $this->phpmailer_lib->load();
+
+			// Konfigurasi SMTP
+			$mail->isSMTP();
+			$mail->Host = 'mail.indotaichen.com';
+			$mail->SMTPAuth = true;
+			$mail->Username = 'dept.it@indotaichen.com';
+			$mail->Password = 'Xr7PzUWoyPA';
+			$mail->SMTPSecure = 'TLS';
+			$mail->Port = 587;
+
+			$mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
+			$mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
+
+			// Tambahkan alamat email penerima
+			if ($no_scan_atasan2 == 1) {
+				$mail->addAddress('prs@indotaichen.com');
+			} else {
+				$mail->addAddress($email_atasan2);
+			}
+
+			// Tentukan subjek dan body email
+			$mail->Subject = 'Permohonan pengajuan cuti';
+			$mail->isHTML(true);
+
+			$mailContent = "<html>
+                        <head></head>
+                        <body>
+                            <br>
+                            Dengan hormat, <br>
+                            Berikut Data karyawan yang mengajukan Permohonan Izin Cuti : $kode_cuti <br>
+                            Nomor Absen : $query->no_scan <br>
+                            Nama karyawan : $query->nama<br>
+                            Departemen :  $query->dept  <br>
+                            Jabatan : $query->jabatan <br>
+                            Tanggal Permohonan :  $query->ftgl_mulai <br>
+                            Tanggal Selesai :  $query->ftgl_selesai  <br>
+                            Lama Izin :  $query->lama_izin <br>
+                            Alasan :  $query->alasan <br>
+                            Status Approve Atasan 1 : $query->status_approval_1 <br>
+                            Terimakasih
+                            <br>
+                        </body>
+                    </html>";
+			$mail->Body = $mailContent;
+
+			if (!$mail->send()) {
+				// Log error jika email gagal dikirim
+				log_message('error', 'Email gagal dikirim ke: ' . $mail->ErrorInfo);
+			}
 			redirect('pci/approve_cuti_menyetujui');
 		}
+
 		// Jika approval 2 diset
 		elseif (!empty($checked2)) {
-			$data = array(
-				'status_approval_2' => $checked2,
-				'disetujui_nama_2' => $this->input->post('user_approval2'),
-				'disetujui_jabatan_2' => $this->input->post('jabatan_atasan2', true),
-				'tgl_approval_2' => $tgl_approval2, // Biasanya tanggal yang sama, pastikan ini benar
-				'hash_approval2' => $getalldata2
-			);
+			$data = new stdClass();
+			$data->status_approval_2 = $checked2;
+			$data->disetujui_nama_2 = $this->input->post('user_approval2');
+			$data->disetujui_jabatan_2 = $this->input->post('jabatan_atasan2', true);
+			$data->tgl_approval_2 = $tgl_approval2;
+			$data->hash_approval2 = $getalldata2;
+
+			// Update hanya berdasarkan ID yang diberikan
 			$this->db->where('id', $id);
 			$this->db->update('permohonan_izin_cuti', $data);
 
-			// Redirect setelah update
+			// Ambil data berdasarkan ID
+			$query = $this->db->query("SELECT DISTINCT
+                                tm.no_scan,
+                                tm.nama,
+                                tm.dept,
+                                tm.jabatan,
+                                CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
+                                DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
+                                DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
+                                pic.lama_izin,
+                                pic.alasan,
+                                pic.no_scan_atasan_1,
+                                pic.no_scan_atasan_2,
+                                pic.status_approval_1,
+                                pic.status_approval_2,
+                                u.email
+                                FROM permohonan_izin_cuti pic
+                                LEFT JOIN (SELECT nama, no_scan, dept, jabatan FROM tbl_makar WHERE status_aktif = 1) tm 
+                                    ON tm.no_scan = pic.nip 
+                                LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_2
+                                WHERE pic.id = '$id' AND NOT pic.status = 'Verifikasi' 
+                                AND pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
+    ")->row();
+
+			if (!$query) {
+				// Data tidak ditemukan
+				return;
+			}
+
+			$email_atasan2 = $query->email;
+			$kode_cuti = $query->kode_cuti;
+			$no_scan_atasan2 = $query->no_scan_atasan_2;
+
+			$this->load->library('phpmailer_lib');
+			$mail = $this->phpmailer_lib->load();
+
+			// Konfigurasi SMTP
+			$mail->isSMTP();
+			$mail->Host = 'mail.indotaichen.com';
+			$mail->SMTPAuth = true;
+			$mail->Username = 'dept.it@indotaichen.com';
+			$mail->Password = 'Xr7PzUWoyPA';
+			$mail->SMTPSecure = 'TLS';
+			$mail->Port = 587;
+
+			$mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
+			$mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
+
+			$mail->addAddress('prs@indotaichen.com');
+
+			// Tentukan subjek dan body email
+			$mail->Subject = 'Permohonan pengajuan cuti';
+			$mail->isHTML(true);
+
+			$mailContent = "<html>
+                        <head></head>
+                        <body>
+                            <br>
+                            Dengan hormat, <br>
+                            Berikut Data karyawan yang mengajukan Permohonan Izin Cuti : $kode_cuti <br>
+                            Nomor Absen : $query->no_scan <br>
+                            Nama karyawan : $query->nama<br>
+                            Departemen :  $query->dept  <br>
+                            Jabatan : $query->jabatan <br>
+                            Tanggal Permohonan :  $query->ftgl_mulai <br>
+                            Tanggal Selesai :  $query->ftgl_selesai  <br>
+                            Lama Izin :  $query->lama_izin <br>
+                            Alasan :  $query->alasan <br>
+                           	Status Approve Atasan 1 : $query->status_approval_1 <br>
+                            Status Approve Atasan 2 : $query->status_approval_2 <br>
+                            Terimakasih
+                            <br>
+                        </body>
+                    </html>";
+			$mail->Body = $mailContent;
+
+			if (!$mail->send()) {
+				// Log error jika email gagal dikirim
+				log_message('error', 'Email gagal dikirim ke: ' . $mail->ErrorInfo);
+			}
 			redirect('pci/approve_cuti_menyetujui');
 		}
 	}
+
 	public function approval_tugas_dinas1($username)
 	{
 		// Mendapatkan nilai dari input
@@ -897,33 +1141,209 @@ class pci extends CI_Controller
 		$getalldata1 = $this->input->post('getalldata1', true);
 		$getalldata2 = $this->input->post('getalldata2', true);
 
+		// Pastikan ID ada dan valid
+		if (empty($id)) {
+			// Jika ID tidak valid atau kosong, hentikan proses
+			return;
+		}
+
 		// Jika approval 1 diset
 		if (!empty($checked1)) {
-			$data = array(
-				'status_approval_1' => $checked1,
-				'disetujui_nama_1' => $this->input->post('user_approval1'),
-				'disetujui_jabatan_1' => $this->input->post('jabatan_atasan1', true),
-				'tgl_approval_1' => $tgl_approval1,
-				'hash_approval1' => $getalldata1
-			);
+			$data = new stdClass();
+			$data->status_approval_1 = $checked1;
+			$data->disetujui_nama_1 = $this->input->post('user_approval1');
+			$data->disetujui_jabatan_1 = $this->input->post('jabatan_atasan1', true);
+			$data->tgl_diset_mengetehui = $tgl_approval1;
+			$data->tgl_approval_1 = $tgl_approval1;
+			$data->hash_approval1 = $getalldata1;
+
+			// Update hanya berdasarkan ID yang diberikan
 			$this->db->where('id', $id);
 			$this->db->update('permohonan_izin_cuti', $data);
 
+			// Ambil data berdasarkan ID
+			$query = $this->db->query("SELECT DISTINCT
+                                tm.no_scan,
+                                tm.nama,
+                                tm.dept,
+                                tm.jabatan,
+                                CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
+                                DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
+                                DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
+                                pic.lama_izin,
+                                pic.alasan,
+                                pic.no_scan_atasan_1,
+                                pic.no_scan_atasan_2,
+                                pic.status_approval_1,
+                                pic.status_approval_2,
+                                u.email
+                                FROM permohonan_izin_cuti pic
+                                LEFT JOIN (SELECT nama, no_scan, dept, jabatan FROM tbl_makar WHERE status_aktif = 1) tm 
+                                    ON tm.no_scan = pic.nip 
+                                LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_1
+                                WHERE pic.id = '$id' AND NOT pic.status = 'Verifikasi' 
+                                AND pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
+    ")->row();
+
+			if (!$query) {
+				// Data tidak ditemukan
+				return;
+			}
+
+			$email_atasan2 = $query->email;
+			$kode_cuti = $query->kode_cuti;
+			$no_scan_atasan2 = $query->no_scan_atasan_2;
+
+			$this->load->library('phpmailer_lib');
+			$mail = $this->phpmailer_lib->load();
+
+			// Konfigurasi SMTP
+			$mail->isSMTP();
+			$mail->Host = 'mail.indotaichen.com';
+			$mail->SMTPAuth = true;
+			$mail->Username = 'dept.it@indotaichen.com';
+			$mail->Password = 'Xr7PzUWoyPA';
+			$mail->SMTPSecure = 'TLS';
+			$mail->Port = 587;
+
+			$mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
+			$mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
+
+			// Tambahkan alamat email penerima
+			if ($no_scan_atasan2 == 1 || $no_scan_atasan2 == 55) {
+				$mail->addAddress('prs@indotaichen.com');
+			} else {
+				$mail->addAddress($email_atasan2);
+			}
+
+			// Tentukan subjek dan body email
+			$mail->Subject = 'Permohonan Pengajuan Dinas';
+			$mail->isHTML(true);
+
+			$mailContent = "<html>
+                        <head></head>
+                        <body>
+                            <br>
+                            Dengan hormat, <br>
+                            Berikut Data karyawan yang mengajukan Permohonan Tugas Dinas : $kode_cuti <br>
+                            Nomor Absen : $query->no_scan <br>
+                            Nama karyawan : $query->nama<br>
+                            Departemen :  $query->dept  <br>
+                            Jabatan : $query->jabatan <br>
+                            Tanggal Permohonan :  $query->ftgl_mulai <br>
+                            Tanggal Selesai :  $query->ftgl_selesai  <br>
+                            Lama Izin :  $query->lama_izin <br>
+                            Alasan Dinas:  $query->alasan <br>
+                            Status Approve Atasan 1 : $query->status_approval_1 <br>
+                            Terimakasih
+                            <br>
+                        </body>
+                    </html>";
+			$mail->Body = $mailContent;
+
+			if (!$mail->send()) {
+				// Log error jika email gagal dikirim
+				log_message('error', 'Email gagal dikirim ke: ' . $mail->ErrorInfo);
+			}
 			// Redirect setelah update
 			redirect('pci/tugas_dinas_menyetujui');
 		}
+
 		// Jika approval 2 diset
 		elseif (!empty($checked2)) {
-			$data = array(
-				'status_approval_2' => $checked2,
-				'disetujui_nama_2' => $this->input->post('user_approval2'),
-				'disetujui_jabatan_2' => $this->input->post('jabatan_atasan2', true),
-				'tgl_approval_2' => $tgl_approval2, // Biasanya tanggal yang sama, pastikan ini benar
-				'hash_approval2' => $getalldata2
-			);
-			$this->db->where('id', $this->input->post('id', true));
+			$data = new stdClass();
+			$data->status_approval_2 = $checked2;
+			$data->disetujui_nama_2 = $this->input->post('user_approval2');
+			$data->disetujui_jabatan_2 = $this->input->post('jabatan_atasan2', true);
+			$data->tgl_approval_2 = $tgl_approval2;
+			$data->hash_approval2 = $getalldata2;
+
+			// Update hanya berdasarkan ID yang diberikan
+			$this->db->where('id', $id);
 			$this->db->update('permohonan_izin_cuti', $data);
 
+			// Ambil data berdasarkan ID
+			$query = $this->db->query("SELECT DISTINCT
+                                tm.no_scan,
+                                tm.nama,
+                                tm.dept,
+                                tm.jabatan,
+                                CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
+                                DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
+                                DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
+                                pic.lama_izin,
+                                pic.alasan,
+                                pic.no_scan_atasan_1,
+                                pic.no_scan_atasan_2,
+                                pic.status_approval_1,
+                                pic.status_approval_2,
+                                u.email
+                                FROM permohonan_izin_cuti pic
+                                LEFT JOIN (SELECT nama, no_scan, dept, jabatan FROM tbl_makar WHERE status_aktif = 1) tm 
+                                    ON tm.no_scan = pic.nip 
+                                LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_2
+                                WHERE pic.id = '$id' AND NOT pic.status = 'Verifikasi' 
+                                AND pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
+    ")->row();
+
+			if (!$query) {
+				// Data tidak ditemukan
+				return;
+			}
+
+			$email_atasan2 = $query->email;
+			$kode_cuti = $query->kode_cuti;
+			$no_scan_atasan2 = $query->no_scan_atasan_2;
+
+			$this->load->library('phpmailer_lib');
+			$mail = $this->phpmailer_lib->load();
+
+			// Konfigurasi SMTP
+			$mail->isSMTP();
+			$mail->Host = 'mail.indotaichen.com';
+			$mail->SMTPAuth = true;
+			$mail->Username = 'dept.it@indotaichen.com';
+			$mail->Password = 'Xr7PzUWoyPA';
+			$mail->SMTPSecure = 'TLS';
+			$mail->Port = 587;
+
+			$mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
+			$mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
+
+
+			$mail->addAddress('prs@indotaichen.com');
+
+
+			// Tentukan subjek dan body email
+			$mail->Subject = 'Permohonan Pengajuan Dinas';
+			$mail->isHTML(true);
+
+			$mailContent = "<html>
+                        <head></head>
+                        <body>
+                            <br>
+                            Dengan hormat, <br>
+                            Berikut Data karyawan yang mengajukan Tugas Dinas : $kode_cuti <br>
+                            Nomor Absen : $query->no_scan <br>
+                            Nama karyawan : $query->nama<br>
+                            Departemen :  $query->dept  <br>
+                            Jabatan : $query->jabatan <br>
+                            Tanggal Permohonan :  $query->ftgl_mulai <br>
+                            Tanggal Selesai :  $query->ftgl_selesai  <br>
+                            Lama Izin :  $query->lama_izin <br>
+                            Alasan Dinas:  $query->alasan <br>
+                           	Status Approve Atasan 1 : $query->status_approval_1 <br>
+                            Status Approve Atasan 2 : $query->status_approval_2 <br>
+                            Terimakasih
+                            <br>
+                        </body>
+                    </html>";
+			$mail->Body = $mailContent;
+
+			if (!$mail->send()) {
+				// Log error jika email gagal dikirim
+				log_message('error', 'Email gagal dikirim ke: ' . $mail->ErrorInfo);
+			}
 			redirect('pci/tugas_dinas_menyetujui');
 		}
 	}

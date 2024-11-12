@@ -68,7 +68,7 @@
 									where
 									not p.ket = 'A15'and not p.status ='Verifikasi'
 									and ((tm.no_scan_atasan1 = '$no_scan_' and status_approval_1 is null) 
-									or(tm.no_scan_atasan2='$no_scan_' and status_approval_1 is not null and status_approval_2 is null))")->result_array();
+									or(tm.no_scan_atasan2='$no_scan_' and status_approval_1 ='Approved' and status_approval_2 is null))")->result_array();
 							?>
                             <?php foreach ($query as $data): ?>
                             <tr>
@@ -117,6 +117,9 @@
                                                             <input class="form-control input-sm"
                                                                 value="<?= $data['nama']; ?> / <?= $data['nip']; ?>"
                                                                 name="nama" id="nama" readonly>
+                                                            <input class="form-control input-sm"
+                                                                value="<?= $data['nip']; ?>" name="nip" id="nip"
+                                                                type="hidden">
                                                         </div>
                                                         <div class="col-lg-5">
                                                             <label class="control-label col-lg-12">Departemen</label>
@@ -212,7 +215,7 @@
                                 <script type="text/javascript"
                                     src="<?= base_url(); ?>lib/advanced-datatable/js/DT_bootstrap.js"></script>
                                 <script type="text/javascript" language="javascript" src="
-																									<?= base_url(); ?>lib/advanced-datatable/js/jquery.dataTables.js">
+																										<?= base_url(); ?>lib/advanced-datatable/js/jquery.dataTables.js">
                                 </script>
                             </tr>
                             <?php endforeach; ?>
