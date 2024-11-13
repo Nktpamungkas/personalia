@@ -525,7 +525,7 @@ class pci extends CI_Controller
 			//script di sini
 		} else {
 
-			// KIRIM EMAIL KARYAWAN BARU
+			// KIRIM EMAIL pengajuan
 			$noscan = $this->input->post('no_scan', true);
 
 			// Ubah query SQL untuk menyertakan kolom dept_mail
@@ -587,6 +587,9 @@ class pci extends CI_Controller
 										Tanggal Selesai :  $query->ftgl_selesai  <br>
 										Lama Izin :  $query->lama_izin <br>
 										Alasan :  $query->alasan <br>
+										<br>
+										Dimohon untuk login untuk approve permohonan tersebut di halaman <br>
+										<a href='https://online.indotaichen.com/personali/approve_cuti_menyetujui </a><br>
 										Terimakasih
                                         <br>
                                     </body>
@@ -1020,6 +1023,9 @@ class pci extends CI_Controller
                             Lama Izin :  $query->lama_izin <br>
                             Alasan :  $query->alasan <br>
                             Status Approve Atasan 1 : $query->status_approval_1 <br>
+							<br>
+							Dimohon untuk login untuk approve permohonan tersebut di halaman <br> 
+							<a href='https://online.indotaichen.com/personalia/approve_cuti_menyetujui </a><br>
                             Terimakasih
                             <br>
                         </body>
@@ -1334,6 +1340,8 @@ class pci extends CI_Controller
                             Alasan Dinas:  $query->alasan <br>
                            	Status Approve Atasan 1 : $query->status_approval_1 <br>
                             Status Approve Atasan 2 : $query->status_approval_2 <br>
+
+							Dimohon untuk login untuk verifikasi permohonan tersebut di <a href='https://online.indotaichen.com/personalia/pci/show_verifikasi_cuti_approve </a><br>
                             Terimakasih
                             <br>
                         </body>
