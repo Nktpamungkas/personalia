@@ -53,3 +53,6 @@ $route['default_controller'] = 'auth';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = false;
 $route['email'] = 'home';
+$route['update_shift'] = 'Data_karyawan/update_shift';
+$route['auth/activation_form'] = 'auth/activation_form'; // Tampilkan form aktivasi
+$route['auth/activate'] = 'auth/activate'; // Verifikasi kode aktivasi

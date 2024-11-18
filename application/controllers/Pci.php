@@ -587,7 +587,6 @@ class pci extends CI_Controller
 										Tanggal Selesai :  $query->ftgl_selesai  <br>
 										Lama Izin :  $query->lama_izin <br>
 										Alasan :  $query->alasan <br>
-										<br>
 										Dimohon untuk login untuk approve permohonan tersebut di halaman <br>
 										<a href='https://online.indotaichen.com/personali/approve_cuti_menyetujui </a><br>
 										Terimakasih

@@ -1,7 +1,7 @@
 <section id="main-content">
 	<section class="wrapper">
-		<h4><i class="fa fa-angle-right"></i> Time Attendance <i class="fa fa-angle-right"></i> Form Pengajuan Tugas
-			Dinas </h4>
+		<h4><i class="fa fa-angle-right"></i> Time Attendance <i class="fa fa-angle-right"></i> Histori Pengajuan
+			Approve Cuti </h4>
 		<div id="editRequestModal" class="modal fade" tabindex="-1" role="dialog">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -48,50 +48,48 @@
 						</thead>
 						<tbody>
 							<?php
-							$dept = $user['dept'];
-							if ($dept == 'BOD') {
-								$query = $this->db->query("SELECT a.id, a.kode_cuti,
-																DATE_FORMAT( a.tgl_surat_pemohon, '%d %M %Y' ) AS tgl_surat_pemohon,
-																a.nip,
-																b.nama,
-																b.dept,
-																DATE_FORMAT( a.tgl_mulai, '%d %M %Y' ) AS tgl_mulai,
-																a.lama_izin,
-																DATE_FORMAT( a.tgl_selesai, '%d %M %Y' ) AS tgl_selesai,
-																a.alasan,
-																a.status,
-																a.status_approval 
-															FROM
-																permohonan_izin_cuti a
-																LEFT JOIN ( SELECT * FROM tbl_makar ) b ON a.nip = b.no_scan 
-															WHERE
-																a.status_approval IS NOT NULL AND (a.status_approval_1 = 'Approved'  or a.status_approval_1 = '-') and (a.status_approval_2 = 'Approved' or a.status_approval_2 = '-' ) 
-																AND a.kode_cuti LIKE '%FIC%' and a.ket NOT in('A15') and not a.status = 'Verifikasi'
-																AND tgl_surat_pemohon BETWEEN DATE_ADD( NOW( ), INTERVAL -1 month ) AND DATE_ADD( NOW( ), INTERVAL '14' MONTH )
-															ORDER BY
-																a.tgl_mulai DESC")->result_array();
-							} else {
-								$query = $this->db->query("SELECT a.id, a.kode_cuti,
-																DATE_FORMAT( a.tgl_surat_pemohon, '%d %M %Y' ) AS tgl_surat_pemohon,
-																a.nip,
-																b.nama,
-																b.dept,
-																DATE_FORMAT( a.tgl_mulai, '%d %M %Y' ) AS tgl_mulai,
-																a.lama_izin,
-																DATE_FORMAT( a.tgl_selesai, '%d %M %Y' ) AS tgl_selesai,
-																a.alasan,
-																a.status,
-																a.status_approval_1,
-																a.status_approval_2
-															FROM
-																permohonan_izin_cuti a
-																LEFT JOIN ( SELECT * FROM tbl_makar ) b ON a.nip = b.no_scan 
-															WHERE
-																a.status_approval_1 IS not NULL AND a.kode_cuti LIKE '%FIC%' and a.ket NOT in ('A15') and b.dept = '$dept' and not a.status = 'Verifikasi'
-																AND tgl_surat_pemohon BETWEEN DATE_ADD( NOW( ), INTERVAL -1 month ) AND DATE_ADD( NOW( ), INTERVAL '14' MONTH )
-															ORDER BY
-																a.tgl_mulai DESC")->result_array();
-							}
+							$no_scan_ = $user['no_scan'];
+							$query = $this->db->query("SELECT distinct
+										*,
+										   CONCAT(p.kode_cuti, '-', LPAD(p.id, 7, '0')) AS fkode_cuti
+									from
+										permohonan_izin_cuti p
+									left join (
+										select
+											tm.nama,
+											tm.no_scan,
+											tm.dept,
+											tm2.no_scan as no_scan_atasan1,
+											tm2.nama as nama_atasan,
+										tm2.jabatan as jabatan_atasan1,
+											tm3.nama as nama_atasan2,
+											tm3.jabatan as jabatan_atasan2,
+											tm3.no_scan as no_scan_atasan2,
+											u.fcm as fcm_atasan1,
+											u2.fcm as fcm_atasan2
+										from
+											tbl_makar tm
+										left join 
+									tbl_makar tm2 on
+											tm.atasan1 = tm2.nama
+										left join 
+									tbl_makar tm3 on
+											tm.atasan2 = tm3.nama
+										left join 
+									user u on
+											tm2.no_scan = u.no_scan
+										left join 
+									user u2 on
+											tm3.no_scan = u2.no_scan
+										where
+											tm2.status_aktif = 1
+											and (tm3.no_scan IS NULL OR tm3.status_aktif = 1)) tm on
+										tm.no_scan = p.nip	
+									where
+									not p.ket = 'A15'and (p.status ='Verifikasi'or p.status ='Printed')
+									and ((tm.no_scan_atasan1 = '$no_scan_' and status_approval_1 ='Approved') 
+									or(tm.no_scan_atasan2='$no_scan_' and status_approval_1 ='Approved' and ( status_approval_2 is null or status_approval_2 ='Approved')))
+									order by p.tgl_surat_pemohon desc")->result_array();
 							?>
 							<?php foreach ($query as $data): ?>
 								<tr>
@@ -108,9 +106,11 @@
 									<td><?= $data['tgl_selesai']; ?></td>
 									<td><?= $data['alasan']; ?></td>
 									<?php if ($user['dept'] == "BOD"): ?>
-										<td><?= $data['status_approval']; ?></td>
-									<?php elseif ($user['dept'] != "BOD"): ?>
-										<td><?= $data['status_approval_2']; ?></td>
+										<td><?= $data['status_approval_1']; ?></td>
+									<?php elseif ($user['dept'] != "BOD" && empty($data['no_scan_atasan2'])): ?>
+										<td><?= $data['status_approval_1']; ?></td>
+									<?php else: ?>
+										<td><?= $data['status_approval_1']; ?></td>
 									<?php endif; ?>
 								</tr>
 							<?php endforeach; ?>

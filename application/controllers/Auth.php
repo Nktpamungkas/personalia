@@ -13,128 +13,6 @@ class Auth extends CI_Controller
 
 	public function index()
 	{
-		// 	//upadate Status Resigned
-		//     $sql= "UPDATE tbl_makar set status_aktif = 0 WHERE tgl_resign between tgl_resign AND NOW() AND status_karyawan = 'Resigned'"; 
-		//     $this->db->query($sql);
-
-		//   //Generate Cuti tahunan
-		//     $sql_sheet  = "SELECT *,
-		//                     DATE_FORMAT( tgl_tetap, '%d %M' ) AS awal,
-		//                     YEAR(CURDATE()) as thn_awal,
-		//                     DATE_FORMAT( ( tgl_tetap + INTERVAL '12' MONTH - INTERVAL '1' DAY), '%d %M' ) AS akhir, 
-		//                     YEAR(CURDATE()+interval '1'year) as thn_akhir,
-		//                     YEAR(CURDATE()-interval '1'year) as thn_awal_periode_gen,
-		//                     YEAR(CURDATE()) as thn_akhir_periode_gen
-		//                 FROM
-		//                     tbl_makar 
-		//                 WHERE
-		//                     status_karyawan = 'Tetap' 
-		//                     AND gaji IS NULL 
-		//                     AND status_aktif = 1 
-		//                     AND DATE_FORMAT( tgl_tetap, '%d %M' ) = DATE_FORMAT(CURDATE(),'%d %M') 
-		//                     and not year(tgl_tetap) = year(CURDATE())
-		//                     and not tgl_generate_cuti = CURDATE()
-		//                 ORDER BY
-		//                     ( tgl_tetap + INTERVAL '12' MONTH - INTERVAL '1' DAY ) DESC";           
-		//     // $sheet_gen  = $this->db->query($sql_sheet." LIMIT 1 ")->row(); 
-		//     $sheet      = $this->db->query($sql_sheet)->result_array(); 
-		//         foreach ($sheet AS $value){
-		//         if ($value['sisa_cuti'] <= 0) {
-		//         $saldosisacuti = 12 + $value['sisa_cuti'];
-		//         } else {
-		//         $saldosisacuti = 12;
-		//         }
-
-		//     $data = array (
-		//             'no_scan'   => $value['no_scan'],
-		//             'sisa_cuti' => $saldosisacuti,
-		//             'sisa_cuti_th_sebelumnya' => $value['sisa_cuti'],
-		//             'tgl_generate_cuti'=> DATE('Y-m-d')
-		//     );
-		//     $this->db->where('no_scan', $value['no_scan']);
-		//     $this->db->update('tbl_makar', $data);
-
-		//     if($value['sisa_cuti']){
-		//         $alasan = "Sisa cuti ".$value['sisa_cuti']." telah dibayarkan (Periode".$value['thn_awal_periode_gen']." - ".$value['thn_akhir_periode_gen']." ).";
-		//     } else {
-		//         $alasan = "Tidak ada sisa cuti yang dibayarkan. Sisa cuti habis.";
-		//     }
-
-		//     // input histori izin cuti 
-		//     $data_histori = array (
-		//                     'kode_cuti'             => "GEN-".date('Ym'), //HISTORI IMPORT CUTI
-		//                     'nip'                   => $value['no_scan'], 
-		//                     'dept'                  => $value['dept'],
-		//                     'saldo_cuti'            => $saldosisacuti,
-		//                     'days_or_month'         => "Hari",
-		//                     'ket'                   => "th.".date('Y'),
-		//                     'alasan'                => $alasan
-		//     );
-		//     $this->db->insert('permohonan_izin_cuti', $data_histori);
-
-		//     }
-
-		//     //Update Data Career transition(Mitasi, Promosi, Demosi)
-		//     $sql_transition = "SELECT 
-		//                         no_scan,
-		//                         proses,
-		//                         tgl_efektif,
-		//                         dept_baru,
-		//                         bagian_baru,
-		//                         golongan_baru,
-		//                         jabatan_baru,
-		//                         kode_jabatan_baru,
-		//                         atasan1,
-		//                         atasan2
-		//                     FROM 
-		//                         career_transition
-		//                     WHERE 
-		//                         tgl_efektif = CURDATE() ";
-
-		//     $sheet_tran = $this->db->query($sql_transition)->result_array();
-
-		//     foreach ($sheet_tran as $value) {
-		//         if ($value['proses'] == 'mutasi'){
-
-		//             $data = array(
-		//                 'dept'         => $value['dept_baru'],
-		//                 'bagian'       => $value['bagian_baru'],
-		//                 );
-		//         // Tambahkan kondisi if untuk memeriksa apakah atasan1 dan atasan2 tidak null
-		//         } else if ($value['atasan1'] !== null && $value['atasan2'] !== null) {
-		//             //update jika atasan1 dan atasan2 tidak null
-		//             $data = array(
-		//                 'dept'         => $value['dept_baru'],
-		//                 'bagian'       => $value['bagian_baru'],
-		//                 'golongan'     => $value['golongan_baru'],
-		//                 'jabatan'      => $value['jabatan_baru'],
-		//                 'kode_jabatan' => $value['kode_jabatan_baru'],
-		//                 'atasan1'      => $value['atasan1'], 
-		//                 'atasan2'      => $value['atasan2'], 
-		//             );
-		//         } else {
-		//             //update jika atasan1 dan atasan2 null
-		//             $data = array(
-		//                 'dept'         => $value['dept_baru'],
-		//                 'bagian'       => $value['bagian_baru'],
-		//                 'golongan'     => $value['golongan_baru'],
-		//                 'jabatan'      => $value['jabatan_baru'],
-		//                 'kode_jabatan' => $value['kode_jabatan_baru'],
-		//             );
-		//         }
-
-		//         $this->db->where('no_scan', $value['no_scan']); 
-		//         $this->db->update('tbl_makar', $data);
-		//     }
-
-
-		//     //Update Masa Kerja Karyawan baru
-		//     $masakerja = "UPDATE tbl_makar set masa_kerja = 6 where tgl_seragam between tgl_seragam  AND  now() and status_seragam ='BELUM' and status_idcard ='BELUM' AND NOT status_karyawan = 'Resigned' ";
-		//     $this->db->query($masakerja);
-
-		//     $tglseragam = "UPDATE tbl_makar set tgl_seragam = (DATE_ADD(tgl_masuk, INTERVAL 6 month )) where status_seragam = 'BELUM' and status_idcard ='BELUM' AND NOT status_karyawan = 'Resigned'";
-		//     $this->db->query($tglseragam);
-
 		$this->form_validation->set_rules('name', 'Name', 'trim|required');
 		$this->form_validation->set_rules('password', 'Password', 'trim|required');
 
@@ -358,4 +236,144 @@ class Auth extends CI_Controller
 	{
 		force_download('Panduan/Penduan Penggunaan Aplikasi V1.pdf', NULL);
 	}
+	public function forgot_password()
+	{
+		$data['title'] = 'Login Page - PT. Indo Taichen Textile Industry';
+		$this->load->view('template/header_Auth', $data);
+		$this->load->view('auth/forgot_password');
+		$this->load->view('template/footer_Auth');
+	}
+
+	public function aktivasi_akun()
+	{
+		$data['title'] = 'Login Page - PT. Indo Taichen Textile Industry';
+		$this->load->view('template/header_Auth', $data);
+		$this->load->view('auth/activation_form');
+		$this->load->view('template/footer_Auth');
+	}
+
+	public function edit_password()
+	{
+		if ($this->input->post()) {
+			// Mengambil data dari form
+			$id = $this->input->post('id_', true);
+			$nama = $this->input->post('Searchname1', true);
+			$email = $this->input->post('email', true);
+			$password1 = $this->input->post('password1', true);
+			$password2 = $this->input->post('password2', true);
+			$activation_code = rand(100000, 999999); // Kode aktivasi 6 digit
+
+			// Validasi apakah password1 dan password2 cocok
+			if ($password1 !== $password2) {
+				$this->session->set_flashdata('message', 'Password dan konfirmasi password tidak cocok.');
+				redirect('auth/forgot_password');
+			}
+
+			// Cari user berdasarkan id
+			$this->db->where('id', $id);
+			$user = $this->db->get('user')->row();
+
+			if ($user) {
+				// Update password baru ke database jika user ditemukan
+				$data = new stdClass();
+				$data->password = password_hash($password1, PASSWORD_DEFAULT);
+				$data->aktivasi_kode = $activation_code;
+				$data->is_active = 0;
+				$this->db->where('id', $id);
+				if ($this->db->update('user', $data)) {
+
+					$this->load->library('phpmailer_lib');
+					$mail = $this->phpmailer_lib->load();
+
+					// Konfigurasi SMTP
+					$mail->isSMTP();
+					$mail->Host = 'mail.indotaichen.com';
+					$mail->SMTPAuth = true;
+					$mail->Username = 'dept.it@indotaichen.com';
+					$mail->Password = 'Xr7PzUWoyPA';
+					$mail->SMTPSecure = 'TLS';
+					$mail->Port = 587;
+
+					$mail->setFrom('dept.it@indotaichen.com', 'Dept IT');
+					$mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
+
+					// Tambahkan alamat email penerima
+					$mail->addAddress($email);
+
+					//  body email
+					$mail->Subject = 'Kode Aktivasi Akun HRIS';
+					$mail->isHTML(true);
+
+					$mailContent = "<html>
+                        <head></head>
+                        <body>
+                            <br>
+                           	Hello, $nama <br>
+							berikut kode aktivasi akun HRIS anda:<br>
+							$activation_code. <br>                            
+                            Terimakasih
+                            <br>
+                        </body>
+                    </html>";
+					$mail->Body = $mailContent;
+					$mail->send();
+					$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert">Password berhasil diubah. silahkan cek email untuk medapatkan kode aktivasi</center>');
+					redirect('auth/aktivasi_akun');
+				} else {
+					// Jika terjadi kesalahan saat update
+					$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert">Terjadi kesalahan, coba lagi.</center>');
+					redirect('auth/forgot_password');
+				}
+			} else {
+				// Jika email tidak ditemukan
+				$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert">Email tidak ditemukan.</center>');
+				redirect('auth/forgot_password');
+			}
+		}
+		// Jika tidak ada post data, tampilkan halaman form
+		$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert">tidak ada data yang terkirim</center>');
+		$this->load->view('auth/forgot_password');
+	}
+
+	public function search_user($username)
+	{
+		$dataSearch = $this->db->query("SELECT *
+												from `user` a
+												WHERE a.name = '$username'")->result();
+		echo json_encode($dataSearch);
+	}
+
+	public function activate()
+	{
+		if ($this->input->post()) {
+			$activation_code = $this->input->post('activation_code', true);
+
+			if (empty($activation_code)) {
+				$this->session->set_flashdata('message', 'Kode aktivasi tidak boleh kosong.');
+				redirect('auth/aktivasi_akun');
+			}
+
+			// Periksa apakah kode aktivasi ada di database
+			$this->db->where('aktivasi_kode', $activation_code);
+			$user = $this->db->get('user')->row();
+
+			if ($user) {
+				$this->db->where('aktivasi_kode', $activation_code);
+				$this->db->update('user', ['is_active' => 1, 'aktivasi_kode' => NULL]);
+
+				// Set pesan sukses
+				$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert">Akun Anda berhasil diaktivasi.</center>');
+				redirect('auth');
+			} else {
+				// Jika tidak ditemukan, tampilkan pesan error
+				$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert">Kode aktivasi salah atau tidak ditemukan.</center>');
+				redirect('auth/aktivasi_akun');
+			}
+		} else {
+			// Jika tidak ada data POST, redirect ke halaman aktivasi akun
+			redirect('auth/aktivasi_akun');
+		}
+	}
+
+
 }

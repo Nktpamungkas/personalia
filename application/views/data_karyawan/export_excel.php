@@ -140,9 +140,8 @@ header('Cache-Control: max-age=0');
 				<td><?= $dd['status_aktif']; ?></td>
 				<td>
 					<?php
-					if ($dd['tgl_resign'] == "0000-00-00") {
-						$tglresign = date_create("00/00/000");
-						echo "";
+					if ($dd['tgl_resign'] == "0000-00-00" || empty($dd['tgl_resign'])) {
+						echo " ";
 					} else {
 						$tglresign = date_create($dd['tgl_resign']);
 						echo date_format($tglresign, "d/m/Y");

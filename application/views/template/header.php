@@ -169,7 +169,7 @@ if ($user['name']): ?>
                         <?php endif; ?>
                     </li>
                     <?php endif; ?>
-                    <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13): ?>
+                    <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13 || $role_id == 9): ?>
                     <li class="sub-menu">
                         <a <?php if ($title == "Dashboard" || $title == "Dashboard Karyawan Baru" || $title == "headdepartment" || $title == "Karyawan Habis Kontrak" || $title == "Status Seragam Dan ID card Karyawan Dept" || $title == "Status Seragam Dan ID card Karyawan ALL" || $title == "Data Karyawan Kedisiplinan" || $title == "Data Karyawan Keluar" || $title == "Data Karyawan Ulang Tahun" || $title == "Data Karyawan Masa Percobaan") {
 									echo 'class="active"';
@@ -202,7 +202,7 @@ if ($user['name']): ?>
 											echo 'class="active"';
 										} ?>><a href="<?= base_url('home/habiskontrak2'); ?>">Habis Kontrak (test kirim email)</a></li>    
 									<?php endif; ?>  -->
-                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13): ?>
+                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13 || $role_id == 9): ?>
                             <li <?php if ($title == "Status Seragam Dan ID card Karyawan Dept") {
 											echo 'class="active"';
 										} ?>><a href="<?= base_url('home\statusseragam_dept'); ?>">Seragam Dan ID
@@ -232,7 +232,7 @@ if ($user['name']): ?>
                     </li>
                     <?php endif; ?>
 
-                    <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13): ?>
+                    <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13 || $role_id == 9): ?>
                     <li class="sub-menu">
                         <a <?php if ($title == "Employee Information" || $title == "Employee Dept. Information" || $title == "PKWT" || $title == "Career Administration | Discipline" || $title == "Employee | Data Seragam") {
 									echo 'class="active"';
@@ -248,7 +248,7 @@ if ($user['name']): ?>
                             </li>
                             <?php endif; ?>
 
-                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13): ?>
+                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13 || $role_id == 9): ?>
                             <li <?php if ($title == "Employee Dept. Information") {
 											echo 'class="active"';
 										} ?>><a href="<?= base_url('data_karyawan/per_dpt'); ?>">Employee Dept.
@@ -272,7 +272,7 @@ if ($user['name']): ?>
                                     Peringatan</a></li>
                             <?php endif; ?>
 
-                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13): ?>
+                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13 || $role_id == 9): ?>
                             <li <?php if ($title == "Employee | Data Seragam ") {
 											echo 'class="active"';
 										} ?>><a href="<?= base_url('Data_karyawan/seragam'); ?>">Data Seragam</a>
@@ -282,7 +282,7 @@ if ($user['name']): ?>
                     </li>
                     <?php endif; ?>
 
-                    <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13): ?>
+                    <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13 || $role_id == 9): ?>
                     <li class="sub-menu">
                         <a <?php if ($title == "Recruitment | Permohonan" || $title == "Recruitment | Seleksi" || $title == "Recruitment | Exit Interview") {
 									echo 'class="active"';
@@ -291,19 +291,19 @@ if ($user['name']): ?>
                             <span>RECRUITMENT</span>
                         </a>
                         <ul class="sub">
-                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13): ?>
+                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13 || $role_id == 9): ?>
                             <li <?php if ($title == "Recruitment | Permohonan") {
 											echo 'class="active"';
 										} ?>><a href="<?= base_url('Recruitment/index_permohonan'); ?>">Permohonan</a></li>
                             <?php endif; ?>
 
-                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13): ?>
+                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13 || $role_id == 9): ?>
                             <li <?php if ($title == "Recruitment | Seleksi") {
 											echo 'class="active"';
 										} ?>><a href="<?= base_url('Recruitment/index_seleksi'); ?>">Seleksi</a>
                             </li>
                             <?php endif; ?>
-                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13): ?>
+                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13 || $role_id == 9): ?>
                             <li <?php if ($title == "Recruitment | Exit Interview") {
 											echo 'class="active"';
 										} ?>><a href="<?= base_url('Recruitment/List_form_exit_interview'); ?>">Exit Interview</a>
@@ -338,7 +338,7 @@ if ($user['name']): ?>
                         </ul>
                     </li>
                     <li class="sub-menu">
-                        <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13): ?>
+                        <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13 || $role_id == 9): ?>
                         <a href="javascript:;" <?php if ($title == "Time Attendance | Izin Cuti" || $title == "Time Attendance | Lembur" || $title == "Time Attendance | Laporan Absen" || $title == "Time Attendance | Generate Cuti" || $title == "Time Attendance | Lembur Test") {
 									echo 'class="active"';
 								} ?>>
@@ -347,7 +347,7 @@ if ($user['name']): ?>
                         </a>
                         <?php endif; ?>
                         <ul class="sub">
-                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13): ?>
+                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13 || $role_id == 9): ?>
                             <li <?php if ($title == "Time Attendance | Izin Cuti") {
 										echo 'class="active"';
 									} ?>><a href="<?= base_url('pci'); ?>">Izin Cuti</a></li>
@@ -359,7 +359,7 @@ if ($user['name']): ?>
 									} ?>><a href="<?= base_url('pkl2'); ?>">Lembur Test </a></li>
 								<?php endif; ?> -->
 
-                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13): ?>
+                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13 || $role_id == 9): ?>
                             <li <?php if ($title == "Time Attendance | Lembur") {
 										echo 'class="active"';
 									} ?>><a href="<?= base_url('pkl'); ?>">Lembur</a></li>

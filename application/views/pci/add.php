@@ -815,6 +815,70 @@ function keterangan() {
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
                 search_atasan();
+            } else if (_ket == "A16") { //izin masuk kerja setengah hari
+                $('#lama_izin').removeAttr("readonly");
+                $('#days_or_month').removeAttr("readonly");
+                $('#tgl_mulai').removeAttr("readonly");
+                $('#tgl_selesai').removeAttr("readonly");
+                document.getElementById('lama_izin').value = null;
+                document.getElementById("Button").disabled = false
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
+                searchsisacuti_disabled();
+                search_atasan();
+            } else if (_ket == "A17") { //izin masuk kerja terlat
+                $('#lama_izin').removeAttr("readonly");
+                $('#days_or_month').removeAttr("readonly");
+                $('#tgl_mulai').removeAttr("readonly");
+                $('#tgl_selesai').removeAttr("readonly");
+                document.getElementById('lama_izin').value = null;
+                document.getElementById("Button").disabled = false
+                document.getElementById('disetujui_nama_1').disabled = false;
+                document.getElementById('disetujui_nama_1').required = false;
+                document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').disabled = false;
+                document.getElementById('disetujui_jabatan_1').required = false;
+                document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_nama_2').disabled = false;
+                document.getElementById('disetujui_nama_2').required = false;
+                document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').disabled = false;
+                document.getElementById('disetujui_jabatan_2').required = false;
+                document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('mengetahui_nama').disabled = false;
+                document.getElementById('mengetahui_nama').required = false;
+                document.getElementById('mengetahui_nama').type = 'hidden'
+                document.getElementById('mengetahui_jabatan').disabled = false;
+                document.getElementById('mengetahui_jabatan').required = false;
+                document.getElementById('mengetahui_jabatan').type = 'hidden'
+                document.getElementById('tgl_diset_mengetehui').disabled = false;
+                document.getElementById('tgl_diset_mengetehui').required = false;
+                document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('mengetahui_label').style.display = 'block';
+                document.getElementById('disetujui_label').style.display = 'block';
+                searchsisacuti_disabled();
+                search_atasan();
             } else if (_ket == "A15") { //perjalanan dinas
                 $('#lama_izin').removeAttr("readonly");
                 $('#days_or_month').removeAttr("readonly");
