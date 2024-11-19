@@ -6,7 +6,7 @@
                 <?php echo $this->session->flashdata('message'); ?>
             </div>
             <?php endif; ?>
-            <h2 class="form-login-heading">Reset Password</h2>
+            <h2 class="form-login-heading">Request Reset Password</h2>
             <div class="login-wrap">
                 <div class="form-group">
                     <div class="border-box">
@@ -23,37 +23,13 @@
                         <input type="hidden" class="form-control form-control-user" id="id_" name="id_" value=""
                             placeholder="Email" readonly>
                     </div>
-                    <div class="form-group">
-                        <p>New Password</p>
-                        <input type="password" class="form-control form-control-user" id="password1" name="password1"
-                            placeholder="New Password" required>
-                        <?= form_error('password1', '<small class="text-danger pl-3">', '</small>'); ?>
-                    </div>
-                    <div class="form-group">
-                        <p>Confirm New Password</p>
-                        <input type="password" class="form-control form-control-user" id="password2" name="password2"
-                            placeholder="Repeat New Password" required>
-                        <?= form_error('password2', '<small class="text-danger pl-3">', '</small>'); ?>
-                    </div>
-                    <button type="submit" class="btn btn-theme btn-block"><i class="fa fa-lock"></i> Save New
-                        Password</button>
+                    <button type="submit" class="btn btn-theme btn-block"><i class="fa fa-lock"></i> Submit</button>
                     <a href="<?= base_url('auth') ?>" class="btn btn-default btn-block">Back</a>
                 </div>
         </form>
     </div>
 </div>
 <script src="<?= base_url(); ?>lib/jquery/jquery.min.js"></script>
-<script>
-// Form password validation before submit
-$("form").on("submit", function(event) {
-    var password1 = $("#password1").val();
-    var password2 = $("#password2").val();
-    if (password1 !== password2) {
-        event.preventDefault(); // Prevent form submission
-        alert("Password and Confirm Password do not match!");
-    }
-});
-</script>
 <script>
 // Function untuk mengecek apakah tombol Enter ditekan
 function checkEnter(event) {
@@ -76,8 +52,6 @@ function searchusername() {
             } else {
                 document.getElementById('id_').value = '';
                 document.getElementById('email').value = '';
-                document.getElementById('password1').value = '';
-                document.getElementById('password2').value = '';
                 alert("User not found");
             }
         }

@@ -259,15 +259,7 @@ class Auth extends CI_Controller
 			$id = $this->input->post('id_', true);
 			$nama = $this->input->post('Searchname1', true);
 			$email = $this->input->post('email', true);
-			$password1 = $this->input->post('password1', true);
-			$password2 = $this->input->post('password2', true);
-			$activation_code = rand(100000, 999999); // Kode aktivasi 6 digit
-
-			// Validasi apakah password1 dan password2 cocok
-			if ($password1 !== $password2) {
-				$this->session->set_flashdata('message', 'Password dan konfirmasi password tidak cocok.');
-				redirect('auth/forgot_password');
-			}
+			$activation_code = rand(100000, 999999); // Kode aktivasi 6 digit			
 
 			// Cari user berdasarkan id
 			$this->db->where('id', $id);
@@ -276,7 +268,6 @@ class Auth extends CI_Controller
 			if ($user) {
 				// Update password baru ke database jika user ditemukan
 				$data = new stdClass();
-				$data->password = password_hash($password1, PASSWORD_DEFAULT);
 				$data->aktivasi_kode = $activation_code;
 				$data->is_active = 0;
 				$this->db->where('id', $id);
@@ -317,7 +308,7 @@ class Auth extends CI_Controller
                     </html>";
 					$mail->Body = $mailContent;
 					$mail->send();
-					$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert">Password berhasil diubah. silahkan cek email untuk medapatkan kode aktivasi</center>');
+					$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert">silahkan cek email untuk medapatkan kode aktivasi</center>');
 					redirect('auth/aktivasi_akun');
 				} else {
 					// Jika terjadi kesalahan saat update
@@ -347,9 +338,18 @@ class Auth extends CI_Controller
 	{
 		if ($this->input->post()) {
 			$activation_code = $this->input->post('activation_code', true);
+			$password1 = $this->input->post('password1', true);
+			$password2 = $this->input->post('password2', true);
+			$has_password = password_hash($password1, PASSWORD_DEFAULT);
 
 			if (empty($activation_code)) {
 				$this->session->set_flashdata('message', 'Kode aktivasi tidak boleh kosong.');
+				redirect('auth/aktivasi_akun');
+			}
+
+			// Validasi apakah password1 dan password2 cocok
+			if ($password1 !== $password2) {
+				$this->session->set_flashdata('message', 'Password dan konfirmasi password tidak cocok.');
 				redirect('auth/aktivasi_akun');
 			}
 
@@ -359,10 +359,10 @@ class Auth extends CI_Controller
 
 			if ($user) {
 				$this->db->where('aktivasi_kode', $activation_code);
-				$this->db->update('user', ['is_active' => 1, 'aktivasi_kode' => NULL]);
+				$this->db->update('user', ['is_active' => 1, 'aktivasi_kode' => NULL, 'password' => $has_password]);
 
 				// Set pesan sukses
-				$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert">Akun Anda berhasil diaktivasi.</center>');
+				$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert">Password berhasil di ubah.</center>');
 				redirect('auth');
 			} else {
 				// Jika tidak ditemukan, tampilkan pesan error
