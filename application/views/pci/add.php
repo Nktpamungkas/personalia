@@ -290,27 +290,31 @@ function searchsisacuti_disabled() {
 function search_atasan() {
     var _no_scan = document.getElementById('no_scan').value;
     var today = new Date();
+    var _ket = document.getElementById('ket').value;
     var yyyy = today.getFullYear();
     $.ajax({
         type: 'POST',
         url: '<?= base_url() . "pci/search_noscan" ?>/' + _no_scan + '/' + yyyy,
         dataType: 'json',
         success: function(data) {
-            document.getElementById('pemohon_role_id').value = data[0].role_id;
-            document.getElementById('disetujui_nama_1').value = data[0].nama_atasan;
-            document.getElementById('disetujui_jabatan_1').value = data[0].jabatan_atasan;
-            document.getElementById('no_scan_atasan').value = data[0].no_scan_atasan;
-            document.getElementById('disetujui_nama_2').value = data[0].nama_atasan2;
-            document.getElementById('disetujui_jabatan_2').value = data[0].jabatan2;
-            document.getElementById('no_scan_atasan2').value = data[0].no_scan2;
-            document.getElementById('label_disetujui_nama_1').value = data[0].nama_atasan;
-            document.getElementById('label_disetujui_jabatan_1').value = data[0].jabatan_atasan;
-            document.getElementById('label_disetujui_nama_2').value = data[0].nama_atasan2;
-            document.getElementById('label_disetujui_jabatan_2').value = data[0].jabatan2;
+            if (_ket == "B03") {
+                document.getElementById('pemohon_role_id').value = data[0].role_id;
+            } else {
+                document.getElementById('pemohon_role_id').value = data[0].role_id;
+                document.getElementById('disetujui_nama_1').value = data[0].nama_atasan;
+                document.getElementById('disetujui_jabatan_1').value = data[0].jabatan_atasan;
+                document.getElementById('no_scan_atasan').value = data[0].no_scan_atasan;
+                document.getElementById('disetujui_nama_2').value = data[0].nama_atasan2;
+                document.getElementById('disetujui_jabatan_2').value = data[0].jabatan2;
+                document.getElementById('no_scan_atasan2').value = data[0].no_scan2;
+                document.getElementById('label_disetujui_nama_1').value = data[0].nama_atasan;
+                document.getElementById('label_disetujui_jabatan_1').value = data[0].jabatan_atasan;
+                document.getElementById('label_disetujui_nama_2').value = data[0].nama_atasan2;
+                document.getElementById('label_disetujui_jabatan_2').value = data[0].jabatan2;
+            }
         }
     });
 }
-
 
 function keterangan() {
     var _ket = document.getElementById('ket').value;
@@ -328,6 +332,10 @@ function keterangan() {
                 $('#disetujui_jabatan_2').attr('readonly', true);
                 $('#mengetahui_jabatan').attr('readonly', true);
                 $('#tgl_diset_mengetehui').attr('readonly', true);
+                document.getElementById('disetujui_nama_1').value = '';
+                document.getElementById('disetujui_jabatan_1').value = '';
+                document.getElementById('disetujui_nama_2').value = '';
+                document.getElementById('disetujui_jabatan_2').value = '';
             } else {
                 $('#disetujui_nama_1').removeAttr("readonly");
                 $('#disetujui_nama_2').removeAttr("readonly");
@@ -729,15 +737,19 @@ function keterangan() {
                 document.getElementById('disetujui_nama_1').disabled = false;
                 document.getElementById('disetujui_nama_1').required = false;
                 document.getElementById('disetujui_nama_1').type = 'hidden'
+                document.getElementById('disetujui_nama_1').value = '';
                 document.getElementById('disetujui_jabatan_1').disabled = false;
                 document.getElementById('disetujui_jabatan_1').required = false;
                 document.getElementById('disetujui_jabatan_1').type = 'hidden'
+                document.getElementById('disetujui_jabatan_1').value = '';
                 document.getElementById('disetujui_nama_2').disabled = false;
                 document.getElementById('disetujui_nama_2').required = false;
                 document.getElementById('disetujui_nama_2').type = 'hidden'
+                document.getElementById('disetujui_nama_2').value = '';
                 document.getElementById('disetujui_jabatan_2').disabled = false;
                 document.getElementById('disetujui_jabatan_2').required = false;
                 document.getElementById('disetujui_jabatan_2').type = 'hidden'
+                document.getElementById('disetujui_jabatan_2').value = '';
                 document.getElementById('mengetahui_nama').disabled = false;
                 document.getElementById('mengetahui_nama').required = false;
                 document.getElementById('mengetahui_nama').type = 'hidden'
@@ -747,6 +759,10 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').disabled = false;
                 document.getElementById('tgl_diset_mengetehui').required = false;
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
+                document.getElementById('label_disetujui_nama_1').value = '';
+                document.getElementById('label_disetujui_jabatan_1').value = '';
+                document.getElementById('label_disetujui_nama_2').value = '';
+                document.getElementById('label_disetujui_jabatan_2').value = '';
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
                 searchsisacuti_disabled();
@@ -1065,11 +1081,9 @@ $(document).ready(function() {
 																	ORDER BY tm.nama")->result_array();
 										?>
                                         <?php foreach ($queryShift as $dk): ?>
-                                        <option value="<?= $dk['no_scan'] ?>" data-role-id="<?= $dk['role_id'] ?>"
-                                            data-atasan1="<?= $dk['nama_atasan'] ?>"
-                                            data-jabatan_atasan1="<?= $dk['jabatan_atasan'] ?>" <?php if ($dk['no_scan'] == set_value('no_scan')) {
-													  echo "SELECTED";
-												  } ?>>
+                                        <option value="<?= $dk['no_scan'] ?>" <?php if ($dk['no_scan'] == set_value('no_scan')) {
+												  echo "SELECTED";
+											  } ?>>
                                             <?= $dk['no_scan'] . ' - ' . $dk['nama']; ?>
                                         </option>
                                         <?php endforeach ?>

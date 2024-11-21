@@ -4,21 +4,25 @@
         <?= $this->session->flashdata('message'); ?>
         <div class="col-md-6">
             <p>
-                <!-- <?php if ($Belum_ver): ?>
-			<form action="<?= base_url('pci/index_all'); ?>" method="POST">
-				<a href="<?= base_url('pci'); ?>" class="btn btn-warning"><i
-						class=" fa fa-reply"></i>&nbsp;&nbsp;Back</a>
-				<a href="#" data-toggle="modal" data-target="#modalExport" class="btn btn-info">Export to Excel</a>
-				<button type="submit" name="submit" class="btn btn-primary">Tampilkan semua data</button>
-			</form>
-			<?php else: ?>
-			<form action="<?= base_url('pci/show_verifikasi'); ?>" method="POST">
-				<a href="<?= base_url('pci'); ?>" class="btn btn-warning"><i
-						class=" fa fa-reply"></i>&nbsp;&nbsp;Back</a>
-				<a href="#" data-toggle="modal" data-target="#modalExport" class="btn btn-info">Export to Excel</a>
-				<button type="submit" name="submit" class="btn btn-primary">Tampilkan data yg belum Verifikasi</button>
-			</form>
-			<?php endif; ?> -->
+                <?php if ($Belum_ver): ?>
+            <form action="<?= base_url('pci/index_all'); ?>" method="POST">
+                <a href="<?= base_url('pci'); ?>" class="btn btn-warning"><i
+                        class=" fa fa-reply"></i>&nbsp;&nbsp;Back</a>
+                <!-- <a href="#" data-toggle="modal" data-target="#modalExport" class="btn btn-info">Export to Excel</a>
+				<button type="submit" name="submit" class="btn btn-primary">Tampilkan semua data</button> -->
+            </form>
+            <?php else: ?>
+            <form action="<?= base_url('pci/show_verifikasi'); ?>" method="POST">
+                <a href="<?= base_url('pci'); ?>" class="btn btn-warning"><i
+                        class=" fa fa-reply"></i>&nbsp;&nbsp;Back</a>
+                <!-- <a href="#" data-toggle="modal" data-target="#modalExport" class="btn btn-info">Export to Excel</a>
+				<button type="submit" name="submit" class="btn btn-primary">Tampilkan data yg belum Verifikasi</button> -->
+            </form>
+            <?php endif; ?>
+            <!-- <form action="<?= base_url('pci/show_verifikasi_cuti_approve'); ?>" method="POST">
+				<button type="submit" name="submit" class="btn btn-primary">Verifikasi data cuti approved</button>
+			</form> -->
+
 
             <div class="modal fade" id="modalExport" tabindex="-1" role="dialog" aria-labelledby="modalResign"
                 aria-hidden="true">
@@ -76,7 +80,8 @@
                                 <th width="25">Lama Izin</th>
                                 <th width="150">Selesai</th>
                                 <th width="200">Alasan</th>
-                                <!-- <th width="100">Status</th> -->
+                                <th width="100">Approve Atasan 1</th>
+                                <th width="100">Approve Atasan 2</th>
                                 <th>Option</th>
                             </tr>
                         </thead>
@@ -88,38 +93,53 @@
 								$_Belum_ver = '';
 							}
 							$query = $this->db->query("SELECT DISTINCT 
-																	a.id, 
-																	a.kode_cuti,
-																	DATE_FORMAT(a.tgl_surat_pemohon, '%d %M %Y') AS tgl_surat_pemohon,
-																	a.nip,
-																	b.nama,
-																	b.dept,
-																	DATE_FORMAT(a.tgl_mulai, '%d %M %Y') AS tgl_mulai,
-																	a.lama_izin,
-																	DATE_FORMAT(a.tgl_selesai, '%d %M %Y') AS tgl_selesai,
-																	a.alasan,
-																	a.status,
-																	a.status_approval_1,
-																	a.status_approval_2,
-																	a.no_scan_atasan_1
-																FROM 
-																	permohonan_izin_cuti a
-																LEFT JOIN 
-																	tbl_makar b ON a.nip = b.no_scan
-																LEFT JOIN 
-																	tbl_makar c ON a.no_scan_atasan_1 = c.no_scan AND c.status_aktif = 1
-																WHERE 
-																	a.status != '$_Belum_ver' 
-																	AND a.kode_cuti LIKE '%FIC%'
-																	AND (a.status_approval_1 = 'Approved' OR a.status_approval_1 = '-')
-																	AND (
-																		(a.no_scan_atasan_1 in(55,1) AND (a.status_approval_2 = 'Approved' OR a.status_approval_2 = '-' OR a.status_approval_2 IS NULL))
-																		OR (a.no_scan_atasan_1 not in(55,1) AND (a.status_approval_2 = 'Approved' OR a.status_approval_2 = '-'))
-																	)
-																	AND a.tgl_surat_pemohon BETWEEN DATE_ADD(NOW(), INTERVAL -40 DAY) AND DATE_ADD(NOW(), INTERVAL 14 MONTH)
-																ORDER BY 
-																	a.tgl_mulai DESC;
-																")->result_array();
+														a.id, 
+														a.kode_cuti,
+														DATE_FORMAT(a.tgl_surat_pemohon, '%d %M %Y') AS tgl_surat_pemohon,
+														a.nip,
+														b.nama,
+														b.dept,
+														DATE_FORMAT(a.tgl_mulai, '%d %M %Y') AS tgl_mulai,
+														a.lama_izin,
+														DATE_FORMAT(a.tgl_selesai, '%d %M %Y') AS tgl_selesai,
+														a.alasan,
+														a.status,
+														case 
+															when a.ket ='B03' then '-'
+															else a.status_approval_1
+														end  status_approval_1,
+														case 
+															when a.no_scan_atasan_1 IN (55, 1) then '-'
+															when b.atasan2 ='-' then '-'
+															when a.status_approval_2 is null then 'Not yet Approved'
+															else a.status_approval_2
+														end  status_approval_2,
+														a.no_scan_atasan_1,
+														a.no_scan_atasan_2
+													FROM 
+														permohonan_izin_cuti a
+													LEFT JOIN 
+														tbl_makar b ON a.nip = b.no_scan
+													LEFT JOIN 
+														tbl_makar c ON a.no_scan_atasan_1 = c.no_scan AND c.status_aktif = 1
+													WHERE 
+													a.status != '$_Belum_ver' 
+														AND a.kode_cuti LIKE '%FIC%'
+														AND ( a.status_approval_1 = 'Approved' OR a.status_approval_2 = '-')
+														AND (
+															(a.no_scan_atasan_1 IN (55, 1) AND 
+																(a.status_approval_2 = 'Approved' OR a.status_approval_2 = '-' OR a.status_approval_2 IS NULL)
+															)
+															OR 
+															(a.no_scan_atasan_1 IN (55, 1) AND a.status_approval_2 IS NULL)
+															OR 
+															(a.no_scan_atasan_1 NOT IN (55, 1) or b.atasan2 is not null AND 
+																(a.status_approval_2 = 'Approved' OR a.status_approval_2 = '-')
+															)
+														)
+														AND a.tgl_surat_pemohon BETWEEN DATE_ADD(NOW(), INTERVAL -40 DAY) AND DATE_ADD(NOW(), INTERVAL 14 MONTH)
+													ORDER BY 
+														a.tgl_mulai DESC")->result_array();
 							?>
                             <?php foreach ($query as $data): ?>
                             <tr>
@@ -134,6 +154,8 @@
                                 <td><?= $data['lama_izin']; ?></td>
                                 <td><?= $data['tgl_selesai']; ?></td>
                                 <td><?= $data['alasan']; ?></td>
+                                <td><?= $data['status_approval_1']; ?></td>
+                                <td><?= $data['status_approval_2']; ?></td>
                                 <!-- <td><?php if ($data['status'] == "Verifikasi") {
 										echo '<span class="fa fa-check-circle">Terverifikasi</span>';
 									} ?></td> -->
@@ -190,6 +212,6 @@
 <script type="text/javascript" language="javascript" src="<?= base_url(); ?>lib/advanced-datatable/js/jquery.js">
 </script>
 <script type="text/javascript" src="<?= base_url(); ?>lib/advanced-datatable/js/DT_bootstrap.js"></script>
-<scri type="text/javascript" language="javascript"
-    src="<?= base_url(); ?>lib/advanced-datatable/js/jquery.dataTables.js"></scri 
-pt>
+<script type="text/javascript" language="javascript"
+    src="<?= base_url(); ?>lib/advanced-datatable/js/jquery.dataTables.js">
+</script>

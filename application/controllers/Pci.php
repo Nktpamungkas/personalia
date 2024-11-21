@@ -101,7 +101,7 @@ class pci extends CI_Controller
 		))->row_array();
 		$data['title'] = 'Time Attendance | Izin Cuti';
 
-		$bulan['Belum_ver'] = 'Verifikasi';
+		$bulan['Belum_ver'] = '';
 
 		$this->load->view('template/header', $data);
 		$this->load->view('pci/indexAll_Approve', $bulan);
@@ -288,7 +288,7 @@ class pci extends CI_Controller
 	public function add()
 	{
 		if (
-			$this->input->post('ket', true) !== "A15"
+			$this->input->post('ket', true) !== "B03"
 		) {
 			$data = array(
 				'kode_cuti' => "FIC-" . date('Ym'),
@@ -313,7 +313,7 @@ class pci extends CI_Controller
 				'disetujui_jabatan_2' => $this->input->post('disetujui_jabatan_2', true),
 				'mengetahui_nama' => $this->input->post('mengetahui_nama', true),
 				'mengetahui_jabatan' => $this->input->post('mengetahui_jabatan', true),
-				// 'tgl_diset_mengetehui' => $this->input->post('tgl_surat_pemohon', true),
+				'tgl_diset_mengetehui' => $this->input->post('tgl_surat_pemohon', true),
 				'tgl_surat_pemohon' => $this->input->post('tgl_surat_pemohon', true),
 				'status' => 'Printed',
 				'hash_creation' => $this->input->post('pemohon_nama', true) . ' - ' .
@@ -321,7 +321,7 @@ class pci extends CI_Controller
 					$this->input->post('tgl_surat_pemohon', true)
 			);
 		} elseif (
-			$this->input->post('ket', true) === "A15"
+			$this->input->post('ket', true) === "B03"
 		) {
 			$data = array(
 				'kode_cuti' => "FIC-" . date('Ym'),
@@ -340,14 +340,16 @@ class pci extends CI_Controller
 				'role_id' => $this->input->post('pemohon_role_id', true),
 				'no_scan_atasan_1' => $this->input->post('no_scan_atasan', true),
 				'no_scan_atasan_2' => $this->input->post('no_scan_atasan2', true),
-				'disetujui_nama_1' => $this->input->post('atasan1', true),
-				'disetujui_jabatan_1' => $this->input->post('jabatan_atasan', true),
-				'disetujui_nama_2' => $this->input->post('atasan2', true),
-				'disetujui_jabatan_2' => $this->input->post('jabatan_atasan2', true),
+				// 'disetujui_nama_1' => $this->input->post('atasan1', true),
+				// 'disetujui_jabatan_1' => $this->input->post('jabatan_atasan', true),
+				// 'disetujui_nama_2' => $this->input->post('atasan2', true),
+				// 'disetujui_jabatan_2' => $this->input->post('jabatan_atasan2', true),
 				'mengetahui_nama' => $this->input->post('mengetahui_nama', true),
 				'mengetahui_jabatan' => $this->input->post('mengetahui_jabatan', true),
+				'status_approval_1' => '-',
+				'status_approval_2' => '-',
 				'tgl_surat_pemohon' => $this->input->post('tgl_surat_pemohon', true),
-				// 'tgl_diset_mengetehui' => $this->input->post('tgl_surat_pemohon', true),
+				'tgl_diset_mengetehui' => $this->input->post('tgl_surat_pemohon', true),
 				'status' => 'Printed',
 				'hash_creation' => $this->input->post('pemohon_nama', true) . ' - ' .
 					$this->input->post('no_scan', true) . ' ' .
@@ -524,40 +526,49 @@ class pci extends CI_Controller
 			//tambahan create cuti kirim email ke atasan 1
 			//script di sini
 		} else {
-
-			// KIRIM EMAIL pengajuan
+			$save = $this->db->insert('permohonan_izin_cuti', $data);
 			$noscan = $this->input->post('no_scan', true);
 
-			// Ubah query SQL untuk menyertakan kolom dept_mail
 			$query = $this->db->query("SELECT distinct 
-										tm.no_scan,
-											tm.nama,
-											tm.dept,
-											tm.jabatan,
-											CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
-											DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
-											DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
-											pic.lama_izin,
-											pic.alasan,
-											pic.no_scan_atasan_1,
-											pic.no_scan_atasan_2,
-											u.email
-											FROM permohonan_izin_cuti pic
-											left join (select nama, no_scan, dept, jabatan from tbl_makar where status_aktif =1) tm on tm.no_scan = pic.nip 
-											LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_1
-											where pic.nip = '$noscan' and not pic.status = 'Verifikasi' and pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
-                ")->row();
+                             tm.no_scan,
+                             tm.nama,
+                             tm.dept,
+                             tm.jabatan,
+                             CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
+                             DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
+                             DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
+                             pic.lama_izin,
+                             pic.alasan,
+                             pic.no_scan_atasan_1,
+                             pic.no_scan_atasan_2,
+                             u.email
+                             FROM permohonan_izin_cuti pic
+                             LEFT JOIN (SELECT nama, no_scan, dept, jabatan FROM tbl_makar WHERE status_aktif = 1) tm ON tm.no_scan = pic.nip 
+                             LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_1
+                             WHERE pic.nip = '$noscan' AND pic.status != 'Verifikasi' 
+                             AND pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
+                             ")->row();
+
+			// if (!$query || !$query->email) {
+			// 	$this->session->set_flashdata('message', '<center class="alert alert-danger" role="alert"><b>Email Atasan 1 Tidak Ditemukan.</b></center>');
+			// 	redirect('pci/add_Request');
+			// 	return;
+			// }
+
 			$email_atasan1 = $query->email;
 			$kode_cuti = $query->kode_cuti;
+			$ket = $this->input->post('ket', true);
 
 			$this->load->library('phpmailer_lib');
 			$mail = $this->phpmailer_lib->load();
+
 			// Konfigurasi SMTP
 			$mail->isSMTP();
 			$mail->Host = 'mail.indotaichen.com';
 			$mail->SMTPAuth = true;
 			$mail->Username = 'dept.it@indotaichen.com';
 			$mail->Password = 'Xr7PzUWoyPA';
+			// $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 			$mail->SMTPSecure = 'TLS';
 			$mail->Port = 587;
 
@@ -565,44 +576,66 @@ class pci extends CI_Controller
 			$mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
 
 			// Menambahkan penerima
-			$mail->addAddress($email_atasan1);
-			// $mail->addAddress('asep.pauji@indotaichen.com');
 
+			if ($ket == "B03") {
+				$mail->addAddress('prs.absensi@indotaichen.com');
 
-			$mail->Subject = 'Permohonan pengajuan cuti';
-			// Mengatur format email ke HTML
-			$mail->isHTML(true);
-			$mailContent = "<html>
-                                    <head>
-                                    </head>
-                                    <body>
-                                    <br>
-									Dengan hormat, <br>
-										Berikut Data karyawan yang mengajukan Permohonan Izin Cuti : $kode_cuti <br>
-										Nomor Absen : $query->no_scan <br>
-										Nama karyawan : $query->nama<br>
-										Departemen :  $query->dept  <br>
-										Jabatan : $query->jabatan <br>
-										Tanggal Permohonan :  $query->ftgl_mulai <br>
-										Tanggal Selesai :  $query->ftgl_selesai  <br>
-										Lama Izin :  $query->lama_izin <br>
-										Alasan :  $query->alasan <br>
-										Dimohon untuk login untuk approve permohonan tersebut di halaman <br>
-										<a href='https://online.indotaichen.com/personali/approve_cuti_menyetujui </a><br>
-										Terimakasih
-                                        <br>
-                                    </body>
-                                </html>";
+				$mail->Subject = 'Permohonan pengajuan cuti/izin(Mangkir)';
+				$mail->isHTML(true);
+				$mailContent = "<html>
+                  <head></head>
+                  <body>
+                    <br>
+                    Dengan hormat, <br>
+                    Berikut Data karyawan yang mengajukan Permohonan Izin Cuti : $kode_cuti <br>
+                    Nomor Absen : $query->no_scan <br>
+                    Nama karyawan : $query->nama<br>
+                    Departemen :  $query->dept  <br>
+                    Jabatan : $query->jabatan <br>
+                    Tanggal Permohonan :  $query->ftgl_mulai <br>
+                    Tanggal Selesai :  $query->ftgl_selesai  <br>
+                    Lama Izin :  $query->lama_izin <br>
+                    Alasan :  $query->alasan <br>                   
+                    Terimakasih
+                  <br>
+                  </body>
+                </html>";
+			} else {
+				$mail->addAddress($email_atasan1);
+				$mail->Subject = 'Permohonan pengajuan cuti/izin';
+				$mail->isHTML(true);
+				$mailContent = "<html>
+                  <head></head>
+                  <body>
+                    <br>
+                    Dengan hormat, <br>
+                    Berikut Data karyawan yang mengajukan Permohonan Izin Cuti : $kode_cuti <br>
+                    Nomor Absen : $query->no_scan <br>
+                    Nama karyawan : $query->nama<br>
+                    Departemen :  $query->dept  <br>
+                    Jabatan : $query->jabatan <br>
+                    Tanggal Permohonan :  $query->ftgl_mulai <br>
+                    Tanggal Selesai :  $query->ftgl_selesai  <br>
+                    Lama Izin :  $query->lama_izin <br>
+                    Alasan :  $query->alasan <br>
+                    Dimohon untuk login untuk approve permohonan tersebut di halaman HRIS.<br>
+                    <a href='https://online.indotaichen.com/personalia/pci/approve_cuti_menyetujui'>Klik</a><br>
+                    Terimakasih
+                  <br>
+                  </body>
+                </html>";
+			}
+
 			$mail->Body = $mailContent;
-
-			$save = $this->db->insert('permohonan_izin_cuti', $data);
+			// Kirim email
 			if ($save && $mail->send()) {
 				$this->session->set_flashdata('message', '<center class="alert alert-success" role="alert"><b>Success.</b></center>');
 				redirect('pci');
 			} else {
-				$this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"><b>Please Try Again.</b></center>');
+				$this->session->set_flashdata('message', '<center class="alert alert-warning" role="alert"><b>Please Try Again. Error: ' . $mail->ErrorInfo . '</b></center>');
 				redirect('pci/add_Request');
 			}
+
 		}
 	}
 	// END NEW IZIN CUTI
