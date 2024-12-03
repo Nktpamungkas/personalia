@@ -224,7 +224,9 @@ class pci extends CI_Controller
 												a.hash_approval2,
 												DATE_FORMAT(a.tgl_approval_1, '%d %M %Y') as ftgl_approval_1,
 												DATE_FORMAT(a.tgl_approval_2, '%d %M %Y') as ftgl_approval_2,
-												a.hash_creation
+												a.hash_creation,
+												a.jam_mulai,
+												a.jam_selesai
                                             FROM 
                                                 permohonan_izin_cuti a
                                                 LEFT JOIN (SELECT * FROM tbl_makar) b ON a.nip = b.no_scan
@@ -315,6 +317,8 @@ class pci extends CI_Controller
 				'mengetahui_jabatan' => $this->input->post('mengetahui_jabatan', true),
 				'tgl_diset_mengetehui' => $this->input->post('tgl_surat_pemohon', true),
 				'tgl_surat_pemohon' => $this->input->post('tgl_surat_pemohon', true),
+				'jam_mulai' => $this->input->post('jam_mulai', true),
+				'jam_selesai' => $this->input->post('jam_selesai', true),
 				'status' => 'Printed',
 				'hash_creation' => $this->input->post('pemohon_nama', true) . ' - ' .
 					$this->input->post('no_scan', true) . ' ' .

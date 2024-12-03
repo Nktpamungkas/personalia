@@ -1400,9 +1400,21 @@
             </tr>
             <tr class="row14">
                 <td class="column0 style18 s style18" colspan="2">Alasan</td>
+                <?php if ($dpci->ket == "A17"): ?>
+                <td class="column0 style18 s style18" colspan="4">: <?= $dpci->alasan; ?> (<?= $dpci->ket; ?> -
+                    <?= $dpci->cuti; ?>).
+                    <br>Ket jam : <?= $dpci->jam_mulai; ?> s/d <?= $dpci->jam_selesai; ?> WIB
+                </td>
+                <?php elseif ($dpci->ket == "A16"): ?>
+                <td class="column0 style18 s style18" colspan="4">: <?= $dpci->alasan; ?> (<?= $dpci->ket; ?> -
+                    <?= $dpci->cuti; ?>).
+                    <br>Ket jam Keluar : <?= $dpci->jam_mulai; ?> WIB
+                </td>
+                <?php else: ?>
                 <td class="column0 style18 s style18" colspan="4">: <?= $dpci->alasan; ?> (<?= $dpci->ket; ?> -
                     <?= $dpci->cuti; ?>)
                 </td>
+                <?php endif; ?>
             </tr>
             <tr class="row15">
                 <td class="column0 style18 s style18" colspan="2"></td>
@@ -1491,37 +1503,37 @@
                 <td class="column6 style17 s style17" colspan="3">
                     <center>
                         <?php
-								// Include library QRcode
+							// Include library QRcode
 						
-								// Nama folder tempat menyimpan file qrcode
-								$tempdir1a = "temp/";
+							// Nama folder tempat menyimpan file qrcode
+							$tempdir1a = "temp/";
 
-								// Cek apakah folder temp sudah ada, jika tidak buat folder baru
-								if (!file_exists($tempdir1a)) {
-									mkdir($tempdir1a);
-								}
+							// Cek apakah folder temp sudah ada, jika tidak buat folder baru
+							if (!file_exists($tempdir1a)) {
+								mkdir($tempdir1a);
+							}
 
-								// Isi qrcode jika di scan
-								$codeContents1a = $dpci->hash_approval1;
+							// Isi qrcode jika di scan
+							$codeContents1a = $dpci->hash_approval1;
 
-								// Nama file qrcode yang akan disimpan
-								$namaFile1a = $dpci->id . "-2" . ".png";
+							// Nama file qrcode yang akan disimpan
+							$namaFile1a = $dpci->id . "-2" . ".png";
 
-								// ECC Level
-								$level1a = QR_ECLEVEL_H;
+							// ECC Level
+							$level1a = QR_ECLEVEL_H;
 
-								// Ukuran pixel
-								$UkuranPixel1a = 1;
+							// Ukuran pixel
+							$UkuranPixel1a = 1;
 
-								// Ukuran frame
-								$UkuranFrame1a = 1;
+							// Ukuran frame
+							$UkuranFrame1a = 1;
 
-								// Buat file QR code
-								QRcode::png($codeContents1a, $tempdir1a . $namaFile1a, $level1a, $UkuranPixel1a, $UkuranFrame1a);
+							// Buat file QR code
+							QRcode::png($codeContents1a, $tempdir1a . $namaFile1a, $level1a, $UkuranPixel1a, $UkuranFrame1a);
 
-								// Tampilkan QR code
+							// Tampilkan QR code
 						
-								?>
+							?>
                         <img src="<?= base_url($tempdir1a . $namaFile1a); ?>">
                     </center>
                 </td>
@@ -1543,37 +1555,37 @@
                 <td class="column6 style17 s style17" colspan="3">
                     <center>
                         <?php
-								// Include library QRcode
+							// Include library QRcode
 						
-								// Nama folder tempat menyimpan file qrcode
-								$tempdir1b = "temp/";
+							// Nama folder tempat menyimpan file qrcode
+							$tempdir1b = "temp/";
 
-								// Cek apakah folder temp sudah ada, jika tidak buat folder baru
-								if (!file_exists($tempdir1b)) {
-									mkdir($tempdir1b);
-								}
+							// Cek apakah folder temp sudah ada, jika tidak buat folder baru
+							if (!file_exists($tempdir1b)) {
+								mkdir($tempdir1b);
+							}
 
-								// Isi qrcode jika di scan
-								$codeContents1b = $dpci->hash_approval2;
+							// Isi qrcode jika di scan
+							$codeContents1b = $dpci->hash_approval2;
 
-								// Nama file qrcode yang akan disimpan
-								$namaFile1b = $dpci->id . "-3" . ".png";
+							// Nama file qrcode yang akan disimpan
+							$namaFile1b = $dpci->id . "-3" . ".png";
 
-								// ECC Level
-								$level1b = QR_ECLEVEL_H;
+							// ECC Level
+							$level1b = QR_ECLEVEL_H;
 
-								// Ukuran pixel
-								$UkuranPixel1b = 1;
+							// Ukuran pixel
+							$UkuranPixel1b = 1;
 
-								// Ukuran frame
-								$UkuranFrame1b = 1;
+							// Ukuran frame
+							$UkuranFrame1b = 1;
 
-								// Buat file QR code
-								QRcode::png($codeContents1b, $tempdir1b . $namaFile1b, $level1b, $UkuranPixel1b, $UkuranFrame1b);
+							// Buat file QR code
+							QRcode::png($codeContents1b, $tempdir1b . $namaFile1b, $level1b, $UkuranPixel1b, $UkuranFrame1b);
 
-								// Tampilkan QR code
+							// Tampilkan QR code
 						
-								?>
+							?>
                         <img src="<?= base_url($tempdir1b . $namaFile1b); ?>">
                     </center>
                 </td>
@@ -1666,5 +1678,6 @@ $(document).ready(function() {
     // Menambahkan gambar ke elemen dengan id 'displaySignature'
     $('#displaySignature').append(img);
 });
+
 S
 </script>

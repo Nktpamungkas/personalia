@@ -375,6 +375,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A06") { //pernikahan anak karyawan
@@ -407,6 +409,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A07") { //khitanan anak karyawan
@@ -439,6 +443,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A08") { //istri melahirkan / keguguran
@@ -471,6 +477,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A09") { //cuti baptis
@@ -503,6 +511,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A10") { //keluarga inti meninggal
@@ -535,6 +545,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A11") { //saudara meninggal
@@ -567,6 +579,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A12") { //keluarga serumah meninggal
@@ -599,6 +613,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A02") { //cuti melahurkan
@@ -631,6 +647,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';/
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A01") { //cuti tahunan
@@ -662,6 +680,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti();
                 search_atasan();
             } else if (_ket == "A13") { //izin dispensasi
@@ -694,6 +714,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A14") { //sakit dengan surat dokter
@@ -726,6 +748,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "B03") { //mangkir
@@ -765,6 +789,8 @@ function keterangan() {
                 document.getElementById('label_disetujui_jabatan_2').value = '';
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "B01") { //izin pribadi
@@ -797,6 +823,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "B02") { //izin tanpan surat dokterr
@@ -829,6 +857,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A16") { //izin masuk kerja setengah hari
@@ -861,6 +891,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'block';
+                // document.getElementById('jam-keluar').style.display = 'block';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A17") { //izin masuk kerja terlat
@@ -893,6 +925,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'block';
                 document.getElementById('disetujui_label').style.display = 'block';
+                document.getElementById('jam-group').style.display = 'block';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 searchsisacuti_disabled();
                 search_atasan();
             } else if (_ket == "A15") { //perjalanan dinas
@@ -918,6 +952,8 @@ function keterangan() {
                 document.getElementById('tgl_diset_mengetehui').type = 'hidden'
                 document.getElementById('mengetahui_label').style.display = 'none';
                 document.getElementById('disetujui_label').style.display = 'none';
+                document.getElementById('jam-group').style.display = 'none';
+                // document.getElementById('jam-keluar').style.display = 'none';
                 document.getElementById('alasan').placeholder = 'Alasan Dinaas Minimal 30 karakter.';
                 searchsisacuti_disabled();
                 search_atasan();
@@ -1143,6 +1179,17 @@ $(document).ready(function() {
                                 <div class="col-lg-2">
                                     <input type="date" name="tgl_selesai" class="form-control input-sm" id="tgl_selesai"
                                         required>
+                                </div>
+                            </div>
+                            <div class="form-group" id="jam-group" style="display: none;">
+                                <label class="control-label col-lg-2">Jam Mulai</label>
+                                <div class="col-lg-2">
+                                    <input type="time" name="jam_mulai" class="form-control input-sm" id="jam_mulai">
+                                </div>
+                                <label class="control-label col-lg-2">Jam Selesai</label>
+                                <div class="col-lg-2">
+                                    <input type="time" name="jam_selesai" class="form-control input-sm"
+                                        id="jam_selesai">
                                 </div>
                             </div>
                             <div class="form-group">
