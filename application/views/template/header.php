@@ -338,7 +338,7 @@ if ($user['name']): ?>
                         </ul>
                     </li>
                     <li class="sub-menu">
-                        <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13 || $role_id == 9): ?>
+                        <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13 || $role_id == 9 || $role_id == 14): ?>
                         <a href="javascript:;" <?php if ($title == "Time Attendance | Izin Cuti" || $title == "Time Attendance | Lembur" || $title == "Time Attendance | Laporan Absen" || $title == "Time Attendance | Generate Cuti" || $title == "Time Attendance | Lembur Test") {
 									echo 'class="active"';
 								} ?>>
@@ -347,7 +347,7 @@ if ($user['name']): ?>
                         </a>
                         <?php endif; ?>
                         <ul class="sub">
-                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13 || $role_id == 9): ?>
+                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13 || $role_id == 9 || $role_id == 14): ?>
                             <li <?php if ($title == "Time Attendance | Izin Cuti") {
 										echo 'class="active"';
 									} ?>><a href="<?= base_url('pci'); ?>">Izin Cuti</a></li>
@@ -359,7 +359,7 @@ if ($user['name']): ?>
 									} ?>><a href="<?= base_url('pkl2'); ?>">Lembur Test </a></li>
 								<?php endif; ?> -->
 
-                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13 || $role_id == 9): ?>
+                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 7 || $role_id == 13 || $role_id == 9 ): ?>
                             <li <?php if ($title == "Time Attendance | Lembur") {
 										echo 'class="active"';
 									} ?>><a href="<?= base_url('pkl'); ?>">Lembur</a></li>
@@ -371,7 +371,7 @@ if ($user['name']): ?>
 									} ?>><a href="<?= base_url('pci/laporan_absen'); ?>">Laporan Absen</a> </li>
                             <?php endif; ?>
 
-                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13): ?>
+                            <?php if ($role_id == 1 || $role_id == 2 || $role_id == 3 || $role_id == 4 || $role_id == 5 || $role_id == 6 || $role_id == 13 || $role_id == 14): ?>
                             <li <?php if ($title == "Time Attendance | Generate Cuti") {
 										echo 'class="active"';
 									} ?>><a href="<?= base_url('pci/generate_cuti'); ?>">Laporan Sisa Cuti</a>

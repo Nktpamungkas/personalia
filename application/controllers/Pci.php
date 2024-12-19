@@ -412,7 +412,7 @@ class pci extends CI_Controller
 			             b.no_scan,
 			             b.nama,
 			             b.dept,
-						 b.jabatan,
+						 b.jabatan,						
 			             c.nama as atasan1,
 			             c.jabatan as jabatan_atasan,
 			             DATE_FORMAT(a.tgl_mulai, '%d %M %Y') AS tgl_mulai,
@@ -537,7 +537,11 @@ class pci extends CI_Controller
                              tm.no_scan,
                              tm.nama,
                              tm.dept,
+							 tm.sisa_cuti,
                              tm.jabatan,
+							 tm.sisa_cuti,
+						 	 DATE_FORMAT( tm.tgl_generate_cuti, '%d %M %Y' ) AS th_awal,
+           				 	 DATE_FORMAT( ( tm.tgl_generate_cuti + INTERVAL '12' MONTH - INTERVAL '1' DAY), '%d %M %Y' ) as th_akhir,	
                              CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
                              DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
                              DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
@@ -547,7 +551,7 @@ class pci extends CI_Controller
                              pic.no_scan_atasan_2,
                              u.email
                              FROM permohonan_izin_cuti pic
-                             LEFT JOIN (SELECT nama, no_scan, dept, jabatan FROM tbl_makar WHERE status_aktif = 1) tm ON tm.no_scan = pic.nip 
+                             LEFT JOIN (SELECT nama, no_scan, dept, jabatan,sisa_cuti,tgl_generate_cuti FROM tbl_makar WHERE status_aktif = 1) tm ON tm.no_scan = pic.nip 
                              LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_1
                              WHERE pic.nip = '$noscan' AND pic.status != 'Verifikasi' 
                              AND pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
@@ -600,6 +604,33 @@ class pci extends CI_Controller
                     Tanggal Selesai :  $query->ftgl_selesai  <br>
                     Lama Izin :  $query->lama_izin <br>
                     Alasan :  $query->alasan <br>                   
+                    Terimakasih
+                  <br>
+                  </body>
+                </html>";
+			} else if ($ket == "A01") {
+				$mail->addAddress($email_atasan1);
+				// $mail->addAddress('asep.pauji@indotaichen.com');
+				$mail->Subject = 'Permohonan pengajuan cuti/izin';
+				$mail->isHTML(true);
+				$mailContent = "<html>
+                  <head></head>
+                  <body>
+                    <br>
+                    Dengan hormat, <br>
+                    Berikut Data karyawan yang mengajukan Permohonan Izin Cuti : $kode_cuti <br>
+                    Nomor Absen : $query->no_scan <br>
+                    Nama karyawan : $query->nama<br>
+                    Departemen :  $query->dept  <br>
+					Sisa Cuti :  $query->sisa_cuti<br>
+					Periode Penggunaan: $query->th_awal s/d $query->th_akhir <br>
+                    Jabatan : $query->jabatan <br>
+                    Tanggal Permohonan :  $query->ftgl_mulai <br>
+                    Tanggal Selesai :  $query->ftgl_selesai  <br>
+                    Lama Izin :  $query->lama_izin <br>
+                    Alasan :  $query->alasan <br>
+                    Dimohon untuk login untuk approve permohonan tersebut di halaman HRIS.<br>
+                    <a href='https://online.indotaichen.com/personalia/pci/approve_cuti_menyetujui'>Klik</a><br>
                     Terimakasih
                   <br>
                   </body>
@@ -755,16 +786,16 @@ class pci extends CI_Controller
 	}
 	// END LAPORAN ABSEN
 
-	public function tampil_username()
-	{
-		$user_data = array(
-			'id' => $id->id,
-			'name' => $id->name,
-			'name' => $username,
-			'dept' => $depts,
-			'logged_in' => true
-		);
-	}
+	// public function tampil_username()
+	// {
+	// 	$user_data = array(
+	// 		'id' => $id->id,
+	// 		'name' => $id->name,
+	// 		'name' => $username,
+	// 		'dept' => $depts,
+	// 		'logged_in' => true
+	// 	);
+	// }
 
 	public function approve_cuti_menyetujui()
 	{
@@ -965,54 +996,38 @@ class pci extends CI_Controller
 		$getalldata1 = $this->input->post('getalldata1', true);
 		$getalldata2 = $this->input->post('getalldata2', true);
 
-		// Pastikan ID ada dan valid
 		if (empty($id)) {
-			// Jika ID tidak valid atau kosong, hentikan proses
+			$this->session->set_flashdata('error', 'ID tidak valid.');
+			redirect('pci/approve_cuti_menyetujui');
 			return;
 		}
 
 		// Jika approval 1 diset
 		if (!empty($checked1)) {
-			$data = new stdClass();
-			$data->status_approval_1 = $checked1;
-			$data->disetujui_nama_1 = $this->input->post('user_approval1');
-			$data->disetujui_jabatan_1 = $this->input->post('jabatan_atasan1', true);
-			$data->tgl_diset_mengetehui = $tgl_approval1;
-			$data->tgl_approval_1 = $tgl_approval1;
-			$data->hash_approval1 = $getalldata1;
-
-			// Update hanya berdasarkan ID yang diberikan
-			$this->db->where('id', $id);
-			$this->db->update('permohonan_izin_cuti', $data);
-
 			// Ambil data berdasarkan ID
 			$query = $this->db->query("SELECT DISTINCT
-                                tm.no_scan,
-                                tm.nama,
-                                tm.dept,
-                                tm.jabatan,
-                                CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
-                                DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
-                                DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
-                                pic.lama_izin,
-                                pic.alasan,
-                                pic.no_scan_atasan_1,
-                                pic.no_scan_atasan_2,
-                                pic.status_approval_1,
-                                pic.status_approval_2,
-                                u.email
-                                FROM permohonan_izin_cuti pic
-                                LEFT JOIN (SELECT nama, no_scan, dept, jabatan FROM tbl_makar WHERE status_aktif = 1) tm 
-                                    ON tm.no_scan = pic.nip 
-                                LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_2
-                                WHERE pic.id = '$id' AND NOT pic.status = 'Verifikasi' 
-                                AND pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
-    ")->row();
-
-			if (!$query) {
-				// Data tidak ditemukan
-				return;
-			}
+	                            tm.no_scan,
+	                            tm.nama,
+	                            tm.dept,
+	                            tm.jabatan,
+								tm.sisa_cuti,
+	                            CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
+	                            DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
+	                            DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
+	                            pic.lama_izin,
+	                            pic.alasan,
+	                            pic.no_scan_atasan_1,
+	                            pic.no_scan_atasan_2,
+	                            pic.status_approval_1,
+	                            pic.status_approval_2,
+	                            u.email
+	                            FROM permohonan_izin_cuti pic
+	                            LEFT JOIN (SELECT nama, no_scan, dept, jabatan,sisa_cuti FROM tbl_makar WHERE status_aktif = 1) tm 
+	                                ON tm.no_scan = pic.nip 
+	                            LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_2
+	                            WHERE pic.id = '$id' AND NOT pic.status = 'Verifikasi' 
+	                            AND pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
+	")->row();
 
 			$email_atasan2 = $query->email;
 			$kode_cuti = $query->kode_cuti;
@@ -1034,10 +1049,12 @@ class pci extends CI_Controller
 			$mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
 
 			// Tambahkan alamat email penerima
-			if ($no_scan_atasan2 == 1) {
+			if ($no_scan_atasan2 == 1 || $no_scan_atasan2 == 5 || $no_scan_atasan2 == '') {
 				$mail->addAddress('prs@indotaichen.com');
+				// $mail->addAddress('asep.pauji@indotaichen.com');
 			} else {
 				$mail->addAddress($email_atasan2);
+				// $mail->addAddress('asep.pauji@indotaichen.com');
 			}
 
 			// Tentukan subjek dan body email
@@ -1045,78 +1062,70 @@ class pci extends CI_Controller
 			$mail->isHTML(true);
 
 			$mailContent = "<html>
-                        <head></head>
-                        <body>
-                            <br>
-                            Dengan hormat, <br>
-                            Berikut Data karyawan yang mengajukan Permohonan Izin Cuti : $kode_cuti <br>
-                            Nomor Absen : $query->no_scan <br>
-                            Nama karyawan : $query->nama<br>
-                            Departemen :  $query->dept  <br>
-                            Jabatan : $query->jabatan <br>
-                            Tanggal Permohonan :  $query->ftgl_mulai <br>
-                            Tanggal Selesai :  $query->ftgl_selesai  <br>
-                            Lama Izin :  $query->lama_izin <br>
-                            Alasan :  $query->alasan <br>
-                            Status Approve Atasan 1 : $query->status_approval_1 <br>
-							<br>
-							Dimohon untuk login untuk approve permohonan tersebut di halaman <br> 
-							<a href='https://online.indotaichen.com/personalia/approve_cuti_menyetujui </a><br>
-                            Terimakasih
-                            <br>
-                        </body>
-                    </html>";
+					            <head></head>
+					            <body>
+					                <br>
+					                Dengan hormat, <br>
+					                Berikut Data karyawan yang mengajukan Permohonan Izin Cuti : $kode_cuti <br>
+					                Nomor Absen : $query->no_scan <br>
+					                Nama karyawan : $query->nama<br>
+					                Departemen :  $query->dept  <br>
+					                Jabatan : $query->jabatan <br>
+					                Tanggal Permohonan :  $query->ftgl_mulai <br>
+					                Tanggal Selesai :  $query->ftgl_selesai  <br>
+					                Lama Izin :  $query->lama_izin <br>
+					                Alasan :  $query->alasan <br>
+					                Status Approve Atasan 1 : $checked1 <br>
+									<br>
+									Dimohon untuk login untuk approve permohonan tersebut di halaman <br> 
+									<a href='https://online.indotaichen.com/personalia/pci/approve_cuti_menyetujui </a><br>
+					                Terimakasih
+					                <br>
+					            </body>
+					        </html>";
 			$mail->Body = $mailContent;
 
-			if (!$mail->send()) {
-				// Log error jika email gagal dikirim
-				log_message('error', 'Email gagal dikirim ke: ' . $mail->ErrorInfo);
+			if ($mail->send()) {
+				$data = [
+					'status_approval_1' => $checked1,
+					'disetujui_nama_1' => $this->input->post('user_approval1'),
+					'disetujui_jabatan_1' => $this->input->post('jabatan_atasan1', true),
+					'tgl_diset_mengetehui' => $tgl_approval1,
+					'tgl_approval_1' => $tgl_approval1,
+					'hash_approval1' => $getalldata1
+				];
+				if ($this->db->where('id', $id)->update('permohonan_izin_cuti', $data)) {
+					redirect('pci/approve_cuti_menyetujui');
+				} else {
+					$this->session->set_flashdata('error', 'Gagal memperbarui data untuk Approval 1.');
+				}
 			}
 			redirect('pci/approve_cuti_menyetujui');
-		}
 
-		// Jika approval 2 diset
-		elseif (!empty($checked2)) {
-			$data = new stdClass();
-			$data->status_approval_2 = $checked2;
-			$data->disetujui_nama_2 = $this->input->post('user_approval2');
-			$data->disetujui_jabatan_2 = $this->input->post('jabatan_atasan2', true);
-			$data->tgl_approval_2 = $tgl_approval2;
-			$data->hash_approval2 = $getalldata2;
-
-			// Update hanya berdasarkan ID yang diberikan
-			$this->db->where('id', $id);
-			$this->db->update('permohonan_izin_cuti', $data);
-
+		} elseif (!empty($checked2)) {
+			$id = $this->input->post('id', true);
 			// Ambil data berdasarkan ID
 			$query = $this->db->query("SELECT DISTINCT
-                                tm.no_scan,
-                                tm.nama,
-                                tm.dept,
-                                tm.jabatan,
-                                CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
-                                DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
-                                DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
-                                pic.lama_izin,
-                                pic.alasan,
-                                pic.no_scan_atasan_1,
-                                pic.no_scan_atasan_2,
-                                pic.status_approval_1,
-                                pic.status_approval_2,
-                                u.email
-                                FROM permohonan_izin_cuti pic
-                                LEFT JOIN (SELECT nama, no_scan, dept, jabatan FROM tbl_makar WHERE status_aktif = 1) tm 
-                                    ON tm.no_scan = pic.nip 
-                                LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_2
-                                WHERE pic.id = '$id' AND NOT pic.status = 'Verifikasi' 
-                                AND pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
-    ")->row();
-
-			if (!$query) {
-				// Data tidak ditemukan
-				return;
-			}
-
+										tm.no_scan,
+										tm.nama,
+										tm.dept,
+										tm.jabatan,
+										CONCAT(pic.kode_cuti, '-', pic.id) AS kode_cuti, 
+										DATE_FORMAT(pic.tgl_mulai, '%d %M %Y') AS ftgl_mulai,
+										DATE_FORMAT(pic.tgl_selesai, '%d %M %Y') AS ftgl_selesai,
+										pic.lama_izin,
+										pic.alasan,
+										pic.no_scan_atasan_1,
+										pic.no_scan_atasan_2,
+										pic.status_approval_1,
+										pic.status_approval_2,
+										u.email
+										FROM permohonan_izin_cuti pic
+										LEFT JOIN (SELECT nama, no_scan, dept, jabatan, sisa_cuti FROM tbl_makar WHERE status_aktif = 1) tm 
+											ON tm.no_scan = pic.nip 
+										LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_2
+										WHERE pic.id = '$id' AND  pic.status_approval_1 = 'Approved'
+			")->row();
 			$email_atasan2 = $query->email;
 			$kode_cuti = $query->kode_cuti;
 			$no_scan_atasan2 = $query->no_scan_atasan_2;
@@ -1137,37 +1146,54 @@ class pci extends CI_Controller
 			$mail->addReplyTo('dept.it@indotaichen.com', 'Dept IT');
 
 			$mail->addAddress('prs@indotaichen.com');
+			// $mail->addAddress('asep.pauji@indotaichen.com');
 
 			// Tentukan subjek dan body email
 			$mail->Subject = 'Permohonan pengajuan cuti';
 			$mail->isHTML(true);
 
 			$mailContent = "<html>
-                        <head></head>
-                        <body>
-                            <br>
-                            Dengan hormat, <br>
-                            Berikut Data karyawan yang mengajukan Permohonan Izin Cuti : $kode_cuti <br>
-                            Nomor Absen : $query->no_scan <br>
-                            Nama karyawan : $query->nama<br>
-                            Departemen :  $query->dept  <br>
-                            Jabatan : $query->jabatan <br>
-                            Tanggal Permohonan :  $query->ftgl_mulai <br>
-                            Tanggal Selesai :  $query->ftgl_selesai  <br>
-                            Lama Izin :  $query->lama_izin <br>
-                            Alasan :  $query->alasan <br>
-                           	Status Approve Atasan 1 : $query->status_approval_1 <br>
-                            Status Approve Atasan 2 : $query->status_approval_2 <br>
-                            Terimakasih
-                            <br>
-                        </body>
-                    </html>";
+			            <head></head>
+			            <body>
+			                <br>
+			                Dengan hormat, <br>
+			                Berikut Data karyawan yang mengajukan Permohonan Izin Cuti : $kode_cuti <br>
+			                Nomor Absen : $query->no_scan <br>
+			                Nama karyawan : $query->nama<br>
+			                Departemen :  $query->dept  <br>
+			                Jabatan : $query->jabatan <br>
+			                Tanggal Permohonan :  $query->ftgl_mulai <br>
+			                Tanggal Selesai :  $query->ftgl_selesai  <br>
+			                Lama Izin :  $query->lama_izin <br>
+			                Alasan :  $query->alasan <br>
+			               	Status Approve Atasan 1 : $query->status_approval_1 <br>
+			                Status Approve Atasan 2 : $checked2 <br>
+			                Terimakasih
+			                <br>
+			            </body>
+			        </html>";
 			$mail->Body = $mailContent;
 
-			if (!$mail->send()) {
-				// Log error jika email gagal dikirim
-				log_message('error', 'Email gagal dikirim ke: ' . $mail->ErrorInfo);
+			if ($mail->send()) {
+				$data = [
+					'status_approval_2' => $checked2,
+					'disetujui_nama_2' => $this->input->post('user_approval2'),
+					'disetujui_jabatan_2' => $this->input->post('jabatan_atasan2', true),
+					'tgl_approval_2' => $tgl_approval2,
+					'hash_approval2' => $getalldata2
+				];
+				// Update hanya berdasarkan ID yang diberikan
+				if ($this->db->where('id', $id)->update('permohonan_izin_cuti', $data)) {
+					// Redirect setelah update berhasil
+					redirect('pci/approve_cuti_menyetujui');
+				} else {
+					$this->session->set_flashdata('error', 'Gagal memperbarui data untuk Approval 2.');
+				}
+			} else {
+				// Jika tidak ada approval yang diset
+				$this->session->set_flashdata('error', 'Approval tidak ditemukan.');
 			}
+			// Redirect ke halaman awal jika kondisi di atas tidak terpenuhi
 			redirect('pci/approve_cuti_menyetujui');
 		}
 	}
@@ -1185,7 +1211,8 @@ class pci extends CI_Controller
 
 		// Pastikan ID ada dan valid
 		if (empty($id)) {
-			// Jika ID tidak valid atau kosong, hentikan proses
+			$this->session->set_flashdata('error', 'ID tidak valid.');
+			redirect('pci/tugas_dinas_menyetujui');
 			return;
 		}
 
@@ -1220,17 +1247,11 @@ class pci extends CI_Controller
                                 pic.status_approval_2,
                                 u.email
                                 FROM permohonan_izin_cuti pic
-                                LEFT JOIN (SELECT nama, no_scan, dept, jabatan FROM tbl_makar WHERE status_aktif = 1) tm 
+                                LEFT JOIN (SELECT nama, no_scan, dept, jabatan, sisa_cuti FROM tbl_makar WHERE status_aktif = 1) tm 
                                     ON tm.no_scan = pic.nip 
                                 LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_1
                                 WHERE pic.id = '$id' AND NOT pic.status = 'Verifikasi' 
-                                AND pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
     ")->row();
-
-			if (!$query) {
-				// Data tidak ditemukan
-				return;
-			}
 
 			$email_atasan2 = $query->email;
 			$kode_cuti = $query->kode_cuti;
@@ -1254,8 +1275,10 @@ class pci extends CI_Controller
 			// Tambahkan alamat email penerima
 			if ($no_scan_atasan2 == 1 || $no_scan_atasan2 == 55) {
 				$mail->addAddress('prs@indotaichen.com');
+				// $mail->addAddress('asep.pauji@indotaichen.com');
 			} else {
 				$mail->addAddress($email_atasan2);
+				// $mail->addAddress('asep.pauji@indotaichen.com');
 			}
 
 			// Tentukan subjek dan body email
@@ -1321,11 +1344,10 @@ class pci extends CI_Controller
                                 pic.status_approval_2,
                                 u.email
                                 FROM permohonan_izin_cuti pic
-                                LEFT JOIN (SELECT nama, no_scan, dept, jabatan FROM tbl_makar WHERE status_aktif = 1) tm 
+                                LEFT JOIN (SELECT nama, no_scan, dept, jabatan, sisa_cuti FROM tbl_makar WHERE status_aktif = 1) tm 
                                     ON tm.no_scan = pic.nip 
                                 LEFT JOIN `user` u ON u.no_scan = pic.no_scan_atasan_2
                                 WHERE pic.id = '$id' AND NOT pic.status = 'Verifikasi' 
-                                AND pic.id IN (SELECT MAX(id) FROM permohonan_izin_cuti GROUP BY nip)
     ")->row();
 
 			if (!$query) {
@@ -1354,6 +1376,7 @@ class pci extends CI_Controller
 
 
 			$mail->addAddress('prs@indotaichen.com');
+			// $mail->addAddress('asep.pauji@indotaichen.com');
 
 
 			// Tentukan subjek dan body email

@@ -1408,7 +1408,7 @@
                 <?php elseif ($dpci->ket == "A16"): ?>
                 <td class="column0 style18 s style18" colspan="4">: <?= $dpci->alasan; ?> (<?= $dpci->ket; ?> -
                     <?= $dpci->cuti; ?>).
-                    <br>Ket jam Keluar : <?= $dpci->jam_mulai; ?> WIB
+                    <br>Ket jam : <?= $dpci->jam_mulai; ?> s/d <?= $dpci->jam_selesai; ?> WIB
                 </td>
                 <?php else: ?>
                 <td class="column0 style18 s style18" colspan="4">: <?= $dpci->alasan; ?> (<?= $dpci->ket; ?> -

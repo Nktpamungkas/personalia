@@ -301,7 +301,8 @@
 											<option value="<?= $dk['no_scan'] ?>" <?php if ($dk['no_scan'] == $dpci->pengganti_kerja) {
 												  echo "SELECTED";
 											  } ?>>
-												<?= $dk['no_scan'] . ' - ' . $dk['nama']; ?></option>
+												<?= $dk['no_scan'] . ' - ' . $dk['nama']; ?>
+											</option>
 										<?php endforeach ?>
 									</select>
 								</div>
@@ -333,6 +334,21 @@
 										value="<?= $dpci->tgl_selesai; ?>" id="tgl_selesai" required>
 								</div>
 							</div>
+							<?php if ($dpci->ket == "A16" || $dpci->ket == "A17"): ?>
+								<div class="form-group" id="jam-group">
+									<label class="control-label col-lg-2" for="jam_mulai">Jam Mulai</label>
+									<div class="col-lg-2">
+										<input type="time" name="jam_mulai" class="form-control input-sm" id="jam_mulai"
+											value="<?= $dpci->jam_mulai; ?>">
+									</div>
+									<label class="control-label col-lg-2" for="jam_selesai">Jam Selesai</label>
+									<div class="col-lg-2">
+										<input type="time" name="jam_selesai" class="form-control input-sm" id="jam_selesai"
+											value="<?= $dpci->jam_selesai; ?>">
+									</div>
+								</div>
+							<?php endif; ?>
+
 							<div class="form-group">
 								<label class="control-label col-lg-2">Alasan</label>
 								<div class="col-lg-10">
@@ -432,5 +448,5 @@
 				</div>
 			</div>
 		</div>
-		</sect ion>
-	</section>
+		</s ect ion>
+		</sec ti on>
